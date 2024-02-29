@@ -1,0 +1,38 @@
+version: '3.0'
+
+services:
+    db:
+        image: mysql:5.7
+        container_name: ${COMPOSE_PROJECT_NAME}.mysql.docker
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: ${DATABASE_NAME}
+            MYSQL_USER: ${DATABASE_USERNAME}
+            MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+        volumes:
+            - mysql.data:/var/lib/mysql
+        ports:
+            - 127.0.0.1:${DATABASE_PORT}:3306
+        networks:
+            - global
+
+    redis:
+        image: redis:alpine
+        container_name: ${COMPOSE_PROJECT_NAME}.redis.docker
+        restart: unless-stopped
+        volumes:
+            - redis.data:/data
+        ports:
+            - 127.0.0.1:${REDIS_PORT}:6379
+        networks:
+            - global
+
+volumes:
+    mysql.data:
+    redis.data:
+
+networks:
+    global:
+        external: true
