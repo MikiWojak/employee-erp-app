@@ -25,6 +25,11 @@ Please bear in mind on default setup you can run one frontend app at the time! Y
 4. Go to directory `frontend-vue` / `frontend-nuxt`
 5. Install and setup frontend according to `README.md` inside
 
+Credentials (`backend-node`):
+
+- email: `admin@erp.test` / `employee@erp.test`
+- password: `test1234`
+
 ## Run React.js / Next.js (frontend) and Node.js (backend)
 
 Please bear in mind on default setup you can run one frontend app at the time! You should not run both `frontend-react` / `frontend-next`
@@ -35,7 +40,13 @@ Please bear in mind on default setup you can run one frontend app at the time! Y
 4. Go to directory `frontend-react` / `frontend-next`
 5. Install and setup frontend according to `README.md` inside
 
-## What about Nest.js (WIP)
+## What about Nest.js (WIP)?
 
 - You can also use `backend-nest` instead of `backend-node`
 - Please bear in mind work on `backend-nest` is still in progress. Thus, not all features are available
+- <b>Currently I'm working on fixing `backend-nest` to make it work properly</b>
+
+Credentials (`backend-nest`):
+
+- email: `admin@erp.test` / `employee@erp.test`
+- password: `Test123#`

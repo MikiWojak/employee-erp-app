@@ -2,7 +2,7 @@
 
 ## Project setup
 
-```
+```bash
 # Set proper node version
 nvm use
 
