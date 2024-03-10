@@ -29,12 +29,21 @@
 ## Installation
 
 ```bash
+$ nvm use
 $ npm install
+$ cp .env.example .env
 ```
 
 ## Running the app
 
 ```bash
+# Docker setup
+$ docker network create global
+$ docker-compose up -d
+
+# Fill db with data
+$ npm run seed:run
+
 # development
 $ npm run start
 
@@ -43,6 +52,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# Close docker containers
+$ docker-compose down
 ```
 
 ## Test

@@ -2,6 +2,22 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Project setup
+
+```
+# Set proper node version
+nvm use
+
+# Install dependencies
+npm install
+
+# Copy env file
+cp .env.example .env
+
+# In case of 'ERROR in Plugin "react" was conflicted between ".eslintrc.json" and "BaseConfig"'
+npm dedupe && npm install
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
