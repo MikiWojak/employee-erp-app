@@ -3,7 +3,14 @@
 ## Project setup
 
 ```
+# Set proper node version
+nvm use
+
+# Install dependencies
 npm install
+
+# Copy env file
+cp .env.example .env
 ```
 
 ### Compiles and hot-reloads for development
