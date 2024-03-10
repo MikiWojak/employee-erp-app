@@ -38,4 +38,4 @@ Please bear in mind on default setup you can run one frontend app at the time! Y
 ## What about Nest.js (WIP)
 
 - You can also use `backend-nest` instead of `backend-node`
-- Please bear in mind work on `backend-nest` is still in progress. Thus not all features are available
+- Please bear in mind work on `backend-nest` is still in progress. Thus, not all features are available
