@@ -5,6 +5,9 @@
 ### Installation
 
 ```bash
+# Set proper node version
+nvm use
+
 # Install dependencies
 npm install
 
