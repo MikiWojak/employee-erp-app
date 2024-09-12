@@ -1,5 +1,47 @@
 # employee-erp-app
 
+## Table of content
+
+- [App description](#app-description)
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Database design and structure](#database-design-and-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+
+- [Screenshots](#screenshots)
+
+## App description
+
+**employee-erp-app** is a web application to manage human resources of the company. Both admin (boss) and employee can login to the application. The admin can manage employees, contracts and vacations. The employee can see their vacations summary and list of contracts. The employee can also manage their own vacations in a limited scope.
+
+## Features
+
+### Admin
+
+- Employees list (Dashboard)
+- Add, edit and delete employee
+- Contracts list
+- Add, edit and delete contract
+- Vacations list
+- Add, edit and delete vacation
+
+### Employee
+
+- Logged employee's vacations summary (Dashboard)
+- Logged employee's contracts list
+- Logged employee's vacations list
+- Add vacation request
+- Edit and delete unapproved vacation request
+
+### Additional information
+
+- No registration - you can login using only initial accounts and ones created by Admin
+
+## Tech stack
+
+TODO
+
 ## Project structure
 
 Project includes:
