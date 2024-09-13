@@ -17,7 +17,7 @@ module.exports = {
             dateOfBirth: '1985-03-17',
 
             email: 'admin@erp.test',
-            password: 'test1234'
+            password: 'Qwerty123!'
         });
 
         // Employee
@@ -32,7 +32,7 @@ module.exports = {
             dateOfBirth: '1990-09-03',
 
             email: 'employee@erp.test',
-            password: 'test1234'
+            password: 'Qwerty123!'
         });
     },
 

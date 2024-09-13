@@ -20,7 +20,7 @@ export default setSeederFactory(User, faker => {
             lastName: user.lastName
         })
         .toLowerCase();
-    user.password = 'Test123#';
+    user.password = 'Qwerty123!';
 
     return user;
 });

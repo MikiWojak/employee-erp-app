@@ -151,7 +151,7 @@ Please bear in mind on default setup you can run one frontend app at the time! Y
 Credentials (`backend-node`):
 
 - email: `admin@erp.test` / `employee@erp.test`
-- password: `test1234`
+- password: `Qwerty123!`
 
 ## Run React.js / Next.js (frontend) and Node.js (backend)
 
@@ -172,4 +172,4 @@ Please bear in mind on default setup you can run one frontend app at the time! Y
 Credentials (`backend-nest`):
 
 - email: `admin@erp.test` / `employee@erp.test`
-- password: `Test123#`
+- password: `Qwerty123!`
