@@ -4,6 +4,13 @@
 
 - [App description](#app-description)
 - [Features](#features)
+- [Frontend Vuejs Nuxt Backend Nodejs](#frontend-vuejs-nuxt-backend-nodejs)
+  - [Vue screenshots](#vue-screenshots)
+- [Frontend React Nextjs Backend Nodejs](#frontend-react-nextjs-backend-nodejs)
+  - [React screenshots](#react-screenshots)
+
+## ToC TODO
+
 - [Tech stack](#tech-stack)
 - [Database design and structure](#database-design-and-structure)
 - [Installation](#installation)
@@ -41,6 +48,80 @@
 ## Tech stack
 
 TODO
+
+## Frontend Vuejs Nuxt Backend Nodejs
+
+### Vue screenshots
+
+Login
+![image](screenshots/vue/vue-login.png)
+
+Admin - Dashboard (list of employees)
+![image](screenshots/vue/vue-admin-dashboard.png)
+
+Admin - Add employee
+![image](screenshots/vue/vue-admin-add-employee.png)
+
+Admin - Contracts
+![image](screenshots/vue/vue-admin-contracts.png)
+
+Admin - Add contract
+![image](screenshots/vue/vue-admin-add-contract.png)
+
+Admin - Vacations
+![image](screenshots/vue/vue-admin-vacations.png)
+
+Admin - Add vacation
+![image](screenshots/vue/vue-admin-add-vacation.png)
+
+Employee - Dashboard (vacations summary)
+![image](screenshots/vue/vue-employee-dashboard.png)
+
+Employee - Contracts
+![image](screenshots/vue/vue-employee-contracts.png)
+
+Employee - Vacations
+![image](screenshots/vue/vue-employee-vacations.png)
+
+Employee - Add vacation
+![image](screenshots/vue/vue-employee-add-vacation.png)
+
+## Frontend React Nextjs Backend Nodejs
+
+### React Screenshots
+
+Login
+![image](screenshots/react/react-login.png)
+
+Admin - Dashboard (list of employees)
+![image](screenshots/react/react-admin-dashboard.png)
+
+Admin - Add employee
+![image](screenshots/react/react-admin-add-employee.png)
+
+Admin - Contracts
+![image](screenshots/react/react-admin-contracts.png)
+
+Admin - Add contract
+![image](screenshots/react/react-admin-add-contract.png)
+
+Admin - Vacations
+![image](screenshots/react/react-admin-vacations.png)
+
+Admin - Add vacation
+![image](screenshots/react/react-admin-add-vacation.png)
+
+Employee - Dashboard (vacations summary)
+![image](screenshots/react/react-employee-dashboard.png)
+
+Employee - Contracts
+![image](screenshots/react/react-employee-contracts.png)
+
+Employee - Vacations
+![image](screenshots/react/react-employee-vacations.png)
+
+Employee - Add vacation
+![image](screenshots/react/react-employee-add-vacation.png)
 
 ## Project structure
 
