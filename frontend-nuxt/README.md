@@ -1,4 +1,4 @@
-# nuxt
+# employee-erp-app - frontend-nuxt
 
 ## Build Setup
 
@@ -6,16 +6,17 @@
 # Set proper node version
 $ nvm use
 
-# install dependencies
+# Install dependencies
 $ npm install
 
 # Copy env file
 $ cp .env.example .env
 
-# serve with hot reload at localhost:3000
+# Serve with hot reload
+# Launch for development
 $ npm run dev
 
-# build for production and launch server
+# Build for production and launch server
 $ npm run build
 $ npm run start
 

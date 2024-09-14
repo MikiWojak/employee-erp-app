@@ -9,9 +9,9 @@
   - [Screenshots React or Next](#screenshots-react-or-next)
   - [Installation Vue or Nuxt](#screenshots-vue-or-nuxt)
 - [Installation](#installation)
-  - [Installation React or Next](#installation-react-or-next)
-  - [Installation Vue or Nuxt](#installation-vue-or-nuxt)
-  - [Installation Node](#installation-node)
+  - [Installation backend Node](#installation-backend-node)
+  - [Installation frontend React or Next](#installation-frontend-react-or-next)
+  - [Installation frontend Vue or Nuxt](#installation-frontend-vue-or-nuxt)
 
 ## ToC TODO
 
@@ -169,30 +169,24 @@ Employee - Add vacation
 
 ## Installation
 
-### Installation React or Next
+Please bear in mind on default setup you can run only one frontend app at the time. Do not run `frontend-react`, `frontend-next`, `frontend-vue` and `frontend-nuxt` simultaneously.
 
-TODO
-
-Please bear in mind on default setup you can run one frontend app at the time! You should not run both `frontend-react` / `frontend-next`
+### Installation backend Node
 
 1. Go to directory `backend-node`
 2. Install and setup backend according to `README.md` inside
-3. Make sure to set `APP_FRONTEND_URL=http://localhost:3000`
-4. Go to directory `frontend-react` / `frontend-next`
-5. Install and setup frontend according to `README.md` inside
+3. Before running the backend set env variable `APP_FRONTEND_URL` according to the frontend installation guide.
 
-### Installation Vue or Nuxt
+### Installation frontend React or Next
 
-TODO
+1. Setup backend according to [Installation backend Node](#installation-backend-node)
+2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
+3. Go to directory `frontend-react` / `frontend-next`
+4. Install and setup frontend according to `README.md` inside
 
-Please bear in mind on default setup you can run one frontend app at the time! You should not run both `frontend-vue` / `frontend-nuxt`
+### Installation frontend Vue or Nuxt
 
-1. Go to directory `backend-node`
-2. Install and setup backend according to `README.md` inside
-3. Make sure to set `APP_FRONTEND_URL=http://localhost:8080`
-4. Go to directory `frontend-vue` / `frontend-nuxt`
-5. Install and setup frontend according to `README.md` inside
-
-### Installation Node
-
-TODO
+1. Setup backend according to [Installation backend Node](#installation-backend-node)
+2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
+3. Go to directory `frontend-vue` / `frontend-nuxt`
+4. Install and setup frontend according to `README.md` inside
