@@ -6,16 +6,16 @@
 - [Features](#features)
 - [Tech stack](#tech-stack)
 - [Screenshots](#screenshots)
-  - [Screenshots React or Next](#screenshots-react-or-next)
-  - [Installation Vue or Nuxt](#screenshots-vue-or-nuxt)
+  - [Frontend React / Next](#screenshots-react-or-next)
+  - [Frontend Vue / Nuxt](#screenshots-vue-or-nuxt)
 - [Installation](#installation)
-  - [Installation backend Node](#installation-backend-node)
-  - [Installation frontend React or Next](#installation-frontend-react-or-next)
-  - [Installation frontend Vue or Nuxt](#installation-frontend-vue-or-nuxt)
+  - [Backend Node](#installation-backend-node)
+  - [Frontend React / Next](#installation-frontend-react-or-next)
+  - [Frontend Vue / Nuxt](#installation-frontend-vue-or-nuxt)
 - [Usage](#usage)
   - [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
-  - [Usage frontend React or Next](#usage-frontend-react-or-next)
-  - [Installation frontend Vue or Nuxt](#usage-frontend-vue-or-nuxt)
+  - [Frontend React / Next](#usage-frontend-react-or-next)
+  - [Frontend Vue / Nuxt](#usage-frontend-vue-or-nuxt)
 
 ## App description
 
@@ -95,7 +95,7 @@ Project includes:
 
 ## Screenshots
 
-### Screenshots React or Next
+<h3 id="screenshots-react-or-next">Frontend React / Next</h3>
 
 Login
 ![image](screenshots/react/react-login.png)
@@ -130,9 +130,7 @@ Employee - Vacations
 Employee - Add vacation
 ![image](screenshots/react/react-employee-add-vacation.png)
 
-## Frontend Vuejs Nuxt Backend Nodejs
-
-### Installation Vue or Nuxt
+<h3 id="screenshots-vue-or-nuxt">Frontend Vue / Nuxt</h3>
 
 Login
 ![image](screenshots/vue/vue-login.png)
@@ -171,22 +169,22 @@ Employee - Add vacation
 
 Please bear in mind on default setup you can run only one frontend app at the time. Do not run `frontend-react`, `frontend-next`, `frontend-vue` and `frontend-nuxt` simultaneously.
 
-### Installation backend Node
+<h3 id="installation-backend-node">Backend Node</h3>
 
 1. Go to directory `backend-node`
 2. Install and setup backend according to `README.md` inside
 3. Before running the backend set env variable `APP_FRONTEND_URL` according to the frontend installation guide.
 
-### Installation frontend React or Next
+<h3 id="installation-frontend-react-or-next">Frontend React / Next</h3>
 
-1. Setup backend according to [Installation backend Node](#installation-backend-node)
+1. Setup backend according to [installation of backend Node](#installation-backend-node)
 2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
 3. Go to directory `frontend-react` / `frontend-next`
 4. Install and setup frontend according to `README.md` inside
 
-### Installation frontend Vue or Nuxt
+<h3 id="installation-frontend-vue-or-nuxt">Frontend Vue / Nuxt</h3>
 
-1. Setup backend according to [Installation backend Node](#installation-backend-node)
+1. Setup backend according to [installation of backend Node](#installation-backend-node)
 2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
 3. Go to directory `frontend-vue` / `frontend-nuxt`
 4. Install and setup frontend according to `README.md` inside
@@ -195,7 +193,7 @@ Please bear in mind on default setup you can run only one frontend app at the ti
 
 ### Credentials for backend Node or Nest
 
-Initial credentials fro backend Node or Nest
+Initial credentials for backend Node or Nest
 
 - Admin:
   - email: `admin@erp.test`
@@ -204,12 +202,12 @@ Initial credentials fro backend Node or Nest
   - email: `employee@erp.test`
   - password: `Qwerty123!`
 
-### Usage frontend React or Next
+<h3 id="usage-frontend-react-or-next">Frontend React / Next</h3>
 
 1. Go to `http://localhost:3000` (default settings)
 2. Login using credentials listed in [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
 
-### Usage frontend Vue or Nuxt
+<h3 id="usage-frontend-vue-or-nuxt">Frontend Vue / Nuxt</h3>
 
 1. Go to `http://localhost:8080` (default settings)
 2. Login using credentials listed in [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
