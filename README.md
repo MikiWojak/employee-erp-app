@@ -12,10 +12,10 @@
   - [Installation backend Node](#installation-backend-node)
   - [Installation frontend React or Next](#installation-frontend-react-or-next)
   - [Installation frontend Vue or Nuxt](#installation-frontend-vue-or-nuxt)
-
-## ToC TODO
-
 - [Usage](#usage)
+  - [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
+  - [Usage frontend React or Next](#usage-frontend-react-or-next)
+  - [Installation frontend Vue or Nuxt](#usage-frontend-vue-or-nuxt)
 
 ## App description
 
@@ -190,3 +190,26 @@ Please bear in mind on default setup you can run only one frontend app at the ti
 2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
 3. Go to directory `frontend-vue` / `frontend-nuxt`
 4. Install and setup frontend according to `README.md` inside
+
+## Usage
+
+### Credentials for backend Node or Nest
+
+Initial credentials fro backend Node or Nest
+
+- Admin:
+  - email: `admin@erp.test`
+  - password: `Qwerty123!`
+- Employee:
+  - email: `employee@erp.test`
+  - password: `Qwerty123!`
+
+### Usage frontend React or Next
+
+1. Go to `http://localhost:3000` (default settings)
+2. Login using credentials listed in [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
+
+### Usage frontend Vue or Nuxt
+
+1. Go to `http://localhost:8080` (default settings)
+2. Login using credentials listed in [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
