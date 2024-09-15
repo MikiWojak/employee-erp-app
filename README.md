@@ -6,24 +6,24 @@
 - [Features](#features)
 - [Tech stack](#tech-stack)
 - [Screenshots](#screenshots)
-  - [Frontend React / Next](#screenshots-react-or-next)
-  - [Frontend Vue / Nuxt](#screenshots-vue-or-nuxt)
+  - [Frontend React / Next.js](#screenshots-react-or-next)
+  - [Frontend Vue.js / Nuxt](#screenshots-vue-or-nuxt)
 - [Installation](#installation)
-  - [Backend Node](#installation-backend-node)
-  - [Frontend React / Next](#installation-frontend-react-or-next)
-  - [Frontend Vue / Nuxt](#installation-frontend-vue-or-nuxt)
+  - [Backend Node.js](#installation-backend-node)
+  - [Frontend React / Next.js](#installation-frontend-react-or-next)
+  - [Frontend Vue.js / Nuxt](#installation-frontend-vue-or-nuxt)
 - [Usage](#usage)
-  - [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
-  - [Frontend React / Next](#usage-frontend-react-or-next)
-  - [Frontend Vue / Nuxt](#usage-frontend-vue-or-nuxt)
+  - [Credentials for backend Node.js or NestJS](#credentials-for-backend-node-or-nest)
+  - [Frontend React / Next.js](#usage-frontend-react-or-next)
+  - [Frontend Vue.js / Nuxt](#usage-frontend-vue-or-nuxt)
 
 ## App description
 
 **employee-erp-app** is a web application to manage human resources of the company. Both admin (boss) and employee can login to the application. The admin can manage employees, contracts and vacations. The employee can see their vacations summary and list of contracts. The employee can also manage their own vacations in a limited scope.
 
-The frontend is written using 4 frontend frameworks - React, Next.js, Vue.js and Nuxt. The backend is written in Node.js + Express. You can run application using combination of selected frontend and backend.
+The frontend is written using 4 frontend frameworks - React, Next.js, Vue.js and Nuxt. The backend is written in Node.js + Express and NestJS (WIP). You can run the application using combination of selected frontend and backend.
 
-The work on the backend written in Nest.js is still in progress, thus not all features are available.
+The work on the backend written in NestJS is still in progress, thus not all features are available.
 
 Project includes:
 
@@ -34,7 +34,7 @@ Project includes:
   - Nuxt - `frontend-nuxt`
 - Backend
   - Node.js - `backend-node`
-  - Nest (WIP) - `backend-nest`
+  - NestJS (WIP) - `backend-nest`
 
 ## Features
 
@@ -57,7 +57,7 @@ Project includes:
 
 ### Additional information
 
-- No registration - you can login using only initial accounts and ones created by Admin
+- No registration - you can login using only initial accounts and ones created by admin
 
 ## Tech stack
 
@@ -82,8 +82,8 @@ Project includes:
   - Docker
   - Docker Compose
   - Redis
-- Nest (WIP)
-  - Nest
+- NestJS (WIP)
+  - NestJS
   - TypeScript
   - Docker
   - Docker Compose
@@ -95,7 +95,7 @@ Project includes:
 
 ## Screenshots
 
-<h3 id="screenshots-react-or-next">Frontend React / Next</h3>
+<h3 id="screenshots-react-or-next">Frontend React / Next.js</h3>
 
 Login
 ![image](screenshots/react/react-login.png)
@@ -130,7 +130,7 @@ Employee - Vacations
 Employee - Add vacation
 ![image](screenshots/react/react-employee-add-vacation.png)
 
-<h3 id="screenshots-vue-or-nuxt">Frontend Vue / Nuxt</h3>
+<h3 id="screenshots-vue-or-nuxt">Frontend Vue.js / Nuxt</h3>
 
 Login
 ![image](screenshots/vue/vue-login.png)
@@ -169,31 +169,31 @@ Employee - Add vacation
 
 Please bear in mind on default setup you can run only one frontend app at the time. Do not run `frontend-react`, `frontend-next`, `frontend-vue` and `frontend-nuxt` simultaneously.
 
-<h3 id="installation-backend-node">Backend Node</h3>
+<h3 id="installation-backend-node">Backend Node.js</h3>
 
 1. Go to directory `backend-node`
 2. Install and setup backend according to `README.md` inside
 3. Before running the backend set env variable `APP_FRONTEND_URL` according to the frontend installation guide.
 
-<h3 id="installation-frontend-react-or-next">Frontend React / Next</h3>
+<h3 id="installation-frontend-react-or-next">Frontend React / Next.js</h3>
 
-1. Setup backend according to [installation of backend Node](#installation-backend-node)
+1. Setup backend according to [installation of backend Node.js](#installation-backend-node)
 2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
 3. Go to directory `frontend-react` / `frontend-next`
 4. Install and setup frontend according to `README.md` inside
 
-<h3 id="installation-frontend-vue-or-nuxt">Frontend Vue / Nuxt</h3>
+<h3 id="installation-frontend-vue-or-nuxt">Frontend Vue.js / Nuxt</h3>
 
-1. Setup backend according to [installation of backend Node](#installation-backend-node)
-2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:3000`
+1. Setup backend according to [installation of backend Node.js](#installation-backend-node)
+2. Make sure to set env variable `APP_FRONTEND_URL=http://localhost:8080`
 3. Go to directory `frontend-vue` / `frontend-nuxt`
 4. Install and setup frontend according to `README.md` inside
 
 ## Usage
 
-### Credentials for backend Node or Nest
+<h3 id="credentials-for-backend-node-or-nest">Credentials for backend Node.js or NestJS</h3>
 
-Initial credentials for backend Node or Nest
+Initial credentials for backend Node.js or NestJS
 
 - Admin:
   - email: `admin@erp.test`
@@ -202,12 +202,12 @@ Initial credentials for backend Node or Nest
   - email: `employee@erp.test`
   - password: `Qwerty123!`
 
-<h3 id="usage-frontend-react-or-next">Frontend React / Next</h3>
+<h3 id="usage-frontend-react-or-next">Frontend React / Next.js</h3>
 
 1. Go to `http://localhost:3000` (default settings)
-2. Login using credentials listed in [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
+2. Login using credentials listed in [credentials for backend Node.js or NestJS](#credentials-for-backend-node-or-nest)
 
-<h3 id="usage-frontend-vue-or-nuxt">Frontend Vue / Nuxt</h3>
+<h3 id="usage-frontend-vue-or-nuxt">Frontend Vue.js / Nuxt</h3>
 
 1. Go to `http://localhost:8080` (default settings)
-2. Login using credentials listed in [Credentials for backend Node or Nest](#credentials-for-backend-node-or-nest)
+2. Login using credentials listed in [credentials for backend Node.js or NestJS](#credentials-for-backend-node-or-nest)
