@@ -39,7 +39,7 @@ $ cp .env.example .env
 ```bash
 # Docker setup
 $ docker network create global
-$ docker-compose up -d
+$ docker compose up -d
 
 # Fill db with data
 $ npm run seed:run
@@ -54,7 +54,7 @@ $ npm run start:dev
 $ npm run start:prod
 
 # Close docker containers
-$ docker-compose down
+$ docker compose down
 ```
 
 ## Test
@@ -64,7 +64,7 @@ $ docker-compose down
 cp .env.test.example .env.test
 
 # Docker setup
-docker-compose --env-file .env.test up -d
+docker compose --env-file .env.test up -d
 
 # Unit tests
 $ npm run test
@@ -76,7 +76,7 @@ $ npm run test:e2e
 $ npm run test:cov
 
 # Close docker containers
-docker-compose --env-file .env.test down
+docker compose --env-file .env.test down
 ```
 
 ## Support

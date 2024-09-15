@@ -28,7 +28,7 @@ module.exports = {
                 lastName: faker.name.lastName(),
                 dateOfBirth: dateOfBirth,
                 email: faker.internet.email().toLowerCase(),
-                password: 'test1234'
+                password: 'Qwerty123!'
             });
         }
     },

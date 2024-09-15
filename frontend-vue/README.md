@@ -1,4 +1,4 @@
-# frontend-vue
+# employee-erp-app - frontend-vue
 
 ## Project setup
 
