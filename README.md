@@ -20,4 +20,4 @@ Project includes:
 Credentials (`backend-node`):
 
 - email: `admin@erp.test` / `employee@erp.test`
-- password: `test1234`
+- password: `Qwerty123!`
