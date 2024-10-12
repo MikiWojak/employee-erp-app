@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "jest --detectOpenHandles --verbose",
+        "test": "NODE_ENV=test jest --detectOpenHandles --verbose",
         "db-setup-test": "NODE_ENV=test npm run db-drop && NODE_ENV=test npm run db-create && NODE_ENV=test npm run db-migrate",
         "db-undo-migrate": "./node_modules/.bin/sequelize db:migrate:undo:all",
         "db-migrate": "./node_modules/.bin/sequelize db:migrate",
