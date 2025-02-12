@@ -11,13 +11,13 @@
                 <table-header />
             </template>
 
-            <template v-slot:[`item.approved`]="{ item }">
+            <template #[`item.approved`]="{ item }">
                 <v-chip :color="getColor(item.approved)" dark>
                     {{ getStatus(item.approved) }}
                 </v-chip>
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
                 <v-btn
                     icon
                     :disabled="!isAdmin && item.approved"
@@ -59,7 +59,7 @@ import { mapGetters, mapActions } from 'vuex';
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
-    name: 'Table',
+    name: 'VacationsTable',
 
     components: {
         TableHeader: () => import('@/components/vacations/TableHeader'),

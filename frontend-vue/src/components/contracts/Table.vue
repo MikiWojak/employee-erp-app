@@ -11,7 +11,7 @@
                 <table-header />
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
                 <v-btn icon @click="openEditDialog(item)">
                     <span>
                         <v-icon small>mdi-pencil</v-icon>
@@ -46,7 +46,7 @@ import { mapGetters, mapActions } from 'vuex';
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
-    name: 'Table',
+    name: 'ContractsTable',
 
     components: {
         TableHeader: () => import('@/components/contracts/TableHeader'),

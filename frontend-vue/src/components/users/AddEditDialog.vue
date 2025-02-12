@@ -184,10 +184,6 @@ export default {
                 if (error?.response?.data?.errors) {
                     this.serverErrors = error.response.data.errors;
                 }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the user!'
-                    : 'Error while adding the user!';
             }
         }
     }

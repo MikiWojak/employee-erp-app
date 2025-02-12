@@ -11,13 +11,13 @@
                 <table-header />
             </template>
 
-            <template v-slot:[`item.vacationLeft`]="{ item }">
+            <template #[`item.vacationLeft`]="{ item }">
                 <v-chip dark :color="getVacationLeftColor(item)">
                     {{ getVacationLeft(item) }}
                 </v-chip>
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
                 <v-btn icon @click="openEditDialog(item)">
                     <span>
                         <v-icon small>mdi-pencil</v-icon>
@@ -51,7 +51,7 @@ import { mapGetters, mapActions } from 'vuex';
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
-    name: 'Table',
+    name: 'UsersTable',
 
     components: {
         TableHeader: () => import('@/components/users/TableHeader'),

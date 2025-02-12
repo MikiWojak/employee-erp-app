@@ -205,10 +205,6 @@ export default {
                 if (error?.response?.data?.errors) {
                     this.serverErrors = error.response.data.errors;
                 }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the vacation!'
-                    : 'Error while adding the vacation!';
             }
         }
     }
