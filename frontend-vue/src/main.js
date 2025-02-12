@@ -1,17 +1,9 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 
-import App from '@/App';
-import store from '@/store';
+import App from '@/App.vue';
 import router from '@/router';
-import vuetify from '@/plugins/vuetify';
-import vuelidate from '@/plugins/vuelidate';
 
-Vue.config.productionTip = false;
-
-new Vue({
-    router,
-    store,
-    vuetify,
-    vuelidate,
-    render: h => h(App)
-}).$mount('#app');
+// @TODO Restore store
+// @TODO Restore vuetify
+// @TODO Restore vuelidate
+createApp(App).use(router).mount('#app');
