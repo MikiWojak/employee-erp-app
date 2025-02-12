@@ -176,9 +176,13 @@ export default {
                 if (this.editedItem) {
                     await this.updateUser(this.formData);
 
+                    // @TODO Restore notification
+
                     this.close();
                 } else {
                     await this.createUser(this.formData);
+
+                    // @TODO Restore notification
 
                     this.close();
                 }
@@ -188,6 +192,8 @@ export default {
                 if (error?.response?.data?.errors) {
                     this.serverErrors = error.response.data.errors;
                 }
+
+                // @TODO Restore notification
             }
         }
     }

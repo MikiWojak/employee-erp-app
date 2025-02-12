@@ -94,8 +94,12 @@ export default {
                 this.clearVacations();
 
                 this.$router.push({ name: 'login' });
+
+                // @TODO Restore notification
             } catch (error) {
                 console.error(error);
+
+                // @TODO Restore notification
             }
         }
     }

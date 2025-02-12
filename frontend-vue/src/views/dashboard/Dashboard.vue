@@ -38,6 +38,8 @@ export default {
                 await this.getMe();
             } catch (error) {
                 console.error(error);
+
+                // @TODO Restore notification
             }
         }
     }

@@ -109,6 +109,8 @@ export default {
                 await this.getContracts();
             } catch (error) {
                 console.error(error);
+
+                // @TODO Restore notification
             }
         }
     }

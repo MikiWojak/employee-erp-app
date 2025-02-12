@@ -43,9 +43,13 @@ export default {
             try {
                 await this.deleteVacation(this.deletedItemId);
 
+                // @TODO Restore notification
+
                 this.close();
             } catch (error) {
                 console.error(error);
+
+                // @TODO Restore notification
             }
         }
     }

@@ -118,6 +118,8 @@ export default {
                 await this.getUsers();
             } catch (error) {
                 console.error(error);
+
+                // @TODO Restore notification
             }
         }
     }

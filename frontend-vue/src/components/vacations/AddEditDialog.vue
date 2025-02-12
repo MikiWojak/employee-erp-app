@@ -176,6 +176,8 @@ export default {
                 await this.getUsers();
             } catch (error) {
                 console.error(error);
+
+                // @TODO Restore notification
             }
         },
 
@@ -192,6 +194,8 @@ export default {
                 if (this.editedItem) {
                     await this.updateVacation(this.formData);
 
+                    // @TODO Restore notification
+
                     this.close();
                 } else {
                     if (!this.isAdmin) {
@@ -201,6 +205,8 @@ export default {
 
                     await this.createVacation(this.formData);
 
+                    // @TODO Restore notification
+
                     this.close();
                 }
             } catch (error) {
@@ -209,6 +215,8 @@ export default {
                 if (error?.response?.data?.errors) {
                     this.serverErrors = error.response.data.errors;
                 }
+
+                // @TODO Restore notification
             }
         }
     }

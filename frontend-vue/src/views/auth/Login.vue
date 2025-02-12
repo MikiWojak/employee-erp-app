@@ -154,6 +154,8 @@ export default {
                 });
 
                 this.$router.push({ name: 'dashboard' });
+
+                // @TODO Restore notification
             } catch (error) {
                 this.formData.password = '';
 

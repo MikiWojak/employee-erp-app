@@ -171,6 +171,8 @@ export default {
             try {
                 await this.getUsers();
             } catch (error) {
+                // @TODO Restore notification
+
                 console.error(error);
             }
         },
@@ -188,9 +190,13 @@ export default {
                 if (this.editedItem) {
                     await this.updateContract(this.formData);
 
+                    // @TODO Restore notification
+
                     this.close();
                 } else {
                     await this.createContract(this.formData);
+
+                    // @TODO Restore notification
 
                     this.close();
                 }
@@ -200,6 +206,8 @@ export default {
                 if (error?.response?.data?.errors) {
                     this.serverErrors = error.response.data.errors;
                 }
+
+                // @TODO Restore notification
             }
         }
     }
