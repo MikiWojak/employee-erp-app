@@ -168,10 +168,6 @@ export default {
                 await this.getUsers();
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
             }
         },
 
@@ -188,19 +184,9 @@ export default {
                 if (this.editedItem) {
                     await this.updateContract(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'Contract has been modified'
-                    });
-
                     this.close();
                 } else {
                     await this.createContract(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'Contract has been added'
-                    });
 
                     this.close();
                 }
@@ -210,15 +196,6 @@ export default {
                 if (error?.response?.data?.errors) {
                     this.serverErrors = error.response.data.errors;
                 }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the contract!'
-                    : 'Error while adding the contract!';
-
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
             }
         }
     }

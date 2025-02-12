@@ -101,10 +101,6 @@ export default {
                 await this.getContracts();
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of contracts!'
-                });
             }
         }
     }

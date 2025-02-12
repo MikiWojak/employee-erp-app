@@ -36,11 +36,6 @@ export default {
                 await this.getMe();
             } catch (error) {
                 console.error(error);
-
-                this.$notify({
-                    type: 'error',
-                    text: "Cannot get logged user's data!"
-                });
             }
         }
     }

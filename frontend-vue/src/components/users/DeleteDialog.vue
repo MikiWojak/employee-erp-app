@@ -42,19 +42,9 @@ export default {
             try {
                 await this.deleteUser(this.deletedItemId);
 
-                this.$notify({
-                    type: 'success',
-                    text: 'User has been deleted'
-                });
-
                 this.close();
             } catch (error) {
                 console.error(error);
-
-                this.$notify({
-                    type: 'error',
-                    text: 'Error while deleting the user!'
-                });
             }
         }
     }

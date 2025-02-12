@@ -172,11 +172,6 @@ export default {
                 await this.getUsers();
             } catch (error) {
                 console.error(error);
-
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
             }
         },
 
@@ -193,11 +188,6 @@ export default {
                 if (this.editedItem) {
                     await this.updateVacation(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'Vacation has been modified'
-                    });
-
                     this.close();
                 } else {
                     if (!this.isAdmin) {
@@ -206,11 +196,6 @@ export default {
                     }
 
                     await this.createVacation(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'Vacation has been added'
-                    });
 
                     this.close();
                 }
@@ -224,11 +209,6 @@ export default {
                 const errorText = this.editedItem
                     ? 'Error while modifying the vacation!'
                     : 'Error while adding the vacation!';
-
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
             }
         }
     }

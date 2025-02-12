@@ -110,11 +110,6 @@ export default {
                 await this.getVacations();
             } catch (error) {
                 console.error(error);
-
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of vacations!'
-                });
             }
         },
 

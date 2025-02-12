@@ -172,19 +172,9 @@ export default {
                 if (this.editedItem) {
                     await this.updateUser(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'User has been modified'
-                    });
-
                     this.close();
                 } else {
                     await this.createUser(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'User has been added'
-                    });
 
                     this.close();
                 }
@@ -198,11 +188,6 @@ export default {
                 const errorText = this.editedItem
                     ? 'Error while modifying the user!'
                     : 'Error while adding the user!';
-
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
             }
         }
     }

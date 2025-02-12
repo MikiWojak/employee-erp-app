@@ -20,17 +20,18 @@
         "vuex": "4.1.0"
     },
     "devDependencies": {
+        "@babel/core": "7.26.8",
+        "@babel/eslint-parser": "7.26.8",
         "@vue/cli-plugin-babel": "5.0.8",
         "@vue/cli-plugin-eslint": "5.0.8",
-        "@vue/cli-service": "~4.5.0",
+        "@vue/cli-service": "5.0.8",
         "babel-eslint": "~10.1.0",
         "eslint": "8.57.0",
         "eslint-plugin-vue": "9.32.0",
         "prettier": "3.5.0",
         "sass": "1.84.0",
         "sass-loader": "16.0.4",
-        "vue-cli-plugin-vuetify": "2.5.8",
-        "vue-template-compiler": "2.7.16"
+        "vue-cli-plugin-vuetify": "2.5.8"
     },
     "eslintConfig": {
         "root": true,

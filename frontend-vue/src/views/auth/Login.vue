@@ -152,11 +152,6 @@ export default {
                 });
 
                 this.$router.push({ name: 'dashboard' });
-
-                this.$notify({
-                    type: 'success',
-                    text: 'Logged in successfully'
-                });
             } catch (error) {
                 this.formData.password = '';
 

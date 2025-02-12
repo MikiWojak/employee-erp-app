@@ -43,19 +43,9 @@ export default {
             try {
                 await this.deleteVacation(this.deletedItemId);
 
-                this.$notify({
-                    type: 'success',
-                    text: 'Vacation has been deleted'
-                });
-
                 this.close();
             } catch (error) {
                 console.error(error);
-
-                this.$notify({
-                    type: 'error',
-                    text: 'Error while deleting the vacation!'
-                });
             }
         }
     }

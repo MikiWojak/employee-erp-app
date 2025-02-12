@@ -85,20 +85,14 @@ export default {
         async handleLogout() {
             try {
                 await this.logout();
+
                 this.clearUsers();
                 this.clearContracts();
                 this.clearVacations();
-                this.$router.push({ name: 'login' });
 
-                this.$notify({
-                    text: 'Logged out'
-                });
+                this.$router.push({ name: 'login' });
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Error while logging out!'
-                });
             }
         }
     }

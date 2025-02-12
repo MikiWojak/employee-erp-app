@@ -8,14 +8,13 @@
             <router-view />
         </v-main>
 
-        <notifications position="bottom center" />
-
         <app-footer />
     </v-app>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+
 export default {
     name: 'App',
 
