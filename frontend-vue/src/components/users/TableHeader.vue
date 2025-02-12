@@ -20,13 +20,17 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+
 import tableHeaderMixin from '@/mixins/tableHeaderMixin';
 
 export default {
     name: 'TableHeader',
 
     components: {
-        AddEditDialog: () => import('@/components/users/AddEditDialog')
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/users/AddEditDialog')
+        )
     },
 
     mixins: [tableHeaderMixin]

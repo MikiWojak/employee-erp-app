@@ -1,9 +1,17 @@
+import 'vuetify/styles';
 import { createApp } from 'vue';
+import { createVuetify } from 'vuetify';
+import '@mdi/font/css/materialdesignicons.css';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 
 import App from '@/App.vue';
 import router from '@/router';
+import { store } from '@/store';
 
-// @TODO Restore store
-// @TODO Restore vuetify
-// @TODO Restore vuelidate
-createApp(App).use(router).mount('#app');
+const vuetify = createVuetify({
+    components,
+    directives
+});
+
+createApp(App).use(router).use(store).use(vuetify).mount('#app');

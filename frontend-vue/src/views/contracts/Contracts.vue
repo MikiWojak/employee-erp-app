@@ -5,11 +5,15 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+
 export default {
     name: 'Contracts',
 
     components: {
-        ContractsTable: () => import('@/components/contracts/Table')
+        ContractsTable: defineAsyncComponent(
+            () => import('@/components/contracts/Table')
+        )
     }
 };
 </script>

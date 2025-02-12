@@ -55,16 +55,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
     name: 'VacationsTable',
 
     components: {
-        TableHeader: () => import('@/components/vacations/TableHeader'),
-        AddEditDialog: () => import('@/components/vacations/AddEditDialog'),
-        DeleteDialog: () => import('@/components/vacations/DeleteDialog')
+        TableHeader: defineAsyncComponent(
+            () => import('@/components/vacations/TableHeader')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/vacations/AddEditDialog')
+        ),
+        DeleteDialog: defineAsyncComponent(
+            () => import('@/components/vacations/DeleteDialog')
+        )
     },
 
     mixins: [tableMixin],

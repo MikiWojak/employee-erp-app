@@ -42,16 +42,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
     name: 'ContractsTable',
 
     components: {
-        TableHeader: () => import('@/components/contracts/TableHeader'),
-        AddEditDialog: () => import('@/components/contracts/AddEditDialog'),
-        DeleteDialog: () => import('@/components/contracts/DeleteDialog')
+        TableHeader: defineAsyncComponent(
+            () => import('@/components/contracts/TableHeader')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/contracts/AddEditDialog')
+        ),
+        DeleteDialog: defineAsyncComponent(
+            () => import('@/components/contracts/DeleteDialog')
+        )
     },
 
     mixins: [tableMixin],

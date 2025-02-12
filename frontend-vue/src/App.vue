@@ -1,43 +1,38 @@
 <template>
-    <!--    <v-app>-->
-    <!--        <app-header />-->
+    <v-app>
+        <app-header />
 
-    <!--        <sidebar v-if="loggedIn" />-->
+        <sidebar v-if="loggedIn" />
 
-    <!--        <v-main>-->
-    <!--            <router-view />-->
-    <!--        </v-main>-->
-
-    <!--        <app-footer />-->
-    <!--    </v-app>-->
-
-    <div>
-        <nav>
-            <router-link :to="{ name: 'dashboard' }"> Dashboard </router-link>
-            <router-link :to="{ name: 'login' }"> Login </router-link>
-        </nav>
-        <main>
+        <v-main>
             <router-view />
-        </main>
-    </div>
+        </v-main>
+
+        <app-footer />
+    </v-app>
 </template>
 
 <script>
-// import { mapGetters } from 'vuex';
-//
-// export default {
-//     name: 'App',
-//
-//     components: {
-//         AppHeader: () => import('@/components/common/AppHeader'),
-//         Sidebar: () => import('@/views/layout/Sidebar'),
-//         AppFooter: () => import('@/components/common/AppFooter')
-//     },
-//
-//     computed: {
-//         ...mapGetters({
-//             loggedIn: 'auth/loggedIn'
-//         })
-//     }
-// };
+import { mapGetters } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+
+export default {
+    name: 'App',
+
+    components: {
+        AppHeader: defineAsyncComponent(
+            () => import('@/components/common/AppHeader')
+        ),
+        Sidebar: defineAsyncComponent(() => import('@/views/layout/Sidebar')),
+        AppFooter: defineAsyncComponent(
+            () => import('@/components/common/AppFooter')
+        )
+    },
+
+    computed: {
+        ...mapGetters({
+            loggedIn: 'auth/loggedIn'
+        })
+    }
+};
 </script>

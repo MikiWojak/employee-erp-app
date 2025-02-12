@@ -71,15 +71,19 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+// import { required, requiredIf } from 'vuelidate/lib/validators';
+
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
-import { required, requiredIf } from 'vuelidate/lib/validators';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/common/DatePicker')
+        )
     },
 
     mixins: [addEditDialogMixin],
@@ -98,26 +102,26 @@ export default {
         };
     },
 
-    validations: {
-        formData: {
-            userId: {
-                required: requiredIf(function () {
-                    return this.isAdmin;
-                })
-            },
-            startDate: {
-                required
-            },
-            endDate: {
-                required
-            },
-            approved: {
-                required: requiredIf(function () {
-                    return this.isAdmin;
-                })
-            }
-        }
-    },
+    // validations: {
+    //     formData: {
+    //         userId: {
+    //             required: requiredIf(function () {
+    //                 return this.isAdmin;
+    //             })
+    //         },
+    //         startDate: {
+    //             required
+    //         },
+    //         endDate: {
+    //             required
+    //         },
+    //         approved: {
+    //             required: requiredIf(function () {
+    //                 return this.isAdmin;
+    //             })
+    //         }
+    //     }
+    // },
 
     computed: {
         ...mapGetters({
@@ -178,11 +182,11 @@ export default {
         async save() {
             this.serverErrors = [];
 
-            this.$v.formData.$touch();
-
-            if (this.$v.formData.$invalid) {
-                return;
-            }
+            // this.$v.formData.$touch();
+            //
+            // if (this.$v.formData.$invalid) {
+            //     return;
+            // }
 
             try {
                 if (this.editedItem) {

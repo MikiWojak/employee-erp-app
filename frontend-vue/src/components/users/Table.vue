@@ -47,16 +47,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
     name: 'UsersTable',
 
     components: {
-        TableHeader: () => import('@/components/users/TableHeader'),
-        AddEditDialog: () => import('@/components/users/AddEditDialog'),
-        DeleteDialog: () => import('@/components/users/DeleteDialog')
+        TableHeader: defineAsyncComponent(
+            () => import('@/components/users/TableHeader')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/users/AddEditDialog')
+        ),
+        DeleteDialog: defineAsyncComponent(
+            () => import('@/components/users/DeleteDialog')
+        )
     },
 
     mixins: [tableMixin],

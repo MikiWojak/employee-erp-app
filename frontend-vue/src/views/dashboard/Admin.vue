@@ -3,11 +3,15 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+
 export default {
     name: 'Admin',
 
     components: {
-        UsersTable: () => import('@/components/users/Table')
+        UsersTable: defineAsyncComponent(
+            () => import('@/components/users/Table')
+        )
     }
 };
 </script>

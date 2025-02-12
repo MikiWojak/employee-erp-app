@@ -68,21 +68,25 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import {
-    required,
-    requiredIf,
-    email,
-    minLength
-} from 'vuelidate/lib/validators';
+// import {
+//     required,
+//     requiredIf,
+//     email,
+//     minLength
+// } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
+import { mapActions } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/common/DatePicker')
+        )
     },
 
     mixins: [addEditDialogMixin],
@@ -103,29 +107,29 @@ export default {
         };
     },
 
-    validations: {
-        formData: {
-            firstName: {
-                required
-            },
-            lastName: {
-                required
-            },
-            dateOfBirth: {
-                required
-            },
-            email: {
-                required,
-                email
-            },
-            password: {
-                required: requiredIf(function () {
-                    return !this.editedItem;
-                }),
-                minLength: minLength(8)
-            }
-        }
-    },
+    // validations: {
+    //     formData: {
+    //         firstName: {
+    //             required
+    //         },
+    //         lastName: {
+    //             required
+    //         },
+    //         dateOfBirth: {
+    //             required
+    //         },
+    //         email: {
+    //             required,
+    //             email
+    //         },
+    //         password: {
+    //             required: requiredIf(function () {
+    //                 return !this.editedItem;
+    //             }),
+    //             minLength: minLength(8)
+    //         }
+    //     }
+    // },
 
     computed: {
         formTitle() {
@@ -162,11 +166,11 @@ export default {
         async save() {
             this.serverErrors = [];
 
-            this.$v.formData.$touch();
-
-            if (this.$v.formData.$invalid) {
-                return;
-            }
+            // this.$v.formData.$touch();
+            //
+            // if (this.$v.formData.$invalid) {
+            //     return;
+            // }
 
             try {
                 if (this.editedItem) {

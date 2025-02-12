@@ -37,13 +37,16 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'Sidebar',
 
     components: {
-        ListItem: () => import('@/components/sidebar/ListItem')
+        ListItem: defineAsyncComponent(
+            () => import('@/components/sidebar/ListItem')
+        )
     },
 
     computed: {

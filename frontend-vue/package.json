@@ -8,6 +8,7 @@
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
+        "@mdi/font": "7.4.47",
         "axios": "1.7.9",
         "babel-preset-stage-2": "~6.24.1",
         "core-js": "3.40.0",
@@ -16,7 +17,6 @@
         "vue": "3.5.13",
         "vue-router": "4.5.0",
         "vuelidate": "0.7.7",
-        "vuetify": "3.7.12",
         "vuex": "4.1.0"
     },
     "devDependencies": {
@@ -31,7 +31,9 @@
         "prettier": "3.5.0",
         "sass": "1.84.0",
         "sass-loader": "16.0.4",
-        "vue-cli-plugin-vuetify": "2.5.8"
+        "vite-plugin-vuetify": "2.1.0",
+        "vue-cli-plugin-vuetify": "2.5.8",
+        "vuetify": "3.7.12"
     },
     "eslintConfig": {
         "root": true,

@@ -8,15 +8,7 @@ export default {
 
     computed: {
         pagination() {
-            const sizes = {
-                xs: 5,
-                sm: 5,
-                md: 5,
-                lg: 10,
-                xl: 15
-            };
-
-            return sizes[this.$vuetify.breakpoint.name] || 10;
+            return 10;
         }
     },
 

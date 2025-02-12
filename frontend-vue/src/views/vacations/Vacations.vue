@@ -5,11 +5,15 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+
 export default {
     name: 'Vacations',
 
     components: {
-        VacationsTable: () => import('@/components/vacations/Table')
+        VacationsTable: defineAsyncComponent(
+            () => import('@/components/vacations/Table')
+        )
     }
 };
 </script>
