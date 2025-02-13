@@ -14,7 +14,10 @@
                 <v-autocomplete
                     v-model="formData.userId"
                     :items="users"
-                    :item-text="user => `${user.firstName} ${user.lastName}`"
+                    :item-title="
+                        user =>
+                            user ? `${user.firstName} ${user.lastName}` : ''
+                    "
                     item-value="id"
                     label="User"
                     :error-messages="userIdError"
@@ -48,6 +51,8 @@
                     v-model="formData.vacationDaysPerYear"
                     label="Days off/year"
                     :items="vacationDaysPerYearItems"
+                    item-title="text"
+                    item-value="value"
                     :error-messages="vacationDaysPerYearError"
                     @blur="onBlur('vacationDaysPerYear')"
                 />

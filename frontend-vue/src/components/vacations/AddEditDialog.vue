@@ -15,7 +15,10 @@
                     v-if="isAdmin"
                     v-model="formData.userId"
                     :items="users"
-                    :item-text="user => `${user.firstName} ${user.lastName}`"
+                    :item-title="
+                        user =>
+                            user ? `${user.firstName} ${user.lastName}` : ''
+                    "
                     item-value="id"
                     label="User"
                     :error-messages="userIdError"
