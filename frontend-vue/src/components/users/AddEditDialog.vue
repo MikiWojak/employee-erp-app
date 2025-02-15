@@ -68,15 +68,11 @@
 </template>
 
 <script>
-// import {
-//     required,
-//     requiredIf,
-//     email,
-//     minLength
-// } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
 import { mapActions } from 'vuex';
 import { defineAsyncComponent } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required, requiredIf, email, minLength } from '@vuelidate/validators';
 
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
@@ -90,6 +86,10 @@ export default {
     },
 
     mixins: [addEditDialogMixin],
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
@@ -107,29 +107,31 @@ export default {
         };
     },
 
-    // validations: {
-    //     formData: {
-    //         firstName: {
-    //             required
-    //         },
-    //         lastName: {
-    //             required
-    //         },
-    //         dateOfBirth: {
-    //             required
-    //         },
-    //         email: {
-    //             required,
-    //             email
-    //         },
-    //         password: {
-    //             required: requiredIf(function () {
-    //                 return !this.editedItem;
-    //             }),
-    //             minLength: minLength(8)
-    //         }
-    //     }
-    // },
+    validations() {
+        return {
+            formData: {
+                firstName: {
+                    required
+                },
+                lastName: {
+                    required
+                },
+                dateOfBirth: {
+                    required
+                },
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required: requiredIf(function () {
+                        return !this.editedItem;
+                    }),
+                    minLength: minLength(8)
+                }
+            }
+        };
+    },
 
     computed: {
         formTitle() {
@@ -166,11 +168,11 @@ export default {
         async save() {
             this.serverErrors = [];
 
-            // this.$v.formData.$touch();
-            //
-            // if (this.$v.formData.$invalid) {
-            //     return;
-            // }
+            this.v$.formData.$touch();
+
+            if (this.v$.formData.$invalid) {
+                return;
+            }
 
             try {
                 if (this.editedItem) {

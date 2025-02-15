@@ -76,7 +76,8 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
-// import { required, integer } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { required, integer } from '@vuelidate/validators';
 
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
@@ -90,6 +91,10 @@ export default {
     },
 
     mixins: [addEditDialogMixin],
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
@@ -110,26 +115,28 @@ export default {
         };
     },
 
-    // validations: {
-    //     formData: {
-    //         userId: {
-    //             required
-    //         },
-    //         position: {
-    //             required
-    //         },
-    //         startDate: {
-    //             required
-    //         },
-    //         endDate: {
-    //             required
-    //         },
-    //         vacationDaysPerYear: {
-    //             required,
-    //             integer
-    //         }
-    //     }
-    // },
+    validations() {
+        return {
+            formData: {
+                userId: {
+                    required
+                },
+                position: {
+                    required
+                },
+                startDate: {
+                    required
+                },
+                endDate: {
+                    required
+                },
+                vacationDaysPerYear: {
+                    required,
+                    integer
+                }
+            }
+        };
+    },
 
     computed: {
         ...mapGetters({
@@ -185,11 +192,11 @@ export default {
         async save() {
             this.serverErrors = [];
 
-            // this.$v.formData.$touch();
+            this.v$.formData.$touch();
 
-            // if (this.$v.formData.$invalid) {
-            //     return;
-            // }
+            if (this.v$.formData.$invalid) {
+                return;
+            }
 
             try {
                 if (this.editedItem) {

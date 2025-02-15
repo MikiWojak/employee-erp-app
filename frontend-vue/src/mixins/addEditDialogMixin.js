@@ -37,12 +37,12 @@ export default {
     methods: {
         onBlur(param) {
             this.clearServerError(param);
-            // this.$v.formData[param].$touch();
+            this.v$.formData[param].$touch();
         },
 
         close() {
             this.$emit('close');
-            // this.$v.formData.$reset();
+            this.v$.formData.$reset();
             this.serverErrors = [];
             this.clearInputs();
         },
@@ -52,31 +52,21 @@ export default {
         },
 
         handleError(param) {
-            // const { formData } = this.$v;
+            const { formData } = this.v$;
 
-            // if (!formData[param].$error) {
-            //     return this.getServerError(param);
-            // }
+            if (!formData[param].$error) {
+                return this.getServerError(param);
+            }
 
-            // if ('required' in formData[param] && !formData[param].required) {
-            //     return 'This field is required.';
-            // }
-            //
-            // if ('email' in formData[param] && !formData[param].email) {
-            //     return 'Wrong email format.';
-            // }
-            //
-            // if ('integer' in formData[param] && !formData[param].integer) {
-            //     return 'This field must be an integer.';
-            // }
-            //
-            // if ('minLength' in formData[param] && !formData[param].minLength) {
-            //     return `This field must have at least ${formData[param].$params.minLength.min} letters.`;
-            // }
+            const vError = formData.$errors.find(
+                error => error.$property === param
+            );
 
-            // return this.getServerError(param) || 'Something is wrong there.';
+            if (vError) {
+                return vError.$message;
+            }
 
-            return this.getServerError(param);
+            return 'Something is wrong there.';
         },
 
         getServerError(param) {
