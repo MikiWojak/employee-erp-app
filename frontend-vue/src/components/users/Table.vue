@@ -76,12 +76,12 @@ export default {
 
         headers() {
             return [
-                { text: 'First name', value: 'firstName' },
-                { text: 'Last name', value: 'lastName' },
-                { text: 'Date of birth', value: 'dateOfBirth' },
-                { text: 'Email', value: 'email' },
-                { text: 'Days off left', value: 'vacationLeft' },
-                { text: 'Actions', value: 'actions', sortable: false }
+                { title: 'First name', value: 'firstName' },
+                { title: 'Last name', value: 'lastName' },
+                { title: 'Date of birth', value: 'dateOfBirth' },
+                { title: 'Email', value: 'email' },
+                { title: 'Days off left', value: 'vacationLeft' },
+                { title: 'Actions', value: 'actions', sortable: false }
             ];
         }
     },

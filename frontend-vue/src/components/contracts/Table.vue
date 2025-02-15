@@ -72,22 +72,22 @@ export default {
 
         headers() {
             const employee = [
-                { text: 'Position', value: 'position' },
-                { text: 'Start date', value: 'startDate' },
-                { text: 'End date', value: 'endDate' },
+                { title: 'Position', value: 'position' },
+                { title: 'Start date', value: 'startDate' },
+                { title: 'End date', value: 'endDate' },
                 {
-                    text: 'Days off/year',
+                    title: 'Days off/year',
                     value: 'vacationDaysPerYear'
                 },
-                { text: 'Days off', value: 'vacationDays' }
+                { title: 'Days off', value: 'vacationDays' }
             ];
 
             if (this.isAdmin) {
                 return [
-                    { text: 'First name', value: 'user.firstName' },
-                    { text: 'Last name', value: 'user.lastName' },
+                    { title: 'First name', value: 'user.firstName' },
+                    { title: 'Last name', value: 'user.lastName' },
                     ...employee,
-                    { text: 'Actions', value: 'actions', sortable: false }
+                    { title: 'Actions', value: 'actions', sortable: false }
                 ];
             }
 
