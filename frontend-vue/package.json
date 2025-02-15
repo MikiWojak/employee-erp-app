@@ -10,13 +10,12 @@
     "dependencies": {
         "@mdi/font": "7.4.47",
         "axios": "1.7.9",
-        "babel-preset-stage-2": "~6.24.1",
+        "babel-preset-stage-2": "6.24.1",
         "core-js": "3.40.0",
         "dayjs": "1.11.13",
         "dotenv": "16.4.7",
         "vue": "3.5.13",
         "vue-router": "4.5.0",
-        "vuelidate": "0.7.7",
         "vuex": "4.1.0"
     },
     "devDependencies": {
@@ -25,7 +24,7 @@
         "@vue/cli-plugin-babel": "5.0.8",
         "@vue/cli-plugin-eslint": "5.0.8",
         "@vue/cli-service": "5.0.8",
-        "babel-eslint": "~10.1.0",
+        "babel-eslint": "10.1.0",
         "eslint": "8.57.0",
         "eslint-plugin-vue": "9.32.0",
         "prettier": "3.5.0",
