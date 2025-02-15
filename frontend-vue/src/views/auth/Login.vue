@@ -160,7 +160,7 @@ export default {
 
                 this.$router.push({ name: 'dashboard' });
 
-                // @TODO Restore notification
+                this.$toast.success('Logged in successfully');
             } catch (error) {
                 this.formData.password = '';
 
@@ -187,6 +187,7 @@ export default {
                 }
 
                 console.error(error);
+
                 this.loginError = 'Error unknown.';
             }
         }

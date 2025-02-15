@@ -183,7 +183,7 @@ export default {
             try {
                 await this.getUsers();
             } catch (error) {
-                // @TODO Restore notification
+                this.$toast.error('Cannot get a list of users!');
 
                 console.error(error);
             }
@@ -202,13 +202,13 @@ export default {
                 if (this.editedItem) {
                     await this.updateContract(this.formData);
 
-                    // @TODO Restore notification
+                    this.$toast.success('Contract has been modified');
 
                     this.close();
                 } else {
                     await this.createContract(this.formData);
 
-                    // @TODO Restore notification
+                    this.$toast.success('Contract has been added');
 
                     this.close();
                 }
@@ -219,7 +219,11 @@ export default {
                     this.serverErrors = error.response.data.errors;
                 }
 
-                // @TODO Restore notification
+                const errorText = this.editedItem
+                    ? 'Error while modifying the contract!'
+                    : 'Error while adding the contract!';
+
+                this.$toast.error(errorText);
             }
         }
     }

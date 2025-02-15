@@ -42,13 +42,13 @@ export default {
             try {
                 await this.deleteUser(this.deletedItemId);
 
-                // @TODO Restore notification
+                this.$toast.success('User has been deleted');
 
                 this.close();
             } catch (error) {
                 console.error(error);
 
-                // @TODO Restore notification
+                this.$toast.error('Error while deleting the user!');
             }
         }
     }

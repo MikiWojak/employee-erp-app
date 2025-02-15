@@ -178,13 +178,13 @@ export default {
                 if (this.editedItem) {
                     await this.updateUser(this.formData);
 
-                    // @TODO Restore notification
+                    this.$toast.success('User has been modified');
 
                     this.close();
                 } else {
                     await this.createUser(this.formData);
 
-                    // @TODO Restore notification
+                    this.$toast.success('User has been added');
 
                     this.close();
                 }
@@ -195,7 +195,11 @@ export default {
                     this.serverErrors = error.response.data.errors;
                 }
 
-                // @TODO Restore notification
+                const errorText = this.editedItem
+                    ? 'Error while modifying the user!'
+                    : 'Error while adding the user!';
+
+                this.$toast.error(errorText);
             }
         }
     }

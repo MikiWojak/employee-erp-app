@@ -43,13 +43,13 @@ export default {
             try {
                 await this.deleteContract(this.deletedItemId);
 
-                // @TODO Restore notification
+                this.$toast.success('Contract has been deleted');
 
                 this.close();
             } catch (error) {
                 console.error(error);
 
-                // @TODO Restore notification
+                this.$toast.error('Error while deleting the contract!');
             }
         }
     }

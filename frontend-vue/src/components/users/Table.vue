@@ -119,7 +119,7 @@ export default {
             } catch (error) {
                 console.error(error);
 
-                // @TODO Restore notification
+                this.$toast.error('Cannot get a list of users!');
             }
         }
     }

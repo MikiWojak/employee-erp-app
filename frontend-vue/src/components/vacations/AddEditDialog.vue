@@ -187,7 +187,7 @@ export default {
             } catch (error) {
                 console.error(error);
 
-                // @TODO Restore notification
+                this.$toast.error('Cannot get a list of users!');
             }
         },
 
@@ -204,7 +204,7 @@ export default {
                 if (this.editedItem) {
                     await this.updateVacation(this.formData);
 
-                    // @TODO Restore notification
+                    this.$toast.success('Vacation has been modified');
 
                     this.close();
                 } else {
@@ -215,7 +215,7 @@ export default {
 
                     await this.createVacation(this.formData);
 
-                    // @TODO Restore notification
+                    this.$toast.success('Vacation has been added');
 
                     this.close();
                 }
@@ -226,7 +226,11 @@ export default {
                     this.serverErrors = error.response.data.errors;
                 }
 
-                // @TODO Restore notification
+                const errorText = this.editedItem
+                    ? 'Error while modifying the vacation!'
+                    : 'Error while adding the vacation!';
+
+                this.$toast.error(errorText);
             }
         }
     }
