@@ -14,10 +14,7 @@
                 <v-autocomplete
                     v-model="formData.userId"
                     :items="users"
-                    :item-title="
-                        user =>
-                            user ? `${user.firstName} ${user.lastName}` : ''
-                    "
+                    :item-title="getFullNameTitle"
                     item-value="id"
                     label="User"
                     :error-messages="userIdError"
@@ -79,6 +76,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { useVuelidate } from '@vuelidate/core';
 import { required, integer } from '@vuelidate/validators';
 
+import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
 export default {
@@ -111,7 +109,8 @@ export default {
             vacationDaysPerYearItems: [
                 { text: 20, value: 20 },
                 { text: 26, value: 26 }
-            ]
+            ],
+            getFullNameTitle
         };
     },
 

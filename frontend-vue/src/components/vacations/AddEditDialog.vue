@@ -15,10 +15,7 @@
                     v-if="isAdmin"
                     v-model="formData.userId"
                     :items="users"
-                    :item-title="
-                        user =>
-                            user ? `${user.firstName} ${user.lastName}` : ''
-                    "
+                    :item-title="getFullNameTitle"
                     item-value="id"
                     label="User"
                     :error-messages="userIdError"
@@ -79,6 +76,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 
+import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
 export default {
@@ -106,7 +104,8 @@ export default {
 
         return {
             defaultForm,
-            formData: { ...defaultForm }
+            formData: { ...defaultForm },
+            getFullNameTitle
         };
     },
 
