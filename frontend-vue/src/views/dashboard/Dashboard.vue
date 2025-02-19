@@ -4,6 +4,7 @@
         <employee v-else />
     </v-container>
 </template>
+
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';

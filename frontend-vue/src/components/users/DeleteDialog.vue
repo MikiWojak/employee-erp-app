@@ -24,6 +24,7 @@
         </v-card>
     </v-dialog>
 </template>
+
 <script>
 import { mapActions } from 'vuex';
 import deleteDialogMixin from '@/mixins/deleteDialogMixin';

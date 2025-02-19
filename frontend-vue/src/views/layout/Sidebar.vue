@@ -1,9 +1,10 @@
 <template>
     <v-navigation-drawer permanent app clipped class="light-blue lighten-3">
         <v-list-item>
-            <!-- // @TODO Move it to the top-->
             <template #prepend>
-                <v-icon x-large> mdi-account-circle </v-icon>
+                <v-icon x-large>
+                    mdi-account-circle
+                </v-icon>
             </template>
 
             <v-list-item-title class="text-h6">

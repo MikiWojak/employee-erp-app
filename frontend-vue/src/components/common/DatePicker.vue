@@ -6,12 +6,12 @@
         :error-messages="errorMessages"
         :min="min"
         :max="max"
+        @blur="$emit('blur')"
         @update:modelValue="handleInput"
     />
 </template>
 
 <script>
-// @TODO What about blur?
 import dayjs from 'dayjs';
 
 export default {
@@ -49,7 +49,7 @@ export default {
         }
     },
 
-    emits: ['update:modelValue'],
+    emits: ['blur', 'update:modelValue'],
 
     data() {
         return {

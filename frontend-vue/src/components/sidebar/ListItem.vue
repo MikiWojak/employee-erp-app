@@ -1,10 +1,14 @@
 <template>
     <v-list-item link @click="$emit('click')">
         <template #prepend>
-            <v-icon class="mr-2">{{ icon }}</v-icon>
+            <v-icon>
+                {{ icon }}
+            </v-icon>
         </template>
 
-        <v-list-item-title>{{ text }}</v-list-item-title>
+        <v-list-item-title>
+            {{ text }}
+        </v-list-item-title>
     </v-list-item>
 </template>
 
