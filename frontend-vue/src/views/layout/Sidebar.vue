@@ -1,19 +1,19 @@
 <template>
     <v-navigation-drawer permanent app clipped class="light-blue lighten-3">
         <v-list-item>
-            <v-list-item-content class="text-center">
-                <span>
-                    <v-icon x-large>mdi-account-circle</v-icon>
-                </span>
+            <template #prepend>
+                <v-icon x-large>
+                    mdi-account-circle
+                </v-icon>
+            </template>
 
-                <v-list-item-title class="text-h6">
-                    {{ fullName }}
-                </v-list-item-title>
+            <v-list-item-title class="text-h6">
+                {{ fullName }}
+            </v-list-item-title>
 
-                <v-list-item-subtitle>
-                    {{ role }}
-                </v-list-item-subtitle>
-            </v-list-item-content>
+            <v-list-item-subtitle>
+                {{ role }}
+            </v-list-item-subtitle>
         </v-list-item>
 
         <v-divider />
@@ -37,13 +37,16 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'Sidebar',
 
     components: {
-        ListItem: () => import('@/components/sidebar/ListItem')
+        ListItem: defineAsyncComponent(
+            () => import('@/components/sidebar/ListItem')
+        )
     },
 
     computed: {
@@ -85,20 +88,20 @@ export default {
         async handleLogout() {
             try {
                 await this.logout();
+
                 this.clearUsers();
                 this.clearContracts();
                 this.clearVacations();
+
                 this.$router.push({ name: 'login' });
 
-                this.$notify({
-                    text: 'Logged out'
-                });
+                // @TODO Why do I get double notification?
+                this.$toast.info('Logged out');
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Error while logging out!'
-                });
+
+                // @TODO Why do I get double notification?
+                this.$toast.error('Error while logging out!');
             }
         }
     }

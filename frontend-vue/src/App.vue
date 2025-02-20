@@ -8,21 +8,25 @@
             <router-view />
         </v-main>
 
-        <notifications position="bottom center" />
-
         <app-footer />
     </v-app>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+
 export default {
     name: 'App',
 
     components: {
-        AppHeader: () => import('@/components/common/AppHeader'),
-        Sidebar: () => import('@/views/layout/Sidebar'),
-        AppFooter: () => import('@/components/common/AppFooter')
+        AppHeader: defineAsyncComponent(
+            () => import('@/components/common/AppHeader')
+        ),
+        Sidebar: defineAsyncComponent(() => import('@/views/layout/Sidebar')),
+        AppFooter: defineAsyncComponent(
+            () => import('@/components/common/AppFooter')
+        )
     },
 
     computed: {

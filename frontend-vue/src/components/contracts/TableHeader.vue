@@ -22,13 +22,17 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+
 import tableHeaderMixin from '@/mixins/tableHeaderMixin';
 
 export default {
     name: 'TableHeader',
 
     components: {
-        AddEditDialog: () => import('@/components/contracts/AddEditDialog')
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/contracts/AddEditDialog')
+        )
     },
 
     mixins: [tableHeaderMixin],

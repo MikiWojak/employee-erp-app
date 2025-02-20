@@ -43,10 +43,15 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { required, email, minLength } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { required, email, minLength } from '@vuelidate/validators';
 
 export default {
     name: 'Login',
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         return {
@@ -59,17 +64,19 @@ export default {
         };
     },
 
-    validations: {
-        formData: {
-            email: {
-                required,
-                email
-            },
-            password: {
-                required,
-                minLength: minLength(8)
+    validations() {
+        return {
+            formData: {
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required,
+                    minLength: minLength(8)
+                }
             }
-        }
+        };
     },
 
     computed: {
@@ -88,28 +95,24 @@ export default {
         }),
 
         onBlur(param) {
-            this.$v.formData[param].$touch();
+            this.v$.formData[param].$touch();
             this.clearServerError(param);
             this.loginError = '';
         },
 
         handleError(param) {
-            const { formData } = this.$v;
+            const { formData } = this.v$;
 
             if (!formData[param].$error) {
                 return this.getServerError(param);
             }
 
-            if ('required' in formData[param] && !formData[param].required) {
-                return 'This field is required.';
-            }
+            const vError = formData.$errors.find(
+                error => error.$property === param
+            );
 
-            if ('email' in formData[param] && !formData[param].email) {
-                return 'Wrong email format.';
-            }
-
-            if ('minLength' in formData[param] && !formData[param].minLength) {
-                return `This field must have at least ${formData[param].$params.minLength.min} letters.`;
+            if (vError) {
+                return vError.$message;
             }
 
             return 'Something is wrong there.';
@@ -137,11 +140,15 @@ export default {
 
         async handleLogin() {
             this.loginError = '';
-            this.$v.formData.$touch();
+            this.serverErrors = [];
 
-            if (this.$v.formData.$invalid) {
+            this.v$.formData.$touch();
+
+            if (this.v$.formData.$invalid) {
                 return;
             }
+
+            this.v$.formData.$reset();
 
             try {
                 const { email, password } = this.formData;
@@ -153,10 +160,7 @@ export default {
 
                 this.$router.push({ name: 'dashboard' });
 
-                this.$notify({
-                    type: 'success',
-                    text: 'Logged in successfully'
-                });
+                this.$toast.success('Logged in successfully');
             } catch (error) {
                 this.formData.password = '';
 
@@ -183,6 +187,7 @@ export default {
                 }
 
                 console.error(error);
+
                 this.loginError = 'Error unknown.';
             }
         }

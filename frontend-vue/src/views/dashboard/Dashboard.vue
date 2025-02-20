@@ -6,14 +6,17 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'Dashboard',
 
     components: {
-        Admin: () => import('@/views/dashboard/Admin'),
-        Employee: () => import('@/views/dashboard/Employee')
+        Admin: defineAsyncComponent(() => import('@/views/dashboard/Admin')),
+        Employee: defineAsyncComponent(
+            () => import('@/views/dashboard/Employee')
+        )
     },
 
     computed: {
@@ -37,10 +40,7 @@ export default {
             } catch (error) {
                 console.error(error);
 
-                this.$notify({
-                    type: 'error',
-                    text: "Cannot get logged user's data!"
-                });
+                this.$toast.error("Cannot get logged user's data!");
             }
         }
     }

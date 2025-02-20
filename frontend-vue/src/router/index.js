@@ -1,13 +1,9 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createWebHistory, createRouter } from 'vue-router';
 
-import store from '@/store/index';
+import { store } from '@/store';
 
-Vue.use(VueRouter);
-
-const router = new VueRouter({
-    mode: 'history',
-
+const router = createRouter({
+    history: createWebHistory(),
     routes: [
         {
             path: '/',
@@ -39,29 +35,23 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     const loggedIn = store.getters['auth/loggedIn'];
 
-    if (to.matched.some(record => record.meta.auth)) {
-        // Is NOT logged in?
+    if (to.meta.auth) {
         if (!loggedIn) {
-            return next({
-                name: 'login'
-            });
+            return next({ name: 'login' });
         }
 
         return next();
     }
 
-    if (to.matched.some(record => record.meta.guest)) {
-        // Is logged in?
+    if (to.meta.guest) {
         if (loggedIn) {
-            return next({
-                name: 'dashboard'
-            });
+            return next({ name: 'dashboard' });
         }
 
         return next();
     }
 
-    return next(); // make sure to always call next()!
+    return next();
 });
 
 export default router;

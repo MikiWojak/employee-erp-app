@@ -11,13 +11,13 @@
                 <table-header />
             </template>
 
-            <template v-slot:[`item.approved`]="{ item }">
+            <template #[`item.approved`]="{ item }">
                 <v-chip :color="getColor(item.approved)" dark>
                     {{ getStatus(item.approved) }}
                 </v-chip>
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
                 <v-btn
                     icon
                     :disabled="!isAdmin && item.approved"
@@ -55,16 +55,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
-    name: 'Table',
+    name: 'VacationsTable',
 
     components: {
-        TableHeader: () => import('@/components/vacations/TableHeader'),
-        AddEditDialog: () => import('@/components/vacations/AddEditDialog'),
-        DeleteDialog: () => import('@/components/vacations/DeleteDialog')
+        TableHeader: defineAsyncComponent(
+            () => import('@/components/vacations/TableHeader')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/vacations/AddEditDialog')
+        ),
+        DeleteDialog: defineAsyncComponent(
+            () => import('@/components/vacations/DeleteDialog')
+        )
     },
 
     mixins: [tableMixin],
@@ -77,17 +85,17 @@ export default {
 
         headers() {
             const employee = [
-                { text: 'Start date', value: 'startDate' },
-                { text: 'End date', value: 'endDate' },
-                { text: 'Duration', value: 'duration' },
-                { text: 'Status', value: 'approved' },
-                { text: 'Actions', value: 'actions', sortable: false }
+                { title: 'Start date', value: 'startDate' },
+                { title: 'End date', value: 'endDate' },
+                { title: 'Duration', value: 'duration' },
+                { title: 'Status', value: 'approved' },
+                { title: 'Actions', value: 'actions', sortable: false }
             ];
 
             if (this.isAdmin) {
                 return [
-                    { text: 'First name', value: 'user.firstName' },
-                    { text: 'Last name', value: 'user.lastName' },
+                    { title: 'First name', value: 'user.firstName' },
+                    { title: 'Last name', value: 'user.lastName' },
                     ...employee
                 ];
             }
@@ -111,10 +119,7 @@ export default {
             } catch (error) {
                 console.error(error);
 
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of vacations!'
-                });
+                this.$toast.error('Cannot get a list of vacations!');
             }
         },
 

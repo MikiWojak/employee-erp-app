@@ -43,19 +43,13 @@ export default {
             try {
                 await this.deleteContract(this.deletedItemId);
 
-                this.$notify({
-                    type: 'success',
-                    text: 'Contract has been deleted'
-                });
+                this.$toast.success('Contract has been deleted');
 
                 this.close();
             } catch (error) {
                 console.error(error);
 
-                this.$notify({
-                    type: 'error',
-                    text: 'Error while deleting the contract!'
-                });
+                this.$toast.error('Error while deleting the contract!');
             }
         }
     }

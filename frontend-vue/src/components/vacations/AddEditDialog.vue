@@ -15,7 +15,7 @@
                     v-if="isAdmin"
                     v-model="formData.userId"
                     :items="users"
-                    :item-text="user => `${user.firstName} ${user.lastName}`"
+                    :item-title="getFullNameTitle"
                     item-value="id"
                     label="User"
                     :error-messages="userIdError"
@@ -71,18 +71,28 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+import { useVuelidate } from '@vuelidate/core';
+import { required, requiredIf } from '@vuelidate/validators';
+
+import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
-import { required, requiredIf } from 'vuelidate/lib/validators';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/common/DatePicker')
+        )
     },
 
     mixins: [addEditDialogMixin],
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
@@ -94,29 +104,32 @@ export default {
 
         return {
             defaultForm,
-            formData: { ...defaultForm }
+            formData: { ...defaultForm },
+            getFullNameTitle
         };
     },
 
-    validations: {
-        formData: {
-            userId: {
-                required: requiredIf(function () {
-                    return this.isAdmin;
-                })
-            },
-            startDate: {
-                required
-            },
-            endDate: {
-                required
-            },
-            approved: {
-                required: requiredIf(function () {
-                    return this.isAdmin;
-                })
+    validations() {
+        return {
+            formData: {
+                userId: {
+                    required: requiredIf(function () {
+                        return this.isAdmin;
+                    })
+                },
+                startDate: {
+                    required
+                },
+                endDate: {
+                    required
+                },
+                approved: {
+                    required: requiredIf(function () {
+                        return this.isAdmin;
+                    })
+                }
             }
-        }
+        };
     },
 
     computed: {
@@ -173,19 +186,16 @@ export default {
             } catch (error) {
                 console.error(error);
 
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
+                this.$toast.error('Cannot get a list of users!');
             }
         },
 
         async save() {
             this.serverErrors = [];
 
-            this.$v.formData.$touch();
+            this.v$.formData.$touch();
 
-            if (this.$v.formData.$invalid) {
+            if (this.v$.formData.$invalid) {
                 return;
             }
 
@@ -193,10 +203,7 @@ export default {
                 if (this.editedItem) {
                     await this.updateVacation(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'Vacation has been modified'
-                    });
+                    this.$toast.success('Vacation has been modified');
 
                     this.close();
                 } else {
@@ -207,10 +214,7 @@ export default {
 
                     await this.createVacation(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'Vacation has been added'
-                    });
+                    this.$toast.success('Vacation has been added');
 
                     this.close();
                 }
@@ -225,10 +229,7 @@ export default {
                     ? 'Error while modifying the vacation!'
                     : 'Error while adding the vacation!';
 
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
+                this.$toast.error(errorText);
             }
         }
     }

@@ -24,6 +24,7 @@
         </v-card>
     </v-dialog>
 </template>
+
 <script>
 import { mapActions } from 'vuex';
 import deleteDialogMixin from '@/mixins/deleteDialogMixin';
@@ -42,19 +43,13 @@ export default {
             try {
                 await this.deleteUser(this.deletedItemId);
 
-                this.$notify({
-                    type: 'success',
-                    text: 'User has been deleted'
-                });
+                this.$toast.success('User has been deleted');
 
                 this.close();
             } catch (error) {
                 console.error(error);
 
-                this.$notify({
-                    type: 'error',
-                    text: 'Error while deleting the user!'
-                });
+                this.$toast.error('Error while deleting the user!');
             }
         }
     }

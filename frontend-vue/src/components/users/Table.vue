@@ -11,13 +11,13 @@
                 <table-header />
             </template>
 
-            <template v-slot:[`item.vacationLeft`]="{ item }">
+            <template #[`item.vacationLeft`]="{ item }">
                 <v-chip dark :color="getVacationLeftColor(item)">
                     {{ getVacationLeft(item) }}
                 </v-chip>
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
                 <v-btn icon @click="openEditDialog(item)">
                     <span>
                         <v-icon small>mdi-pencil</v-icon>
@@ -47,16 +47,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
-    name: 'Table',
+    name: 'UsersTable',
 
     components: {
-        TableHeader: () => import('@/components/users/TableHeader'),
-        AddEditDialog: () => import('@/components/users/AddEditDialog'),
-        DeleteDialog: () => import('@/components/users/DeleteDialog')
+        TableHeader: defineAsyncComponent(
+            () => import('@/components/users/TableHeader')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/users/AddEditDialog')
+        ),
+        DeleteDialog: defineAsyncComponent(
+            () => import('@/components/users/DeleteDialog')
+        )
     },
 
     mixins: [tableMixin],
@@ -68,12 +76,12 @@ export default {
 
         headers() {
             return [
-                { text: 'First name', value: 'firstName' },
-                { text: 'Last name', value: 'lastName' },
-                { text: 'Date of birth', value: 'dateOfBirth' },
-                { text: 'Email', value: 'email' },
-                { text: 'Days off left', value: 'vacationLeft' },
-                { text: 'Actions', value: 'actions', sortable: false }
+                { title: 'First name', value: 'firstName' },
+                { title: 'Last name', value: 'lastName' },
+                { title: 'Date of birth', value: 'dateOfBirth' },
+                { title: 'Email', value: 'email' },
+                { title: 'Days off left', value: 'vacationLeft' },
+                { title: 'Actions', value: 'actions', sortable: false }
             ];
         }
     },
@@ -110,10 +118,8 @@ export default {
                 await this.getUsers();
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
+
+                this.$toast.error('Cannot get a list of users!');
             }
         }
     }

@@ -1,35 +1,19 @@
 <template>
-    <div>
-        <v-menu
-            v-model="isPickerOpened"
-            :close-on-content-click="false"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-        >
-            <template #activator="{ on }">
-                <v-text-field
-                    v-model="date"
-                    :label="label"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    :error-messages="errorMessages"
-                    v-on="on"
-                    @blur="$emit('blur')"
-                />
-            </template>
-
-            <v-date-picker
-                v-model="date"
-                :allowed-dates="allowedDates"
-                :min="min"
-                :max="max"
-                @input="handleInput"
-            />
-        </v-menu>
-    </div>
+    <v-date-input
+        v-model="date"
+        :allowed-dates="allowedDates"
+        :label="label"
+        :error-messages="errorMessages"
+        :min="min"
+        :max="max"
+        @blur="$emit('blur')"
+        @update:modelValue="handleInput"
+    />
 </template>
+
 <script>
+import dayjs from 'dayjs';
+
 export default {
     name: 'DatePicker',
 
@@ -39,7 +23,7 @@ export default {
             default: ''
         },
 
-        value: {
+        modelValue: {
             type: String,
             default: ''
         },
@@ -65,23 +49,29 @@ export default {
         }
     },
 
+    emits: ['blur', 'update:modelValue'],
+
     data() {
         return {
-            isPickerOpened: false,
-            date: this.value
+            date: null
         };
     },
 
     watch: {
-        value() {
-            this.date = this.value;
+        modelValue: {
+            handler(newVal) {
+                this.date = newVal ? new Date(newVal) : null;
+            },
+            immediate: true
         }
     },
 
     methods: {
         handleInput() {
-            this.$emit('input', this.date);
-            this.isPickerOpened = false;
+            this.$emit(
+                'update:modelValue',
+                dayjs(this.date).format('YYYY-MM-DD')
+            );
         }
     }
 };

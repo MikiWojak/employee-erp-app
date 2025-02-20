@@ -11,7 +11,7 @@
                 <table-header />
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
                 <v-btn icon @click="openEditDialog(item)">
                     <span>
                         <v-icon small>mdi-pencil</v-icon>
@@ -42,16 +42,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
-    name: 'Table',
+    name: 'ContractsTable',
 
     components: {
-        TableHeader: () => import('@/components/contracts/TableHeader'),
-        AddEditDialog: () => import('@/components/contracts/AddEditDialog'),
-        DeleteDialog: () => import('@/components/contracts/DeleteDialog')
+        TableHeader: defineAsyncComponent(
+            () => import('@/components/contracts/TableHeader')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/contracts/AddEditDialog')
+        ),
+        DeleteDialog: defineAsyncComponent(
+            () => import('@/components/contracts/DeleteDialog')
+        )
     },
 
     mixins: [tableMixin],
@@ -64,22 +72,22 @@ export default {
 
         headers() {
             const employee = [
-                { text: 'Position', value: 'position' },
-                { text: 'Start date', value: 'startDate' },
-                { text: 'End date', value: 'endDate' },
+                { title: 'Position', value: 'position' },
+                { title: 'Start date', value: 'startDate' },
+                { title: 'End date', value: 'endDate' },
                 {
-                    text: 'Days off/year',
+                    title: 'Days off/year',
                     value: 'vacationDaysPerYear'
                 },
-                { text: 'Days off', value: 'vacationDays' }
+                { title: 'Days off', value: 'vacationDays' }
             ];
 
             if (this.isAdmin) {
                 return [
-                    { text: 'First name', value: 'user.firstName' },
-                    { text: 'Last name', value: 'user.lastName' },
+                    { title: 'First name', value: 'user.firstName' },
+                    { title: 'Last name', value: 'user.lastName' },
                     ...employee,
-                    { text: 'Actions', value: 'actions', sortable: false }
+                    { title: 'Actions', value: 'actions', sortable: false }
                 ];
             }
 
@@ -101,10 +109,8 @@ export default {
                 await this.getContracts();
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of contracts!'
-                });
+
+                this.$toast.error('Cannot get a list of contracts!');
             }
         }
     }

@@ -68,24 +68,28 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import {
-    required,
-    requiredIf,
-    email,
-    minLength
-} from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
+import { mapActions } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required, requiredIf, email, minLength } from '@vuelidate/validators';
+
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/common/DatePicker')
+        )
     },
 
     mixins: [addEditDialogMixin],
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
@@ -103,28 +107,30 @@ export default {
         };
     },
 
-    validations: {
-        formData: {
-            firstName: {
-                required
-            },
-            lastName: {
-                required
-            },
-            dateOfBirth: {
-                required
-            },
-            email: {
-                required,
-                email
-            },
-            password: {
-                required: requiredIf(function () {
-                    return !this.editedItem;
-                }),
-                minLength: minLength(8)
+    validations() {
+        return {
+            formData: {
+                firstName: {
+                    required
+                },
+                lastName: {
+                    required
+                },
+                dateOfBirth: {
+                    required
+                },
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required: requiredIf(function () {
+                        return !this.editedItem;
+                    }),
+                    minLength: minLength(8)
+                }
             }
-        }
+        };
     },
 
     computed: {
@@ -162,9 +168,9 @@ export default {
         async save() {
             this.serverErrors = [];
 
-            this.$v.formData.$touch();
+            this.v$.formData.$touch();
 
-            if (this.$v.formData.$invalid) {
+            if (this.v$.formData.$invalid) {
                 return;
             }
 
@@ -172,19 +178,13 @@ export default {
                 if (this.editedItem) {
                     await this.updateUser(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'User has been modified'
-                    });
+                    this.$toast.success('User has been modified');
 
                     this.close();
                 } else {
                     await this.createUser(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'User has been added'
-                    });
+                    this.$toast.success('User has been added');
 
                     this.close();
                 }
@@ -199,10 +199,7 @@ export default {
                     ? 'Error while modifying the user!'
                     : 'Error while adding the user!';
 
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
+                this.$toast.error(errorText);
             }
         }
     }

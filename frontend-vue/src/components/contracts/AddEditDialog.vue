@@ -14,7 +14,7 @@
                 <v-autocomplete
                     v-model="formData.userId"
                     :items="users"
-                    :item-text="user => `${user.firstName} ${user.lastName}`"
+                    :item-title="getFullNameTitle"
                     item-value="id"
                     label="User"
                     :error-messages="userIdError"
@@ -48,6 +48,8 @@
                     v-model="formData.vacationDaysPerYear"
                     label="Days off/year"
                     :items="vacationDaysPerYearItems"
+                    item-title="text"
+                    item-value="value"
                     :error-messages="vacationDaysPerYearError"
                     @blur="onBlur('vacationDaysPerYear')"
                 />
@@ -69,18 +71,28 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
-import { required, integer } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { required, integer } from '@vuelidate/validators';
+
+import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/common/DatePicker')
+        )
     },
 
     mixins: [addEditDialogMixin],
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
@@ -97,29 +109,32 @@ export default {
             vacationDaysPerYearItems: [
                 { text: 20, value: 20 },
                 { text: 26, value: 26 }
-            ]
+            ],
+            getFullNameTitle
         };
     },
 
-    validations: {
-        formData: {
-            userId: {
-                required
-            },
-            position: {
-                required
-            },
-            startDate: {
-                required
-            },
-            endDate: {
-                required
-            },
-            vacationDaysPerYear: {
-                required,
-                integer
+    validations() {
+        return {
+            formData: {
+                userId: {
+                    required
+                },
+                position: {
+                    required
+                },
+                startDate: {
+                    required
+                },
+                endDate: {
+                    required
+                },
+                vacationDaysPerYear: {
+                    required,
+                    integer
+                }
             }
-        }
+        };
     },
 
     computed: {
@@ -168,19 +183,17 @@ export default {
                 await this.getUsers();
             } catch (error) {
                 console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
+
+                this.$toast.error('Cannot get a list of users!');
             }
         },
 
         async save() {
             this.serverErrors = [];
 
-            this.$v.formData.$touch();
+            this.v$.formData.$touch();
 
-            if (this.$v.formData.$invalid) {
+            if (this.v$.formData.$invalid) {
                 return;
             }
 
@@ -188,19 +201,13 @@ export default {
                 if (this.editedItem) {
                     await this.updateContract(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'Contract has been modified'
-                    });
+                    this.$toast.success('Contract has been modified');
 
                     this.close();
                 } else {
                     await this.createContract(this.formData);
 
-                    this.$notify({
-                        type: 'success',
-                        text: 'Contract has been added'
-                    });
+                    this.$toast.success('Contract has been added');
 
                     this.close();
                 }
@@ -215,10 +222,7 @@ export default {
                     ? 'Error while modifying the contract!'
                     : 'Error while adding the contract!';
 
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
+                this.$toast.error(errorText);
             }
         }
     }
