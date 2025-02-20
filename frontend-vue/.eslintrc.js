@@ -17,10 +17,6 @@ module.exports = {
     overrides: [
         {
             files: ['src/**/*'],
-            parserOptions: {
-                parser: '@babel/eslint-parser',
-                sourceType: 'module'
-            },
             env: {
                 browser: true
             }
@@ -31,5 +27,9 @@ module.exports = {
         require: true,
         process: true,
         module: true
+    },
+    env: {
+        node: true,
+        es2022: true
     }
 };

@@ -1,5 +1,6 @@
+// @TODO Fix it
 const config = {
-    apiURL: process.env.VUE_APP_API_URL
+    apiURL: 'http://localhost:3001',
 };
 
 module.exports = config;
