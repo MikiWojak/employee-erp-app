@@ -182,9 +182,9 @@ export default {
             try {
                 await this.getUsers();
             } catch (error) {
-                this.$toast.error('Cannot get a list of users!');
-
                 console.error(error);
+
+                this.$toast.error('Cannot get a list of users!');
             }
         },
 
