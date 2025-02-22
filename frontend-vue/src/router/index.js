@@ -1,7 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
-import { store } from '@/store';
-
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -32,26 +30,6 @@ const router = createRouter({
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    const loggedIn = store.getters['auth/loggedIn'];
-
-    if (to.meta.auth) {
-        if (!loggedIn) {
-            return next({ name: 'login' });
-        }
-
-        return next();
-    }
-
-    if (to.meta.guest) {
-        if (loggedIn) {
-            return next({ name: 'dashboard' });
-        }
-
-        return next();
-    }
-
-    return next();
-});
+// @TODO Restore!!!
 
 export default router;

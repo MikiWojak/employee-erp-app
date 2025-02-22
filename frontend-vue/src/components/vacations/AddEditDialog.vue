@@ -71,11 +71,13 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 
+import { useAuthStore } from '@/stores/auth';
 import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
@@ -133,9 +135,8 @@ export default {
     },
 
     computed: {
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
         ...mapGetters({
-            loggedUser: 'auth/loggedUser',
-            isAdmin: 'auth/isAdmin',
             users: 'users/items'
         }),
 

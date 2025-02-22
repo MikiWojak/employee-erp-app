@@ -13,8 +13,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'App',
@@ -30,9 +32,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters({
-            loggedIn: 'auth/loggedIn'
-        })
+        ...mapState(useAuthStore, ['loggedIn'])
     }
 };
 </script>

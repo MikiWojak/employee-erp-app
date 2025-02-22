@@ -38,7 +38,10 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
+import { mapActions as oldMapActions } from 'vuex';
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'Sidebar',
@@ -50,9 +53,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters({
-            loggedUser: 'auth/loggedUser'
-        }),
+        ...mapState(useAuthStore, ['loggedUser']),
 
         fullName() {
             if (!this.loggedUser) {
@@ -78,8 +79,8 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            logout: 'auth/logout',
+        ...mapActions(useAuthStore, ['logout']),
+        ...oldMapActions({
             clearUsers: 'users/clear',
             clearContracts: 'contracts/clear',
             clearVacations: 'vacations/clear'
