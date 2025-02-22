@@ -173,6 +173,7 @@ export default {
 
     methods: {
         ...mapActions(useUserStore, { getUsers: 'index' }),
+
         ...mapActions(useContractStore, {
             createContract: 'store',
             updateContract: 'update'

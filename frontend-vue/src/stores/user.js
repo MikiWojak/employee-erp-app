@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', {
             }
         },
 
-        destroyItem(state, id) {
+        destroyItem(id) {
             const index = this.items.findIndex(
                 singleItem => singleItem.id === id
             );

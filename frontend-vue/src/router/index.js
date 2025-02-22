@@ -1,5 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
+import { useAuthStore } from '@/stores/auth';
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -30,6 +32,27 @@ const router = createRouter({
     ]
 });
 
-// @TODO Restore route guard!!!
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+    const { loggedIn } = authStore;
+
+    if (to.meta.auth) {
+        if (!loggedIn) {
+            return next({ name: 'login' });
+        }
+
+        return next();
+    }
+
+    if (to.meta.guest) {
+        if (loggedIn) {
+            return next({ name: 'dashboard' });
+        }
+
+        return next();
+    }
+
+    return next();
+});
 
 export default router;

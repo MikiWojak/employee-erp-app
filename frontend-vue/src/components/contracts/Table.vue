@@ -68,6 +68,7 @@ export default {
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
+
         ...mapState(useContractStore, { contracts: 'items' }),
 
         headers() {
@@ -100,9 +101,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(useContractStore, {
-            getContracts: 'index'
-        }),
+        ...mapActions(useContractStore, { getContracts: 'index' }),
 
         async handleGetContracts() {
             try {

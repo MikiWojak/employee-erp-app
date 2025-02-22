@@ -72,9 +72,7 @@ export default {
     mixins: [tableMixin],
 
     computed: {
-        ...mapState(useUserStore, {
-            users: 'items'
-        }),
+        ...mapState(useUserStore, { users: 'items' }),
 
         headers() {
             return [
@@ -93,9 +91,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(useUserStore, {
-            getUsers: 'index'
-        }),
+        ...mapActions(useUserStore, { getUsers: 'index' }),
 
         getVacationLeft(item) {
             return item.vacationDaysSum - item.vacationDaysUsed;

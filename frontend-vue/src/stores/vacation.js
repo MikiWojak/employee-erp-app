@@ -59,7 +59,7 @@ export const useVacationStore = defineStore('vacation', {
             }
         },
 
-        destroyItem(state, id) {
+        destroyItem(id) {
             const index = this.items.findIndex(
                 singleItem => singleItem.id === id
             );

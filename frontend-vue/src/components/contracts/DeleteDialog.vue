@@ -37,9 +37,7 @@ export default {
     mixins: [deleteDialogMixin],
 
     methods: {
-        ...mapActions(useContractStore, {
-            deleteContract: 'destroy'
-        }),
+        ...mapActions(useContractStore, { deleteContract: 'destroy' }),
 
         async destroy() {
             try {

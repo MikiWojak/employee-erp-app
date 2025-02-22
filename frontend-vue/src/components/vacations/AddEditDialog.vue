@@ -137,6 +137,7 @@ export default {
 
     computed: {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
+
         ...mapState(useUserStore, { users: 'items' }),
 
         formTitle() {
@@ -167,9 +168,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(useUserStore, {
-            getUsers: 'index'
-        }),
+        ...mapActions(useUserStore, { getUsers: 'index' }),
 
         ...mapActions(useVacationStore, {
             createVacation: 'store',

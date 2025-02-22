@@ -80,8 +80,11 @@ export default {
 
     methods: {
         ...mapActions(useAuthStore, ['logout']),
+
         ...mapActions(useUserStore, { clearUsers: 'clear' }),
+
         ...mapActions(useContractStore, { clearContracts: 'clear' }),
+
         ...mapActions(useVacationStore, { clearVacations: 'clear' }),
 
         async handleLogout() {
