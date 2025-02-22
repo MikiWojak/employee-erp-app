@@ -2,7 +2,9 @@
     <v-navigation-drawer permanent app clipped class="light-blue lighten-3">
         <v-list-item>
             <template #prepend>
-                <v-icon x-large> mdi-account-circle </v-icon>
+                <v-icon x-large>
+                    mdi-account-circle
+                </v-icon>
             </template>
 
             <v-list-item-title class="text-h6">
