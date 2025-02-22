@@ -19,24 +19,18 @@
 
             <template #[`item.actions`]="{ item }">
                 <v-btn
-                    icon
+                    variant="plain"
+                    icon="mdi-pencil"
                     :disabled="!isAdmin && item.approved"
                     @click="openEditDialog(item)"
-                >
-                    <span>
-                        <v-icon small>mdi-pencil</v-icon>
-                    </span>
-                </v-btn>
+                />
 
                 <v-btn
-                    icon
+                    variant="plain"
+                    icon="mdi-delete"
                     :disabled="!isAdmin && item.approved"
                     @click="openDeleteDialog(item.id)"
-                >
-                    <span>
-                        <v-icon small>mdi-delete</v-icon>
-                    </span>
-                </v-btn>
+                />
             </template>
         </v-data-table>
 

@@ -12,17 +12,17 @@
             </template>
 
             <template #[`item.actions`]="{ item }">
-                <v-btn icon @click="openEditDialog(item)">
-                    <span>
-                        <v-icon small>mdi-pencil</v-icon>
-                    </span>
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="mdi-pencil"
+                    @click="openEditDialog(item)"
+                />
 
-                <v-btn icon @click="openDeleteDialog(item.id)">
-                    <span>
-                        <v-icon small>mdi-delete</v-icon>
-                    </span>
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="mdi-delete"
+                    @click="openDeleteDialog(item.id)"
+                />
             </template>
         </v-data-table>
 
