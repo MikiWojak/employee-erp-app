@@ -26,7 +26,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'pinia';
+
+import { useVacationStore } from '@/stores/vacation';
 import deleteDialogMixin from '@/mixins/deleteDialogMixin';
 
 export default {
@@ -35,9 +37,7 @@ export default {
     mixins: [deleteDialogMixin],
 
     methods: {
-        ...mapActions({
-            deleteVacation: 'vacations/destroy'
-        }),
+        ...mapActions(useVacationStore, { deleteVacation: 'destroy' }),
 
         async destroy() {
             try {

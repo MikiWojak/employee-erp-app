@@ -2,9 +2,7 @@
     <v-navigation-drawer permanent app clipped class="light-blue lighten-3">
         <v-list-item>
             <template #prepend>
-                <v-icon x-large>
-                    mdi-account-circle
-                </v-icon>
+                <v-icon x-large> mdi-account-circle </v-icon>
             </template>
 
             <v-list-item-title class="text-h6">
@@ -39,9 +37,11 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
-import { mapActions as oldMapActions } from 'vuex';
 
 import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/user';
+import { useContractStore } from '@/stores/contract';
+import { useVacationStore } from '@/stores/vacation';
 
 export default {
     name: 'Sidebar',
@@ -80,11 +80,9 @@ export default {
 
     methods: {
         ...mapActions(useAuthStore, ['logout']),
-        ...oldMapActions({
-            clearUsers: 'users/clear',
-            clearContracts: 'contracts/clear',
-            clearVacations: 'vacations/clear'
-        }),
+        ...mapActions(useUserStore, { clearUsers: 'clear' }),
+        ...mapActions(useContractStore, { clearContracts: 'clear' }),
+        ...mapActions(useVacationStore, { clearVacations: 'clear' }),
 
         async handleLogout() {
             try {

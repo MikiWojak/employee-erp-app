@@ -30,6 +30,6 @@ const router = createRouter({
     ]
 });
 
-// @TODO Restore!!!
+// @TODO Restore route guard!!!
 
 export default router;

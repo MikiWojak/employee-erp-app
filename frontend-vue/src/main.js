@@ -13,7 +13,6 @@ import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 import App from '@/App.vue';
 import router from '@/router';
-import { store } from '@/store';
 
 const pinia = createPinia();
 const vuetify = createVuetify({
@@ -26,7 +25,6 @@ const vuetify = createVuetify({
 
 createApp(App)
     .use(pinia)
-    .use(store)
     .use(router)
     .use(vuetify)
     .use(ToastPlugin, {

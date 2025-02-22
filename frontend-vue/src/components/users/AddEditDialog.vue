@@ -69,11 +69,12 @@
 
 <script>
 import dayjs from 'dayjs';
-import { mapActions } from 'vuex';
+import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf, email, minLength } from '@vuelidate/validators';
 
+import { useUserStore } from '@/stores/user';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
 export default {
@@ -160,9 +161,9 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            createUser: 'users/store',
-            updateUser: 'users/update'
+        ...mapActions(useUserStore, {
+            createUser: 'store',
+            updateUser: 'update'
         }),
 
         async save() {

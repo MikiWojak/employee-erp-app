@@ -55,12 +55,12 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 
 import tableMixin from '@/mixins/tableMixin';
 import { useAuthStore } from '@/stores/auth';
+import { useVacationStore } from '@/stores/vacation';
 
 export default {
     name: 'VacationsTable',
@@ -81,9 +81,8 @@ export default {
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
-        ...mapGetters({
-            vacations: 'vacations/items'
-        }),
+
+        ...mapState(useVacationStore, { vacations: 'items' }),
 
         headers() {
             const employee = [
@@ -111,9 +110,7 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getVacations: 'vacations/index'
-        }),
+        ...mapActions(useVacationStore, { getVacations: 'index' }),
 
         async handleGetVacations() {
             try {

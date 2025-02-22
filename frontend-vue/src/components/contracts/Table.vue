@@ -42,12 +42,12 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 
 import tableMixin from '@/mixins/tableMixin';
 import { useAuthStore } from '@/stores/auth';
+import { useContractStore } from '@/stores/contract';
 
 export default {
     name: 'ContractsTable',
@@ -68,9 +68,7 @@ export default {
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
-        ...mapGetters({
-            contracts: 'contracts/items'
-        }),
+        ...mapState(useContractStore, { contracts: 'items' }),
 
         headers() {
             const employee = [
@@ -102,8 +100,8 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getContracts: 'contracts/index'
+        ...mapActions(useContractStore, {
+            getContracts: 'index'
         }),
 
         async handleGetContracts() {

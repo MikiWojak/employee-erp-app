@@ -48,7 +48,9 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
+
+import { useUserStore } from '@/stores/user';
 
 import tableMixin from '@/mixins/tableMixin';
 
@@ -70,8 +72,8 @@ export default {
     mixins: [tableMixin],
 
     computed: {
-        ...mapGetters({
-            users: 'users/items'
+        ...mapState(useUserStore, {
+            users: 'items'
         }),
 
         headers() {
@@ -91,8 +93,8 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getUsers: 'users/index'
+        ...mapActions(useUserStore, {
+            getUsers: 'index'
         }),
 
         getVacationLeft(item) {

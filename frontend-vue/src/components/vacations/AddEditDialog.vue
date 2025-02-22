@@ -71,13 +71,14 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/user';
+import { useVacationStore } from '@/stores/vacation';
 import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
@@ -136,9 +137,7 @@ export default {
 
     computed: {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
-        ...mapGetters({
-            users: 'users/items'
-        }),
+        ...mapState(useUserStore, { users: 'items' }),
 
         formTitle() {
             return this.editedItem ? 'Edit vacation' : 'New vacation';
@@ -168,10 +167,13 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getUsers: 'users/index',
-            createVacation: 'vacations/store',
-            updateVacation: 'vacations/update'
+        ...mapActions(useUserStore, {
+            getUsers: 'index'
+        }),
+
+        ...mapActions(useVacationStore, {
+            createVacation: 'store',
+            updateVacation: 'update'
         }),
 
         allowBusinessDays(value) {
