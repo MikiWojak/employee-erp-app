@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-import axios from '@/services/api';
+import axios from '@/services/axios';
 
 export const useVacationStore = defineStore('vacation', {
     state: () => ({

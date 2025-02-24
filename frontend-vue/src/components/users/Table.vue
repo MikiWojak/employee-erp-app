@@ -51,7 +51,6 @@ import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
 import { useUserStore } from '@/stores/user';
-
 import tableMixin from '@/mixins/tableMixin';
 
 export default {

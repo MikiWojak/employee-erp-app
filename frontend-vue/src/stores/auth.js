@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-import axios from '@/services/api';
+import axios from '@/services/axios';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -28,6 +28,7 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async logout() {
+            // @TODO Check if necessary
             if (!this.loggedIn) {
                 return;
             }
