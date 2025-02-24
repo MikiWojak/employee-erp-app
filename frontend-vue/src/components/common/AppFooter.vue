@@ -1,5 +1,5 @@
 <template>
-    <v-footer app class="light-blue white--text justify-center">
+    <v-footer app color="light-blue" class="justify-center">
         &copy; 2021 Mikołaj Żarnowski
     </v-footer>
 </template>
