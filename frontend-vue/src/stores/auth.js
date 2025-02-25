@@ -28,11 +28,6 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async logout() {
-            // @TODO Check if necessary
-            if (!this.loggedIn) {
-                return;
-            }
-
             await axios.post('/auth/logout');
 
             localStorage.removeItem('loggedUser');
