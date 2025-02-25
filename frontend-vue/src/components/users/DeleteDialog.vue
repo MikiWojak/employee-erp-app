@@ -26,8 +26,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'pinia';
 import deleteDialogMixin from '@/mixins/deleteDialogMixin';
+
+import { useUserStore } from '@/stores/user';
 
 export default {
     name: 'DeleteDialog',
@@ -35,9 +37,7 @@ export default {
     mixins: [deleteDialogMixin],
 
     methods: {
-        ...mapActions({
-            deleteUser: 'users/destroy'
-        }),
+        ...mapActions(useUserStore, { deleteUser: 'destroy' }),
 
         async destroy() {
             try {

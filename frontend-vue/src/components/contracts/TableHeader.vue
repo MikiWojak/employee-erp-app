@@ -21,9 +21,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 
+import { useAuthStore } from '@/stores/auth';
 import tableHeaderMixin from '@/mixins/tableHeaderMixin';
 
 export default {
@@ -38,9 +39,7 @@ export default {
     mixins: [tableHeaderMixin],
 
     computed: {
-        ...mapGetters({
-            isAdmin: 'auth/isAdmin'
-        })
+        ...mapState(useAuthStore, ['isAdmin'])
     }
 };
 </script>

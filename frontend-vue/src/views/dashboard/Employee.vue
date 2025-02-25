@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'Employee',
 
     computed: {
-        ...mapGetters({
-            vacationDaysLeft: 'auth/vacationDaysLeft'
-        })
+        ...mapState(useAuthStore, ['vacationDaysLeft'])
     },
 
     methods: {

@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
@@ -10,10 +11,10 @@ import { VDateInput } from 'vuetify/labs/VDateInput';
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 
-import App from '@/App.vue';
+import App from '@/App';
 import router from '@/router';
-import { store } from '@/store';
 
+const pinia = createPinia();
 const vuetify = createVuetify({
     components: {
         ...components,
@@ -22,11 +23,13 @@ const vuetify = createVuetify({
     directives
 });
 
-createApp(App)
-    .use(store)
-    .use(router)
-    .use(vuetify)
-    .use(ToastPlugin, {
-        position: 'bottom'
-    })
-    .mount('#app');
+const app = createApp(App);
+
+app.use(pinia);
+app.use(router);
+app.use(vuetify);
+app.use(ToastPlugin, {
+    position: 'bottom'
+});
+
+app.mount('#app');

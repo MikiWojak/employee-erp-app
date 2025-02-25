@@ -72,10 +72,12 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required, integer } from '@vuelidate/validators';
 
+import { useUserStore } from '@/stores/user';
+import { useContractStore } from '@/stores/contract';
 import getFullNameTitle from '@/helpers/getFullName';
 import addEditDialogMixin from '@/mixins/addEditDialogMixin';
 
@@ -138,9 +140,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters({
-            users: 'users/items'
-        }),
+        ...mapState(useUserStore, { users: 'items' }),
 
         formTitle() {
             return this.editedItem ? 'Edit contract' : 'New contract';
@@ -172,10 +172,11 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getUsers: 'users/index',
-            createContract: 'contracts/store',
-            updateContract: 'contracts/update'
+        ...mapActions(useUserStore, { getUsers: 'index' }),
+
+        ...mapActions(useContractStore, {
+            createContract: 'store',
+            updateContract: 'update'
         }),
 
         async handleGetUsers() {

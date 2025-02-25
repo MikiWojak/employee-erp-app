@@ -19,24 +19,18 @@
 
             <template #[`item.actions`]="{ item }">
                 <v-btn
-                    icon
+                    variant="plain"
+                    icon="mdi-pencil"
                     :disabled="!isAdmin && item.approved"
                     @click="openEditDialog(item)"
-                >
-                    <span>
-                        <v-icon small>mdi-pencil</v-icon>
-                    </span>
-                </v-btn>
+                />
 
                 <v-btn
-                    icon
+                    variant="plain"
+                    icon="mdi-delete"
                     :disabled="!isAdmin && item.approved"
                     @click="openDeleteDialog(item.id)"
-                >
-                    <span>
-                        <v-icon small>mdi-delete</v-icon>
-                    </span>
-                </v-btn>
+                />
             </template>
         </v-data-table>
 
@@ -56,9 +50,11 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 
 import tableMixin from '@/mixins/tableMixin';
+import { useAuthStore } from '@/stores/auth';
+import { useVacationStore } from '@/stores/vacation';
 
 export default {
     name: 'VacationsTable',
@@ -78,10 +74,9 @@ export default {
     mixins: [tableMixin],
 
     computed: {
-        ...mapGetters({
-            isAdmin: 'auth/isAdmin',
-            vacations: 'vacations/items'
-        }),
+        ...mapState(useAuthStore, ['isAdmin']),
+
+        ...mapState(useVacationStore, { vacations: 'items' }),
 
         headers() {
             const employee = [
@@ -109,9 +104,7 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getVacations: 'vacations/index'
-        }),
+        ...mapActions(useVacationStore, { getVacations: 'index' }),
 
         async handleGetVacations() {
             try {

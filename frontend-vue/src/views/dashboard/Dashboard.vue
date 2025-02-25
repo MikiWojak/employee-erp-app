@@ -7,7 +7,9 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'Dashboard',
@@ -20,9 +22,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters({
-            isAdmin: 'auth/isAdmin'
-        })
+        ...mapState(useAuthStore, ['isAdmin'])
     },
 
     async created() {
@@ -30,9 +30,7 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getMe: 'auth/me'
-        }),
+        ...mapActions(useAuthStore, { getMe: 'me' }),
 
         async handleGetMe() {
             try {

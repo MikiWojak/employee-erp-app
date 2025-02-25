@@ -12,17 +12,17 @@
             </template>
 
             <template #[`item.actions`]="{ item }">
-                <v-btn icon @click="openEditDialog(item)">
-                    <span>
-                        <v-icon small>mdi-pencil</v-icon>
-                    </span>
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="mdi-pencil"
+                    @click="openEditDialog(item)"
+                />
 
-                <v-btn icon @click="openDeleteDialog(item.id)">
-                    <span>
-                        <v-icon small>mdi-delete</v-icon>
-                    </span>
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="mdi-delete"
+                    @click="openDeleteDialog(item.id)"
+                />
             </template>
         </v-data-table>
 
@@ -43,9 +43,11 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 
 import tableMixin from '@/mixins/tableMixin';
+import { useAuthStore } from '@/stores/auth';
+import { useContractStore } from '@/stores/contract';
 
 export default {
     name: 'ContractsTable',
@@ -65,10 +67,9 @@ export default {
     mixins: [tableMixin],
 
     computed: {
-        ...mapGetters({
-            isAdmin: 'auth/isAdmin',
-            contracts: 'contracts/items'
-        }),
+        ...mapState(useAuthStore, ['isAdmin']),
+
+        ...mapState(useContractStore, { contracts: 'items' }),
 
         headers() {
             const employee = [
@@ -100,9 +101,7 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getContracts: 'contracts/index'
-        }),
+        ...mapActions(useContractStore, { getContracts: 'index' }),
 
         async handleGetContracts() {
             try {

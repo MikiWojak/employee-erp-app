@@ -42,9 +42,11 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength } from '@vuelidate/validators';
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'Login',
@@ -90,9 +92,7 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            login: 'auth/login'
-        }),
+        ...mapActions(useAuthStore, ['login']),
 
         onBlur(param) {
             this.v$.formData[param].$touch();

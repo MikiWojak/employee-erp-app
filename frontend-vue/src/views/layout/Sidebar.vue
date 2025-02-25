@@ -1,58 +1,55 @@
 <template>
-    <v-navigation-drawer permanent app clipped class="light-blue lighten-3">
-        <v-list-item>
-            <template #prepend>
-                <v-icon x-large>
-                    mdi-account-circle
-                </v-icon>
-            </template>
-
-            <v-list-item-title class="text-h6">
-                {{ fullName }}
-            </v-list-item-title>
-
-            <v-list-item-subtitle>
-                {{ role }}
-            </v-list-item-subtitle>
-        </v-list-item>
+    <v-navigation-drawer permanent color="light-blue-lighten-3">
+        <v-list-item
+            lines="two"
+            prepend-icon="mdi-account-circle"
+            :title="fullName"
+            :subtitle="role"
+        />
 
         <v-divider />
 
-        <router-link :to="{ name: 'dashboard' }" class="text-decoration-none">
-            <list-item icon="mdi-home" text="Dashboard" />
-        </router-link>
+        <v-list-item
+            prepend-icon="mdi-home"
+            title="Dashboard"
+            :to="{ name: 'dashboard' }"
+        />
 
-        <router-link :to="{ name: 'contracts' }" class="text-decoration-none">
-            <list-item icon="mdi-briefcase-variant" text="Contracts" />
-        </router-link>
+        <v-list-item
+            prepend-icon="mdi-briefcase-variant"
+            title="Contracts"
+            :to="{ name: 'contracts' }"
+        />
 
-        <router-link :to="{ name: 'vacations' }" class="text-decoration-none">
-            <list-item icon="mdi-bed" text="Vacations" />
-        </router-link>
+        <v-list-item
+            prepend-icon="mdi-bed"
+            title="Vacations"
+            :to="{ name: 'vacations' }"
+        />
 
         <v-divider />
 
-        <list-item icon="mdi-logout" text="Logout" @click="handleLogout" />
+        <v-list-item
+            prepend-icon="mdi-logout"
+            title="Logout"
+            @click="handleLogout"
+        />
     </v-navigation-drawer>
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
+
+import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/user';
+import { useContractStore } from '@/stores/contract';
+import { useVacationStore } from '@/stores/vacation';
 
 export default {
     name: 'Sidebar',
 
-    components: {
-        ListItem: defineAsyncComponent(
-            () => import('@/components/sidebar/ListItem')
-        )
-    },
-
     computed: {
-        ...mapGetters({
-            loggedUser: 'auth/loggedUser'
-        }),
+        ...mapState(useAuthStore, ['loggedUser']),
 
         fullName() {
             if (!this.loggedUser) {
@@ -78,12 +75,13 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            logout: 'auth/logout',
-            clearUsers: 'users/clear',
-            clearContracts: 'contracts/clear',
-            clearVacations: 'vacations/clear'
-        }),
+        ...mapActions(useAuthStore, ['logout']),
+
+        ...mapActions(useUserStore, { clearUsers: 'clear' }),
+
+        ...mapActions(useContractStore, { clearContracts: 'clear' }),
+
+        ...mapActions(useVacationStore, { clearVacations: 'clear' }),
 
         async handleLogout() {
             try {

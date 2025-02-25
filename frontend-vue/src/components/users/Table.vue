@@ -18,17 +18,17 @@
             </template>
 
             <template #[`item.actions`]="{ item }">
-                <v-btn icon @click="openEditDialog(item)">
-                    <span>
-                        <v-icon small>mdi-pencil</v-icon>
-                    </span>
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="mdi-pencil"
+                    @click="openEditDialog(item)"
+                />
 
-                <v-btn icon @click="openDeleteDialog(item.id)">
-                    <span>
-                        <v-icon small>mdi-delete</v-icon>
-                    </span>
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="mdi-delete"
+                    @click="openDeleteDialog(item.id)"
+                />
             </template>
         </v-data-table>
 
@@ -48,8 +48,9 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 
+import { useUserStore } from '@/stores/user';
 import tableMixin from '@/mixins/tableMixin';
 
 export default {
@@ -70,9 +71,7 @@ export default {
     mixins: [tableMixin],
 
     computed: {
-        ...mapGetters({
-            users: 'users/items'
-        }),
+        ...mapState(useUserStore, { users: 'items' }),
 
         headers() {
             return [
@@ -91,9 +90,7 @@ export default {
     },
 
     methods: {
-        ...mapActions({
-            getUsers: 'users/index'
-        }),
+        ...mapActions(useUserStore, { getUsers: 'index' }),
 
         getVacationLeft(item) {
             return item.vacationDaysSum - item.vacationDaysUsed;
