@@ -38,9 +38,10 @@ const config = {
             timestamps: true
         }
     },
-    redis: {
-        url: env('REDIS_URL'),
-        port: env('REDIS_PORT')
+    redisSession: {
+        url: env('REDIS_SESSION_URL'),
+        port: env('REDIS_SESSION_PORT'),
+        pass: env('REDIS_SESSION_PASS')
     }
 };
 
