@@ -17,7 +17,8 @@ class StoreController {
         let vacation;
 
         if (isAdmin) {
-            const transaction = await this.vacationRepository.getDbTransaction();
+            const transaction =
+                await this.vacationRepository.getDbTransaction();
 
             try {
                 const { id } = await this.vacationRepository.create(

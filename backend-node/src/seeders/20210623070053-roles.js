@@ -1,11 +1,12 @@
 'use strict';
+
 const { Role } = require('../models');
 
 const di = require('../di');
 const roleRepository = di.get('repositories.role');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
+    up: async () => {
         await roleRepository.create({
             name: Role.ADMIN
         });
@@ -15,7 +16,7 @@ module.exports = {
         });
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         await queryInterface.bulkDelete('Roles', null, {});
     }
 };

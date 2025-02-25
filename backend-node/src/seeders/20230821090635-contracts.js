@@ -1,4 +1,5 @@
 'use strict';
+
 const faker = require('faker');
 const dayjs = require('dayjs');
 
@@ -9,7 +10,7 @@ const userRepository = di.get('repositories.user');
 const contractRepository = di.get('repositories.contract');
 
 module.exports = {
-    async up(queryInterface, Sequelize) {
+    async up() {
         const users = await userRepository.findAll({
             include: [
                 {
@@ -69,7 +70,7 @@ module.exports = {
         }
     },
 
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         await queryInterface.bulkDelete('Contracts', null, {});
     }
 };

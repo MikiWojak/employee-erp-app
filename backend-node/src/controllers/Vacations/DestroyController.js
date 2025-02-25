@@ -22,7 +22,8 @@ class DestroyController {
         const { userId, approved, user: assignedUser } = vacation;
 
         if (isAdmin) {
-            const transaction = await this.vacationRepository.getDbTransaction();
+            const transaction =
+                await this.vacationRepository.getDbTransaction();
 
             try {
                 await vacation.destroy({ transaction });

@@ -24,7 +24,8 @@ class UpdateController {
         let updatedVacation;
 
         if (isAdmin) {
-            const transaction = await this.vacationRepository.getDbTransaction();
+            const transaction =
+                await this.vacationRepository.getDbTransaction();
 
             const { userId: oldUserId } = vacation;
 
@@ -40,13 +41,11 @@ class UpdateController {
                 );
 
                 if (oldUserId !== userId) {
-                    const oldVacationDaysUsed = await this.vacationRepository.sum(
-                        'duration',
-                        {
+                    const oldVacationDaysUsed =
+                        await this.vacationRepository.sum('duration', {
                             where: { userId: oldUserId, approved: true },
                             transaction
-                        }
-                    );
+                        });
 
                     const oldUser = await this.userRepository.findById(
                         oldUserId,

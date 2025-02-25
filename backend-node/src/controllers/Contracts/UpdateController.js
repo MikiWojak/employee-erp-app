@@ -37,13 +37,11 @@ class UpdateController {
             );
 
             if (oldUserId !== userId) {
-                const oldUserVacationDaysSum = await this.contractRepository.sum(
-                    'vacationDays',
-                    {
+                const oldUserVacationDaysSum =
+                    await this.contractRepository.sum('vacationDays', {
                         where: { userId: oldUserId },
                         transaction
-                    }
-                );
+                    });
 
                 const oldUser = await this.userRepository.findById(oldUserId, {
                     transaction

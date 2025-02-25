@@ -80,8 +80,15 @@ const update = [
         .custom(endDate => !isWeekend(endDate))
         .withMessage('Date must be a business day.')
         .bail()
-        .custom((endDate, { req: { body: { startDate } } }) =>
-            areDatesInProperOrder(startDate, endDate)
+        .custom(
+            (
+                endDate,
+                {
+                    req: {
+                        body: { startDate }
+                    }
+                }
+            ) => areDatesInProperOrder(startDate, endDate)
         )
         .withMessage('End date can not be before start date.')
         .bail()

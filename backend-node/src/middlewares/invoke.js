@@ -1,1 +1,4 @@
-module.exports = controller => (...args) => controller.invoke(...args);
+module.exports =
+    controller =>
+    (...args) =>
+        controller.invoke(...args);
