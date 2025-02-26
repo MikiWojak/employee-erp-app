@@ -180,15 +180,13 @@ export default {
                     await this.updateUser(this.formData);
 
                     this.$toast.success('User has been modified');
-
-                    this.close();
                 } else {
                     await this.createUser(this.formData);
 
                     this.$toast.success('User has been added');
-
-                    this.close();
                 }
+
+                this.onSuccess();
             } catch (error) {
                 console.error(error);
 

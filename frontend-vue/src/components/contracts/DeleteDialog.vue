@@ -45,7 +45,7 @@ export default {
 
                 this.$toast.success('Contract has been deleted');
 
-                this.close();
+                this.onSuccess();
             } catch (error) {
                 console.error(error);
 

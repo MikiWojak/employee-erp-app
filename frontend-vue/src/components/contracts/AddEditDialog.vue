@@ -71,8 +71,8 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
-import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required, integer } from '@vuelidate/validators';
 
@@ -106,6 +106,7 @@ export default {
         };
 
         return {
+            users: [],
             defaultForm,
             formData: { ...defaultForm },
             vacationDaysPerYearItems: [
@@ -140,8 +141,6 @@ export default {
     },
 
     computed: {
-        ...mapState(useUserStore, { users: 'items' }),
-
         formTitle() {
             return this.editedItem ? 'Edit contract' : 'New contract';
         },
@@ -168,7 +167,7 @@ export default {
     },
 
     async created() {
-        await this.handleGetUsers();
+        await this.doGetUsers();
     },
 
     methods: {
@@ -179,9 +178,11 @@ export default {
             updateContract: 'update'
         }),
 
-        async handleGetUsers() {
+        async doGetUsers() {
             try {
-                await this.getUsers();
+                const { rows } = await this.getUsers();
+
+                this.users = rows;
             } catch (error) {
                 console.error(error);
 
@@ -203,15 +204,13 @@ export default {
                     await this.updateContract(this.formData);
 
                     this.$toast.success('Contract has been modified');
-
-                    this.close();
                 } else {
                     await this.createContract(this.formData);
 
                     this.$toast.success('Contract has been added');
-
-                    this.close();
                 }
+
+                this.onSuccess();
             } catch (error) {
                 console.error(error);
 

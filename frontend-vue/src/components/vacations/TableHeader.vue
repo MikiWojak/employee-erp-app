@@ -14,6 +14,7 @@
 
         <add-edit-dialog
             :is-opened="isAddDialogOpened"
+            @refetch-items="onRefetchItems"
             @close="closeAddDialog"
         />
     </div>

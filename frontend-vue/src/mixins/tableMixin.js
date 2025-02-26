@@ -1,6 +1,7 @@
 export default {
     data() {
         return {
+            items: [],
             editedItem: null,
             deletedItemId: null
         };

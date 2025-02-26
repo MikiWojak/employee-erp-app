@@ -87,6 +87,12 @@ export default {
             this.serverErrors = this.serverErrors.filter(
                 error => error.param !== param
             );
+        },
+
+        onSuccess() {
+            this.$emit('refetch-items');
+
+            this.close();
         }
     }
 };

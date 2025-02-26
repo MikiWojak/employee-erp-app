@@ -26,6 +26,12 @@ export default {
     methods: {
         close() {
             this.$emit('close');
+        },
+
+        onSuccess() {
+            this.$emit('refetch-items');
+
+            this.close();
         }
     }
 };

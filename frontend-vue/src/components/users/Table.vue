@@ -2,13 +2,13 @@
     <div>
         <v-data-table
             :headers="headers"
-            :items="users"
+            :items="items"
             :items-per-page="pagination"
             multi-sort
             class="elevation-1"
         >
             <template #top>
-                <table-header />
+                <table-header @refetch-items="getItems" />
             </template>
 
             <template #[`item.vacationLeft`]="{ item }">
@@ -35,12 +35,14 @@
         <add-edit-dialog
             :is-opened="!!editedItem"
             :edited-item="editedItem"
+            @refetch-items="getItems"
             @close="closeEditDialog"
         />
 
         <delete-dialog
             :is-opened="!!deletedItemId"
             :deleted-item-id="deletedItemId"
+            @refetch-items="getItems"
             @close="closeDeleteDialog"
         />
     </div>
@@ -86,11 +88,11 @@ export default {
     },
 
     async created() {
-        await this.handleGetUsers();
+        await this.getItems();
     },
 
     methods: {
-        ...mapActions(useUserStore, { getUsers: 'index' }),
+        ...mapActions(useUserStore, ['index']),
 
         getVacationLeft(item) {
             return item.vacationDaysSum - item.vacationDaysUsed;
@@ -110,9 +112,11 @@ export default {
             return 'red';
         },
 
-        async handleGetUsers() {
+        async getItems() {
             try {
-                await this.getUsers();
+                const { rows } = await this.index();
+
+                this.items = rows;
             } catch (error) {
                 console.error(error);
 

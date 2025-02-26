@@ -15,6 +15,7 @@
         <add-edit-dialog
             v-if="isAdmin"
             :is-opened="isAddDialogOpened"
+            @refetch-items="onRefetchItems"
             @close="closeAddDialog"
         />
     </div>

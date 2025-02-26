@@ -2,13 +2,13 @@
     <div>
         <v-data-table
             :headers="headers"
-            :items="vacations"
+            :items="items"
             :items-per-page="pagination"
             multi-sort
             class="elevation-1"
         >
             <template #top>
-                <table-header />
+                <table-header @refetch-items="getItems" />
             </template>
 
             <template #[`item.approved`]="{ item }">
@@ -37,12 +37,14 @@
         <add-edit-dialog
             :is-opened="!!editedItem"
             :edited-item="editedItem"
+            @refetch-items="getItems"
             @close="closeEditDialog"
         />
 
         <delete-dialog
             :is-opened="!!deletedItemId"
             :deleted-item-id="deletedItemId"
+            @refetch-items="getItems"
             @close="closeDeleteDialog"
         />
     </div>
@@ -76,8 +78,6 @@ export default {
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
 
-        ...mapState(useVacationStore, { vacations: 'items' }),
-
         headers() {
             const employee = [
                 { title: 'Start date', value: 'startDate' },
@@ -100,15 +100,17 @@ export default {
     },
 
     async created() {
-        await this.handleGetVacations();
+        await this.getItems();
     },
 
     methods: {
-        ...mapActions(useVacationStore, { getVacations: 'index' }),
+        ...mapActions(useVacationStore, ['index']),
 
-        async handleGetVacations() {
+        async getItems() {
             try {
-                await this.getVacations();
+                const { rows } = await this.index();
+
+                this.items = rows;
             } catch (error) {
                 console.error(error);
 

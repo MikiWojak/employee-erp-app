@@ -12,6 +12,10 @@ export default {
 
         closeAddDialog() {
             this.isAddDialogOpened = false;
+        },
+
+        onRefetchItems() {
+            this.$emit('refetch-items');
         }
     }
 };

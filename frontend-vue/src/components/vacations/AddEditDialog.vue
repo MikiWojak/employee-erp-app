@@ -106,6 +106,7 @@ export default {
         };
 
         return {
+            users: [],
             defaultForm,
             formData: { ...defaultForm },
             getFullNameTitle
@@ -138,8 +139,6 @@ export default {
     computed: {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
-        ...mapState(useUserStore, { users: 'items' }),
-
         formTitle() {
             return this.editedItem ? 'Edit vacation' : 'New vacation';
         },
@@ -163,7 +162,7 @@ export default {
 
     async created() {
         if (this.isAdmin) {
-            await this.handleGetUsers();
+            await this.doGetUsers();
         }
     },
 
@@ -182,9 +181,11 @@ export default {
             return !isWeekend;
         },
 
-        async handleGetUsers() {
+        async doGetUsers() {
             try {
-                await this.getUsers();
+                const { rows } = await this.getUsers();
+
+                this.users = rows;
             } catch (error) {
                 console.error(error);
 
@@ -206,8 +207,6 @@ export default {
                     await this.updateVacation(this.formData);
 
                     this.$toast.success('Vacation has been modified');
-
-                    this.close();
                 } else {
                     if (!this.isAdmin) {
                         this.formData.userId = this.loggedUser.id;
@@ -217,9 +216,9 @@ export default {
                     await this.createVacation(this.formData);
 
                     this.$toast.success('Vacation has been added');
-
-                    this.close();
                 }
+
+                this.onSuccess();
             } catch (error) {
                 console.error(error);
 
