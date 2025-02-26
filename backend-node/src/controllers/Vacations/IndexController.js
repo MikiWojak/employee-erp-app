@@ -41,9 +41,8 @@ class IndexController {
             };
         }
 
-        const vacations = await this.vacationRepository.findAndCountAll(
-            options
-        );
+        const vacations =
+            await this.vacationRepository.findAndCountAll(options);
 
         return res.send(vacations);
     }

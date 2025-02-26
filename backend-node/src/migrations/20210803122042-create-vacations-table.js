@@ -7,19 +7,19 @@ const {
 } = require('../config');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
+    up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable(
             'Vacations',
             {
                 id: {
                     allowNull: false,
                     primaryKey: true,
-                    type: Sequelize.UUID,
-                    defaultValue: Sequelize.UUIDV4
+                    type: DataTypes.UUID,
+                    defaultValue: DataTypes.UUIDV4
                 },
                 userId: {
                     allowNull: false,
-                    type: Sequelize.UUID,
+                    type: DataTypes.UUID,
                     references: {
                         model: 'Users',
                         key: 'id'
@@ -27,34 +27,34 @@ module.exports = {
                 },
                 startDate: {
                     allowNull: false,
-                    type: Sequelize.DATEONLY
+                    type: DataTypes.DATEONLY
                 },
                 endDate: {
                     allowNull: false,
-                    type: Sequelize.DATEONLY
+                    type: DataTypes.DATEONLY
                 },
                 duration: {
                     allowNull: false,
-                    type: Sequelize.INTEGER,
+                    type: DataTypes.INTEGER,
                     defaultValue: 0
                 },
                 approved: {
                     allowNull: false,
-                    type: Sequelize.BOOLEAN,
+                    type: DataTypes.BOOLEAN,
                     defaultValue: false
                 },
                 createdAt: {
                     allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.fn('now')
+                    type: DataTypes.DATE,
+                    defaultValue: DataTypes.fn('now')
                 },
                 updatedAt: {
                     allowNull: false,
-                    type: Sequelize.DATE,
-                    defaultValue: Sequelize.fn('now')
+                    type: DataTypes.DATE,
+                    defaultValue: DataTypes.fn('now')
                 },
                 deletedAt: {
-                    type: Sequelize.DATE,
+                    type: DataTypes.DATE,
                     defaultValue: null
                 }
             },
@@ -64,7 +64,7 @@ module.exports = {
             }
         );
     },
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         await queryInterface.dropTable('Vacations');
     }
 };

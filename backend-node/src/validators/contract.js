@@ -74,8 +74,15 @@ const update = [
         .withMessage('Wrong date format. Should be YYYY-MM-DD.')
         .bail()
         .toDate()
-        .custom((endDate, { req: { body: { startDate } } }) =>
-            areDatesInProperOrder(startDate, endDate)
+        .custom(
+            (
+                endDate,
+                {
+                    req: {
+                        body: { startDate }
+                    }
+                }
+            ) => areDatesInProperOrder(startDate, endDate)
         )
         .withMessage('End date can not be before start date.')
         .bail()

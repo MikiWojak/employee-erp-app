@@ -41,9 +41,8 @@ class IndexController {
             };
         }
 
-        const contracts = await this.contractRepository.findAndCountAll(
-            options
-        );
+        const contracts =
+            await this.contractRepository.findAndCountAll(options);
 
         return res.send(contracts);
     }

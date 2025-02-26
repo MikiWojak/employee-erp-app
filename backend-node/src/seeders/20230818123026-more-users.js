@@ -1,4 +1,5 @@
 'use strict';
+
 const faker = require('faker');
 const dayjs = require('dayjs');
 
@@ -9,7 +10,7 @@ const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
+    up: async () => {
         const { id: employeeId } = await roleRepository.findByName(
             Role.EMPLOYEE
         );
@@ -33,7 +34,7 @@ module.exports = {
         }
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         return queryInterface.bulkDelete('Users', null, {});
     }
 };

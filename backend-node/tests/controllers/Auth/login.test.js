@@ -52,10 +52,8 @@ describe('Auth', () => {
         });
 
         it('returns OK sending valid data as EMPLOYEE', async () => {
-            const {
-                email: employeeEmail,
-                password: employeePassword
-            } = employee;
+            const { email: employeeEmail, password: employeePassword } =
+                employee;
 
             await login(request, employeeEmail, employeePassword);
 

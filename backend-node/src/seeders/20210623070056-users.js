@@ -1,4 +1,5 @@
 'use strict';
+
 const { Role } = require('../models');
 
 const di = require('../di');
@@ -6,8 +7,7 @@ const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
-        // Admin
+    up: async () => {
         const { id: adminId } = await roleRepository.findByName(Role.ADMIN);
 
         await userRepository.create({
@@ -20,7 +20,6 @@ module.exports = {
             password: 'Qwerty123!'
         });
 
-        // Employee
         const { id: employeeId } = await roleRepository.findByName(
             Role.EMPLOYEE
         );
@@ -36,7 +35,7 @@ module.exports = {
         });
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         return queryInterface.bulkDelete('Users', null, {});
     }
 };
