@@ -87,12 +87,8 @@ export default {
         }
     },
 
-    async created() {
-        await this.getItems();
-    },
-
     methods: {
-        ...mapActions(useUserStore, ['index']),
+        ...mapActions(useUserStore, { getItems: 'index' }),
 
         getVacationLeft(item) {
             return item.vacationDaysSum - item.vacationDaysUsed;
@@ -110,18 +106,6 @@ export default {
             }
 
             return 'red';
-        },
-
-        async getItems() {
-            try {
-                const { rows } = await this.index();
-
-                this.items = rows;
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of users!');
-            }
         }
     }
 };

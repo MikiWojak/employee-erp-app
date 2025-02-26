@@ -96,24 +96,8 @@ export default {
         }
     },
 
-    async created() {
-        await this.getItems();
-    },
-
     methods: {
-        ...mapActions(useContractStore, ['index']),
-
-        async getItems() {
-            try {
-                const { rows } = await this.index();
-
-                this.items = rows;
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of contracts!');
-            }
-        }
+        ...mapActions(useContractStore, { getItems: 'index' })
     }
 };
 </script>

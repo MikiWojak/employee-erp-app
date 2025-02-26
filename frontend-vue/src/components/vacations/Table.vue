@@ -99,24 +99,8 @@ export default {
         }
     },
 
-    async created() {
-        await this.getItems();
-    },
-
     methods: {
-        ...mapActions(useVacationStore, ['index']),
-
-        async getItems() {
-            try {
-                const { rows } = await this.index();
-
-                this.items = rows;
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of vacations!');
-            }
-        },
+        ...mapActions(useVacationStore, { getItems: 'index' }),
 
         getStatus(status) {
             return status ? 'Approved' : 'Pending';
