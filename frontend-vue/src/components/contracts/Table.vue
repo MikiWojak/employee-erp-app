@@ -8,7 +8,7 @@
             class="elevation-1"
         >
             <template #top>
-                <table-header @refetch-items="getItems" />
+                <table-header @refetch-items="doGetItems" />
             </template>
 
             <template #[`item.actions`]="{ item }">
@@ -30,14 +30,15 @@
             v-if="isAdmin"
             :is-opened="!!editedItem"
             :edited-item="editedItem"
-            @refetch-items="getItems"
+            @refetch-items="doGetItems"
             @close="closeEditDialog"
         />
 
-        <delete-dialog
+        <delete-modal
+            title="Do you really want to delete this contract?"
             :is-opened="!!deletedItemId"
-            :deleted-item-id="deletedItemId"
-            @refetch-items="getItems"
+            :item-id="deletedItemId"
+            @delete="doDeleteItem"
             @close="closeDeleteDialog"
         />
     </div>
@@ -61,8 +62,8 @@ export default {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/contracts/AddEditDialog')
         ),
-        DeleteDialog: defineAsyncComponent(
-            () => import('@/components/contracts/DeleteDialog')
+        DeleteModal: defineAsyncComponent(
+            () => import('@/components/modals/DeleteModal')
         )
     },
 
@@ -97,7 +98,10 @@ export default {
     },
 
     methods: {
-        ...mapActions(useContractStore, { getItems: 'index' })
+        ...mapActions(useContractStore, {
+            getItems: 'index',
+            deleteItem: 'destroy'
+        })
     }
 };
 </script>
