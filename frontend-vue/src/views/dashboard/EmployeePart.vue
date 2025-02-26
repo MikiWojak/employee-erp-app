@@ -15,7 +15,7 @@ import { mapState } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 
 export default {
-    name: 'Employee',
+    name: 'EmployeePart',
 
     computed: {
         ...mapState(useAuthStore, ['vacationDaysLeft'])

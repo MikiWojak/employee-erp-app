@@ -49,7 +49,7 @@ import { required, email, minLength } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 
 export default {
-    name: 'Login',
+    name: 'LoginPage',
 
     setup() {
         return { v$: useVuelidate() };

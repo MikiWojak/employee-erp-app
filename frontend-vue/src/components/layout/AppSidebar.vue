@@ -43,7 +43,7 @@ import { mapState, mapActions } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 
 export default {
-    name: 'Sidebar',
+    name: 'AppSidebar',
 
     computed: {
         ...mapState(useAuthStore, ['loggedUser']),

@@ -8,7 +8,7 @@
 import { defineAsyncComponent } from 'vue';
 
 export default {
-    name: 'Vacations',
+    name: 'VacationsPage',
 
     components: {
         VacationsTable: defineAsyncComponent(
