@@ -80,7 +80,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/user';
 import { useVacationStore } from '@/stores/vacation';
 import getFullNameTitle from '@/helpers/getFullName';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
@@ -91,7 +91,7 @@ export default {
         )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
 
     setup() {
         return { v$: useVuelidate() };

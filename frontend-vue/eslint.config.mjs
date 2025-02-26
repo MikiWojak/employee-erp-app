@@ -20,7 +20,8 @@ export default [
             'vue/html-indent': ['error', 4, { baseIndent: 1 }],
             'vue/script-indent': ['error', 4, { baseIndent: 0 }],
             'vue/max-attributes-per-line': 'off',
-            'vue/html-self-closing': 'off'
+            'vue/html-self-closing': 'off',
+            'vue/require-explicit-emits': 'error'
         }
     },
     eslintConfigPrettier

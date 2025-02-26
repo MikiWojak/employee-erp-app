@@ -75,7 +75,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf, email, minLength } from '@vuelidate/validators';
 
 import { useUserStore } from '@/stores/user';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
@@ -86,7 +86,7 @@ export default {
         )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
 
     setup() {
         return { v$: useVuelidate() };

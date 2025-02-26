@@ -1,4 +1,7 @@
+<script>
 export default {
+    name: 'BaseAddEditDialog',
+
     props: {
         isOpened: {
             type: Boolean,
@@ -9,6 +12,8 @@ export default {
             default: null
         }
     },
+
+    emits: ['close', 'refetch-items'],
 
     data() {
         const defaultForm = {};
@@ -96,3 +101,4 @@ export default {
         }
     }
 };
+</script>

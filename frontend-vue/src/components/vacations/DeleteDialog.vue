@@ -29,12 +29,12 @@
 import { mapActions } from 'pinia';
 
 import { useVacationStore } from '@/stores/vacation';
-import deleteDialogMixin from '@/mixins/deleteDialogMixin';
+import BaseDeleteDialog from '@/components/common/BaseDeleteDialog';
 
 export default {
     name: 'DeleteDialog',
 
-    mixins: [deleteDialogMixin],
+    extends: BaseDeleteDialog,
 
     methods: {
         ...mapActions(useVacationStore, { deleteVacation: 'destroy' }),

@@ -27,14 +27,14 @@
 
 <script>
 import { mapActions } from 'pinia';
-import deleteDialogMixin from '@/mixins/deleteDialogMixin';
 
 import { useUserStore } from '@/stores/user';
+import BaseDeleteDialog from '@/components/common/BaseDeleteDialog';
 
 export default {
     name: 'DeleteDialog',
 
-    mixins: [deleteDialogMixin],
+    extends: BaseDeleteDialog,
 
     methods: {
         ...mapActions(useUserStore, { deleteUser: 'destroy' }),

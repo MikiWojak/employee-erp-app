@@ -53,7 +53,7 @@ import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
 import { useUserStore } from '@/stores/user';
-import tableMixin from '@/mixins/tableMixin';
+import BaseTable from '@/components/common/BaseTable';
 
 export default {
     name: 'UsersTable',
@@ -70,7 +70,7 @@ export default {
         )
     },
 
-    mixins: [tableMixin],
+    extends: BaseTable,
 
     computed: {
         ...mapState(useUserStore, { users: 'items' }),

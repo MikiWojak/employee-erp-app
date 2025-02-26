@@ -79,7 +79,7 @@ import { required, integer } from '@vuelidate/validators';
 import { useUserStore } from '@/stores/user';
 import { useContractStore } from '@/stores/contract';
 import getFullNameTitle from '@/helpers/getFullName';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
@@ -90,7 +90,7 @@ export default {
         )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
 
     setup() {
         return { v$: useVuelidate() };

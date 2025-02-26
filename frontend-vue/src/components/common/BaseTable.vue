@@ -1,4 +1,7 @@
+<script>
 export default {
+    name: 'BaseTable',
+
     data() {
         return {
             items: [],
@@ -31,3 +34,4 @@ export default {
         }
     }
 };
+</script>

@@ -1,4 +1,7 @@
+<script>
 export default {
+    name: 'BaseDeleteDialog',
+
     props: {
         isOpened: {
             type: Boolean,
@@ -10,6 +13,8 @@ export default {
             default: null
         }
     },
+
+    emits: ['close', 'refetch-items'],
 
     data() {
         return {
@@ -35,3 +40,4 @@ export default {
         }
     }
 };
+</script>

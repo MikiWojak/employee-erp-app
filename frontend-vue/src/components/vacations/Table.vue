@@ -54,9 +54,9 @@
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-import tableMixin from '@/mixins/tableMixin';
 import { useAuthStore } from '@/stores/auth';
 import { useVacationStore } from '@/stores/vacation';
+import BaseTable from '@/components/common/BaseTable';
 
 export default {
     name: 'VacationsTable',
@@ -73,7 +73,7 @@ export default {
         )
     },
 
-    mixins: [tableMixin],
+    extends: BaseTable,
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
