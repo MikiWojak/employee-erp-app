@@ -10,7 +10,7 @@ const userRepository = di.get('repositories.user');
 const contractRepository = di.get('repositories.contract');
 
 module.exports = {
-    async up() {
+    up: async () => {
         const users = await userRepository.findAll({
             include: [
                 {
@@ -70,7 +70,7 @@ module.exports = {
         }
     },
 
-    async down(queryInterface) {
+    down: async queryInterface => {
         await queryInterface.bulkDelete('Contracts', null, {});
     }
 };
