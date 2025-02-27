@@ -39,12 +39,11 @@
             @close="closeEditDialog"
         />
 
-        <delete-modal
+        <confirmation-modal
+            :is-opened="!!itemToDeleteId"
             title="Do you really want to delete this user?"
-            :is-opened="!!deletedItemId"
-            :item-id="deletedItemId"
-            @delete="doDeleteItem"
-            @close="closeDeleteDialog"
+            @confirm="doDeleteItem"
+            @discard="closeDeleteDialog"
         />
     </div>
 </template>
@@ -66,8 +65,8 @@ export default {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/users/AddEditDialog')
         ),
-        DeleteModal: defineAsyncComponent(
-            () => import('@/components/modals/DeleteModal')
+        ConfirmationModal: defineAsyncComponent(
+            () => import('@/components/modals/ConfirmationModal')
         )
     },
 

@@ -6,7 +6,7 @@ export default {
         return {
             items: [],
             editedItem: null,
-            deletedItemId: null
+            itemToDeleteId: null
         };
     },
 
@@ -41,10 +41,13 @@ export default {
             return Promise.resolve();
         },
 
-        // @TODO What if ID is null?
-        async doDeleteItem(id) {
+        async doDeleteItem() {
+            if (!this.itemToDeleteId) {
+                return;
+            }
+
             try {
-                await this.deleteItem(id);
+                await this.deleteItem(this.itemToDeleteId);
 
                 await this.doGetItems();
 
@@ -67,11 +70,11 @@ export default {
         },
 
         openDeleteDialog(id) {
-            this.deletedItemId = id;
+            this.itemToDeleteId = id;
         },
 
         closeDeleteDialog() {
-            this.deletedItemId = null;
+            this.itemToDeleteId = null;
         }
     }
 };

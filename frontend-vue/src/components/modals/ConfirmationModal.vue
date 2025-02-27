@@ -2,8 +2,8 @@
     <v-dialog
         v-model="isDialogOpened"
         max-width="500px"
-        @click:outside="close"
-        @keydown.esc="close"
+        @click:outside="doDiscard"
+        @keydown.esc="doDiscard"
     >
         <v-card>
             <v-card-title>
@@ -13,9 +13,9 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text="No" @click="close" />
+                <v-btn text="No" @click="doDiscard" />
 
-                <v-btn text="Yes" @click="doDelete" />
+                <v-btn text="Yes" @click="doConfirm" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -23,26 +23,21 @@
 
 <script>
 export default {
-    name: 'DeleteModal',
+    name: 'ConfirmationModal',
 
     props: {
-        title: {
-            type: String,
-            default: 'Do you really want to delete this item?'
-        },
-
         isOpened: {
             type: Boolean,
             default: false
         },
 
-        itemId: {
+        title: {
             type: String,
-            default: null
+            default: 'Are you sure you want to continue?'
         }
     },
 
-    emits: ['close', 'delete'],
+    emits: ['confirm', 'discard'],
 
     data() {
         return {
@@ -57,12 +52,12 @@ export default {
     },
 
     methods: {
-        doDelete() {
-            this.$emit('delete', this.itemId);
+        doConfirm() {
+            this.$emit('confirm');
         },
 
-        close() {
-            this.$emit('close');
+        doDiscard() {
+            this.$emit('discard');
         }
     }
 };
