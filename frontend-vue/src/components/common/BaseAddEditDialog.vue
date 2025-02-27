@@ -1,4 +1,6 @@
 <script>
+import { useVuelidate } from '@vuelidate/core';
+
 export default {
     name: 'BaseAddEditDialog',
 
@@ -15,6 +17,10 @@ export default {
 
     emits: ['close', 'refetch-items'],
 
+    setup() {
+        return { v$: useVuelidate() };
+    },
+
     data() {
         const defaultForm = {};
 
@@ -24,6 +30,10 @@ export default {
             isDialogOpened: false,
             serverErrors: []
         };
+    },
+
+    validations() {
+        return {};
     },
 
     watch: {
@@ -98,6 +108,57 @@ export default {
             this.$emit('refetch-items');
 
             this.close();
+        },
+
+        // @TODO Remove after adjustments in API
+        prepareFormDataAfterValidation() {},
+
+        async updateItem() {
+            return Promise.resolve();
+        },
+
+        async createItem() {
+            return Promise.resolve();
+        },
+
+        async save() {
+            this.serverErrors = [];
+
+            this.v$.formData.$touch();
+
+            if (this.v$.formData.$invalid) {
+                return;
+            }
+
+            this.prepareFormDataAfterValidation();
+
+            try {
+                if (this.editedItem) {
+                    await this.updateItem(this.formData);
+                } else {
+                    await this.createItem(this.formData);
+                }
+
+                const successMessage = this.editedItem
+                    ? 'Item has been modified'
+                    : 'Item has been added';
+
+                this.$toast.success(successMessage);
+
+                this.onSuccess();
+            } catch (error) {
+                console.error(error);
+
+                if (error?.response?.data?.errors) {
+                    this.serverErrors = error.response.data.errors;
+                }
+
+                const errorMessage = this.editedItem
+                    ? 'Error while modifying the contract!'
+                    : 'Error while adding the contract!';
+
+                this.$toast.error(errorMessage);
+            }
         }
     }
 };

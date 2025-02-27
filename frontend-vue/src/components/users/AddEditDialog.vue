@@ -14,14 +14,14 @@
                 <v-text-field
                     v-model="formData.firstName"
                     label="First name"
-                    :error-messages="firstNameError"
+                    :error-messages="handleError('firstName')"
                     @blur="onBlur('firstName')"
                 />
 
                 <v-text-field
                     v-model="formData.lastName"
                     label="Last name"
-                    :error-messages="lastNameError"
+                    :error-messages="handleError('lastName')"
                     @blur="onBlur('lastName')"
                 />
 
@@ -29,7 +29,7 @@
                     v-model="formData.dateOfBirth"
                     label="Date of birth"
                     :max="maxDate"
-                    :error-messages="dateOfBirthError"
+                    :error-messages="handleError('dateOfBirth')"
                     @blur="onBlur('dateOfBirth')"
                 />
 
@@ -37,7 +37,7 @@
                     v-model="formData.email"
                     type="email"
                     label="Email"
-                    :error-messages="emailError"
+                    :error-messages="handleError('email')"
                     @blur="onBlur('email')"
                 />
 
@@ -46,7 +46,7 @@
                     v-model="formData.password"
                     type="password"
                     label="Password"
-                    :error-messages="passwordError"
+                    :error-messages="handleError('password')"
                     hint="At least 8 letters"
                     @blur="onBlur('password')"
                 />
@@ -137,70 +137,14 @@ export default {
     computed: {
         formTitle() {
             return this.editedItem ? 'Edit employee' : 'New employee';
-        },
-
-        firstNameError() {
-            return this.handleError('firstName');
-        },
-
-        lastNameError() {
-            return this.handleError('lastName');
-        },
-
-        dateOfBirthError() {
-            return this.handleError('dateOfBirth');
-        },
-
-        emailError() {
-            return this.handleError('email');
-        },
-
-        passwordError() {
-            return this.handleError('password');
         }
     },
 
     methods: {
         ...mapActions(useUserStore, {
-            createUser: 'store',
-            updateUser: 'update'
-        }),
-
-        async save() {
-            this.serverErrors = [];
-
-            this.v$.formData.$touch();
-
-            if (this.v$.formData.$invalid) {
-                return;
-            }
-
-            try {
-                if (this.editedItem) {
-                    await this.updateUser(this.formData);
-
-                    this.$toast.success('User has been modified');
-                } else {
-                    await this.createUser(this.formData);
-
-                    this.$toast.success('User has been added');
-                }
-
-                this.onSuccess();
-            } catch (error) {
-                console.error(error);
-
-                if (error?.response?.data?.errors) {
-                    this.serverErrors = error.response.data.errors;
-                }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the user!'
-                    : 'Error while adding the user!';
-
-                this.$toast.error(errorText);
-            }
-        }
+            createItem: 'store',
+            updateItem: 'update'
+        })
     }
 };
 </script>
