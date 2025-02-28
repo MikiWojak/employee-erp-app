@@ -47,12 +47,12 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
-import VError from '@/components/common/VError';
+import BaseForm from '@/components/common/BaseForm';
 
 export default {
     name: 'LoginPage',
 
-    extends: VError,
+    extends: BaseForm,
 
     setup() {
         return { v$: useVuelidate() };

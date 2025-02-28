@@ -1,12 +1,12 @@
 <script>
 import { useVuelidate } from '@vuelidate/core';
 
-import VError from '@/components/common/VError';
+import BaseForm from '@/components/common/BaseForm';
 
 export default {
     name: 'BaseAddEditDialog',
 
-    extends: VError,
+    extends: BaseForm,
 
     props: {
         isOpened: {
