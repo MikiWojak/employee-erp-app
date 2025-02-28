@@ -15,9 +15,11 @@
 
                     <v-spacer />
 
-                    <v-btn v-if="isAdmin" @click="openAddEditDialog(null)">
-                        <span>New contract</span>
-                    </v-btn>
+                    <v-btn
+                        v-if="isAdmin"
+                        text="New contract"
+                        @click="openAddEditDialog(null)"
+                    />
                 </v-toolbar>
             </template>
 

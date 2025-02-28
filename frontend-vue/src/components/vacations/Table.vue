@@ -15,9 +15,10 @@
 
                     <v-spacer />
 
-                    <v-btn @click="openAddEditDialog(null)">
-                        <span>New vacation</span>
-                    </v-btn>
+                    <v-btn
+                        text="New vacation"
+                        @click="openAddEditDialog(null)"
+                    />
                 </v-toolbar>
             </template>
 
