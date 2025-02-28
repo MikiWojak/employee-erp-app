@@ -171,14 +171,6 @@ export default {
 
                 this.$toast.error('Cannot get a list of users!');
             }
-        },
-
-        // @TODO Prepare it in API!
-        prepareFormDataAfterValidation() {
-            if (!this.isAdmin) {
-                this.formData.userId = this.loggedUser.id;
-                this.formData.approved = false;
-            }
         }
     }
 };

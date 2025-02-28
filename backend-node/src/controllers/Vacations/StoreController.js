@@ -56,12 +56,8 @@ class StoreController {
                 throw error;
             }
         } else {
-            if (loggedUser.id !== userId) {
-                return res.sendStatus(HTTP.FORBIDDEN);
-            }
-
             const { id } = await this.vacationRepository.create({
-                userId,
+                userId: loggedUser.id,
                 startDate,
                 endDate,
                 approved: false

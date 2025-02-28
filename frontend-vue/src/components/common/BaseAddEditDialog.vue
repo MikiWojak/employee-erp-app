@@ -70,9 +70,6 @@ export default {
             this.close();
         },
 
-        // @TODO Remove after adjustments in API
-        prepareFormDataAfterValidation() {},
-
         async updateItem() {
             return Promise.resolve();
         },
@@ -89,8 +86,6 @@ export default {
             if (this.v$.formData.$invalid) {
                 return;
             }
-
-            this.prepareFormDataAfterValidation();
 
             try {
                 if (this.editedItem) {
