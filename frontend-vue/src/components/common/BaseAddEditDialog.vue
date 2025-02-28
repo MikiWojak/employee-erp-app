@@ -15,7 +15,7 @@ export default {
         }
     },
 
-    emits: ['close', 'refetch-items'],
+    emits: ['close', 'success'],
 
     setup() {
         return { v$: useVuelidate() };
@@ -105,7 +105,7 @@ export default {
         },
 
         onSuccess() {
-            this.$emit('refetch-items');
+            this.$emit('success');
 
             this.close();
         },

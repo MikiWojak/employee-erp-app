@@ -8,7 +8,17 @@
             class="elevation-1"
         >
             <template #top>
-                <table-header @refetch-items="doGetItems" />
+                <v-toolbar flat>
+                    <v-toolbar-title class="text-h6 font-weight-bold">
+                        Employees list
+                    </v-toolbar-title>
+
+                    <v-spacer />
+
+                    <v-btn @click="openAddEditDialog(null)">
+                        <span>New employee</span>
+                    </v-btn>
+                </v-toolbar>
             </template>
 
             <template #[`item.vacationLeft`]="{ item }">
@@ -21,7 +31,7 @@
                 <v-btn
                     variant="plain"
                     icon="mdi-pencil"
-                    @click="openEditDialog(item)"
+                    @click="openAddEditDialog(item)"
                 />
 
                 <v-btn
@@ -33,10 +43,10 @@
         </v-data-table>
 
         <add-edit-dialog
-            :is-opened="!!editedItem"
+            :is-opened="isAddEditDialogOpened"
             :edited-item="editedItem"
-            @refetch-items="doGetItems"
-            @close="closeEditDialog"
+            @success="doGetItems"
+            @close="closeAddEditDialog"
         />
 
         <confirmation-modal
@@ -59,9 +69,6 @@ export default {
     name: 'UsersTable',
 
     components: {
-        TableHeader: defineAsyncComponent(
-            () => import('@/components/users/TableHeader')
-        ),
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/users/AddEditDialog')
         ),

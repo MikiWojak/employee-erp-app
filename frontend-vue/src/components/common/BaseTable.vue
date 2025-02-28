@@ -6,7 +6,8 @@ export default {
         return {
             items: [],
             editedItem: null,
-            itemToDeleteId: null
+            itemToDeleteId: null,
+            isAddEditDialogOpened: false
         };
     },
 
@@ -61,12 +62,13 @@ export default {
             }
         },
 
-        openEditDialog(editedItem) {
-            this.editedItem = { ...editedItem };
+        openAddEditDialog(editedItem = null) {
+            this.isAddEditDialogOpened = true;
+            this.editedItem = editedItem ? { ...editedItem } : null;
         },
 
-        closeEditDialog() {
-            this.editedItem = null;
+        closeAddEditDialog() {
+            this.isAddEditDialogOpened = false;
         },
 
         openDeleteDialog(id) {
