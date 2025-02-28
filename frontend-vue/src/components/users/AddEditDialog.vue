@@ -78,7 +78,7 @@ export default {
 
     components: {
         DatePicker: defineAsyncComponent(
-            () => import('@/components/common/DatePicker')
+            () => import('@/components/inputs/DatePicker')
         )
     },
 

@@ -43,6 +43,7 @@ export default {
             default: ''
         },
 
+        // @TODO Rename
         errorMessages: {
             type: String,
             default: ''
