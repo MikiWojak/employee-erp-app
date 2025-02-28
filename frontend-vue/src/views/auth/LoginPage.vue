@@ -10,7 +10,7 @@
                             v-model="formData.email"
                             label="Email"
                             outlined
-                            :error-messages="emailError"
+                            :error-messages="handleError('email')"
                             @blur="onBlur('email')"
                         />
                     </div>
@@ -21,7 +21,7 @@
                             type="password"
                             label="Password"
                             outlined
-                            :error-messages="passwordError"
+                            :error-messages="handleError('password')"
                             @blur="onBlur('password')"
                         />
                     </div>
@@ -47,9 +47,12 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
+import VError from '@/components/common/VError';
 
 export default {
     name: 'LoginPage',
+
+    extends: VError,
 
     setup() {
         return { v$: useVuelidate() };
@@ -61,8 +64,7 @@ export default {
                 email: '',
                 password: ''
             },
-            loginError: '',
-            serverErrors: []
+            loginError: ''
         };
     },
 
@@ -81,62 +83,8 @@ export default {
         };
     },
 
-    computed: {
-        emailError() {
-            return this.handleError('email');
-        },
-
-        passwordError() {
-            return this.handleError('password');
-        }
-    },
-
     methods: {
         ...mapActions(useAuthStore, ['login']),
-
-        onBlur(param) {
-            this.v$.formData[param].$touch();
-            this.clearServerError(param);
-            this.loginError = '';
-        },
-
-        handleError(param) {
-            const { formData } = this.v$;
-
-            if (!formData[param].$error) {
-                return this.getServerError(param);
-            }
-
-            const vError = formData.$errors.find(
-                error => error.$property === param
-            );
-
-            if (vError) {
-                return vError.$message;
-            }
-
-            return 'Something is wrong there.';
-        },
-
-        getServerError(param) {
-            if (this.serverErrors.length) {
-                const serverError = this.serverErrors.find(
-                    error => error.param === param
-                );
-
-                if (serverError) {
-                    return serverError.message;
-                }
-            }
-
-            return '';
-        },
-
-        clearServerError(param) {
-            this.serverErrors = this.serverErrors.filter(
-                error => error.param !== param
-            );
-        },
 
         async handleLogin() {
             this.loginError = '';
