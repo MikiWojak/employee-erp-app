@@ -5,7 +5,7 @@
         :item-title="getFullNameTitle"
         item-value="id"
         label="User"
-        :error-messages="errorMessage"
+        :error-messages="errorMessages"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
     />
@@ -25,7 +25,7 @@ export default {
             default: ''
         },
 
-        errorMessage: {
+        errorMessages: {
             type: String,
             default: ''
         }
