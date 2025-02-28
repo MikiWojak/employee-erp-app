@@ -2,13 +2,13 @@
     <div>
         <v-data-table
             :headers="headers"
-            :items="vacations"
+            :items="items"
             :items-per-page="pagination"
             multi-sort
             class="elevation-1"
         >
             <template #top>
-                <table-header />
+                <table-header @refetch-items="doGetItems" />
             </template>
 
             <template #[`item.approved`]="{ item }">
@@ -37,13 +37,15 @@
         <add-edit-dialog
             :is-opened="!!editedItem"
             :edited-item="editedItem"
+            @refetch-items="doGetItems"
             @close="closeEditDialog"
         />
 
-        <delete-dialog
-            :is-opened="!!deletedItemId"
-            :deleted-item-id="deletedItemId"
-            @close="closeDeleteDialog"
+        <confirmation-modal
+            :is-opened="!!itemToDeleteId"
+            title="Do you really want to delete this vacation?"
+            @confirm="doDeleteItem"
+            @discard="closeDeleteDialog"
         />
     </div>
 </template>
@@ -52,9 +54,9 @@
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-import tableMixin from '@/mixins/tableMixin';
 import { useAuthStore } from '@/stores/auth';
 import { useVacationStore } from '@/stores/vacation';
+import BaseTable from '@/components/common/BaseTable';
 
 export default {
     name: 'VacationsTable',
@@ -66,17 +68,15 @@ export default {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/vacations/AddEditDialog')
         ),
-        DeleteDialog: defineAsyncComponent(
-            () => import('@/components/vacations/DeleteDialog')
+        ConfirmationModal: defineAsyncComponent(
+            () => import('@/components/modals/ConfirmationModal')
         )
     },
 
-    mixins: [tableMixin],
+    extends: BaseTable,
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
-
-        ...mapState(useVacationStore, { vacations: 'items' }),
 
         headers() {
             const employee = [
@@ -99,22 +99,11 @@ export default {
         }
     },
 
-    async created() {
-        await this.handleGetVacations();
-    },
-
     methods: {
-        ...mapActions(useVacationStore, { getVacations: 'index' }),
-
-        async handleGetVacations() {
-            try {
-                await this.getVacations();
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of vacations!');
-            }
-        },
+        ...mapActions(useVacationStore, {
+            getItems: 'index',
+            deleteItem: 'destroy'
+        }),
 
         getStatus(status) {
             return status ? 'Approved' : 'Pending';

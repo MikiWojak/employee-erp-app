@@ -6,7 +6,7 @@
 import { defineAsyncComponent } from 'vue';
 
 export default {
-    name: 'Admin',
+    name: 'AdminPart',
 
     components: {
         UsersTable: defineAsyncComponent(

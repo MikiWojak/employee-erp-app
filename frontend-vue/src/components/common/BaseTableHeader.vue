@@ -1,4 +1,9 @@
+<script>
 export default {
+    name: 'BaseTableHeader',
+
+    emits: ['refetch-items'],
+
     data() {
         return {
             isAddDialogOpened: false
@@ -12,6 +17,11 @@ export default {
 
         closeAddDialog() {
             this.isAddDialogOpened = false;
+        },
+
+        onRefetchItems() {
+            this.$emit('refetch-items');
         }
     }
 };
+</script>

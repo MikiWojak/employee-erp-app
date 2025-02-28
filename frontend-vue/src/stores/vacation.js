@@ -3,74 +3,31 @@ import { defineStore } from 'pinia';
 import axios from '@/services/axios';
 
 export const useVacationStore = defineStore('vacation', {
-    state: () => ({
-        items: []
-    }),
-
     actions: {
         async index() {
-            const {
-                data: { rows: items }
-            } = await axios.get('/vacations', {
+            const { data } = await axios.get('/vacations', {
                 params: {
                     fetchAll: true
                 }
             });
 
-            this.setItems(items);
+            return data;
         },
 
-        async store(data) {
-            const { data: item } = await axios.post('/vacations', data);
+        async store(body) {
+            const { data } = await axios.post('/vacations', body);
 
-            this.storeItem(item);
+            return data;
         },
 
-        async update(data) {
-            const { data: item } = await axios.put(
-                `/vacations/${data.id}`,
-                data
-            );
+        async update(body) {
+            const { data } = await axios.put(`/vacations/${body.id}`, body);
 
-            this.updateItem(item);
+            return data;
         },
 
         async destroy(id) {
             await axios.delete(`/vacations/${id}`);
-
-            this.destroyItem(id);
-        },
-
-        setItems(items) {
-            this.items = items;
-        },
-
-        storeItem(item) {
-            this.items.push(item);
-        },
-
-        updateItem(item) {
-            const index = this.items.findIndex(
-                singleItem => singleItem.id === item.id
-            );
-
-            if (~index) {
-                this.items.splice(index, 1, item);
-            }
-        },
-
-        destroyItem(id) {
-            const index = this.items.findIndex(
-                singleItem => singleItem.id === id
-            );
-
-            if (~index) {
-                this.items.splice(index, 1);
-            }
-        },
-
-        clear() {
-            this.setItems([]);
         }
     }
 });

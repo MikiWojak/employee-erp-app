@@ -18,7 +18,7 @@
                     :item-title="getFullNameTitle"
                     item-value="id"
                     label="User"
-                    :error-messages="userIdError"
+                    :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
 
@@ -29,7 +29,7 @@
                             label="Start date"
                             :allowed-dates="allowBusinessDays"
                             :max="formData.endDate"
-                            :error-messages="startDateError"
+                            :error-messages="handleError('startDate')"
                             @blur="onBlur('startDate')"
                         />
                     </v-col>
@@ -40,7 +40,7 @@
                             label="End date"
                             :allowed-dates="allowBusinessDays"
                             :min="formData.startDate"
-                            :error-messages="endDateError"
+                            :error-messages="handleError('endDate')"
                             @blur="onBlur('endDate')"
                         />
                     </v-col>
@@ -50,7 +50,7 @@
                     v-if="isAdmin"
                     v-model="formData.approved"
                     label="Approved"
-                    :error-messages="approvedError"
+                    :error-messages="handleError('approved')"
                     @blur="onBlur('approved')"
                 />
             </v-card-text>
@@ -80,7 +80,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/user';
 import { useVacationStore } from '@/stores/vacation';
 import getFullNameTitle from '@/helpers/getFullName';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
@@ -91,7 +91,7 @@ export default {
         )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
 
     setup() {
         return { v$: useVuelidate() };
@@ -106,6 +106,7 @@ export default {
         };
 
         return {
+            users: [],
             defaultForm,
             formData: { ...defaultForm },
             getFullNameTitle
@@ -138,32 +139,14 @@ export default {
     computed: {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
-        ...mapState(useUserStore, { users: 'items' }),
-
         formTitle() {
             return this.editedItem ? 'Edit vacation' : 'New vacation';
-        },
-
-        userIdError() {
-            return this.handleError('userId');
-        },
-
-        startDateError() {
-            return this.handleError('startDate');
-        },
-
-        endDateError() {
-            return this.handleError('endDate');
-        },
-
-        approvedError() {
-            return this.handleError('approved');
         }
     },
 
     async created() {
         if (this.isAdmin) {
-            await this.handleGetUsers();
+            await this.doGetUsers();
         }
     },
 
@@ -171,8 +154,8 @@ export default {
         ...mapActions(useUserStore, { getUsers: 'index' }),
 
         ...mapActions(useVacationStore, {
-            createVacation: 'store',
-            updateVacation: 'update'
+            createItem: 'store',
+            updateItem: 'update'
         }),
 
         allowBusinessDays(value) {
@@ -182,9 +165,11 @@ export default {
             return !isWeekend;
         },
 
-        async handleGetUsers() {
+        async doGetUsers() {
             try {
-                await this.getUsers();
+                const { rows } = await this.getUsers();
+
+                this.users = rows;
             } catch (error) {
                 console.error(error);
 
@@ -192,46 +177,11 @@ export default {
             }
         },
 
-        async save() {
-            this.serverErrors = [];
-
-            this.v$.formData.$touch();
-
-            if (this.v$.formData.$invalid) {
-                return;
-            }
-
-            try {
-                if (this.editedItem) {
-                    await this.updateVacation(this.formData);
-
-                    this.$toast.success('Vacation has been modified');
-
-                    this.close();
-                } else {
-                    if (!this.isAdmin) {
-                        this.formData.userId = this.loggedUser.id;
-                        this.formData.approved = false;
-                    }
-
-                    await this.createVacation(this.formData);
-
-                    this.$toast.success('Vacation has been added');
-
-                    this.close();
-                }
-            } catch (error) {
-                console.error(error);
-
-                if (error?.response?.data?.errors) {
-                    this.serverErrors = error.response.data.errors;
-                }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the vacation!'
-                    : 'Error while adding the vacation!';
-
-                this.$toast.error(errorText);
+        // @TODO Prepare it in API!
+        prepareFormDataAfterValidation() {
+            if (!this.isAdmin) {
+                this.formData.userId = this.loggedUser.id;
+                this.formData.approved = false;
             }
         }
     }

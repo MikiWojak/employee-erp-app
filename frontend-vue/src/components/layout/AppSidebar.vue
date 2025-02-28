@@ -41,12 +41,9 @@
 import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
-import { useUserStore } from '@/stores/user';
-import { useContractStore } from '@/stores/contract';
-import { useVacationStore } from '@/stores/vacation';
 
 export default {
-    name: 'Sidebar',
+    name: 'AppSidebar',
 
     computed: {
         ...mapState(useAuthStore, ['loggedUser']),
@@ -77,19 +74,9 @@ export default {
     methods: {
         ...mapActions(useAuthStore, ['logout']),
 
-        ...mapActions(useUserStore, { clearUsers: 'clear' }),
-
-        ...mapActions(useContractStore, { clearContracts: 'clear' }),
-
-        ...mapActions(useVacationStore, { clearVacations: 'clear' }),
-
         async handleLogout() {
             try {
                 await this.logout();
-
-                this.clearUsers();
-                this.clearContracts();
-                this.clearVacations();
 
                 this.$router.push({ name: 'login' });
 

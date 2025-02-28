@@ -1,7 +1,8 @@
 <template>
     <v-container fluid>
-        <admin v-if="isAdmin" />
-        <employee v-else />
+        <admin-part v-if="isAdmin" />
+
+        <employee-part v-else />
     </v-container>
 </template>
 
@@ -12,12 +13,14 @@ import { mapState, mapActions } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 
 export default {
-    name: 'Dashboard',
+    name: 'DashboardPage',
 
     components: {
-        Admin: defineAsyncComponent(() => import('@/views/dashboard/Admin')),
-        Employee: defineAsyncComponent(
-            () => import('@/views/dashboard/Employee')
+        AdminPart: defineAsyncComponent(
+            () => import('@/views/dashboard/AdminPart')
+        ),
+        EmployeePart: defineAsyncComponent(
+            () => import('@/views/dashboard/EmployeePart')
         )
     },
 

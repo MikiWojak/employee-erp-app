@@ -14,6 +14,7 @@
 
         <add-edit-dialog
             :is-opened="isAddDialogOpened"
+            @refetch-items="onRefetchItems"
             @close="closeAddDialog"
         />
     </div>
@@ -22,7 +23,7 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 
-import tableHeaderMixin from '@/mixins/tableHeaderMixin';
+import BaseTableHeader from '@/components/common/BaseTableHeader';
 
 export default {
     name: 'TableHeader',
@@ -33,6 +34,6 @@ export default {
         )
     },
 
-    mixins: [tableHeaderMixin]
+    extends: BaseTableHeader
 };
 </script>

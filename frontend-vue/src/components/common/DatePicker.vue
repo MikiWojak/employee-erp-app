@@ -7,7 +7,7 @@
         :min="min"
         :max="max"
         @blur="$emit('blur')"
-        @update:modelValue="handleInput"
+        @update:model-value="handleInput"
     />
 </template>
 
@@ -49,7 +49,7 @@ export default {
         }
     },
 
-    emits: ['blur', 'update:modelValue'],
+    emits: ['blur', 'update:model-value'],
 
     data() {
         return {
@@ -69,7 +69,7 @@ export default {
     methods: {
         handleInput() {
             this.$emit(
-                'update:modelValue',
+                'update:model-value',
                 dayjs(this.date).format('YYYY-MM-DD')
             );
         }

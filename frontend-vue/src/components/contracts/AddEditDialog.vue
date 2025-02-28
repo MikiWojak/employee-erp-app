@@ -17,14 +17,14 @@
                     :item-title="getFullNameTitle"
                     item-value="id"
                     label="User"
-                    :error-messages="userIdError"
+                    :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
 
                 <v-text-field
                     v-model="formData.position"
                     label="Position"
-                    :error-messages="positionError"
+                    :error-messages="handleError('position')"
                     @blur="onBlur('position')"
                 />
 
@@ -32,7 +32,7 @@
                     v-model="formData.startDate"
                     label="Start date"
                     :max="formData.endDate"
-                    :error-messages="startDateError"
+                    :error-messages="handleError('startDate')"
                     @blur="onBlur('startDate')"
                 />
 
@@ -40,7 +40,7 @@
                     v-model="formData.endDate"
                     label="End date"
                     :min="formData.startDate"
-                    :error-messages="endDateError"
+                    :error-messages="handleError('endDate')"
                     @blur="onBlur('endDate')"
                 />
 
@@ -50,7 +50,7 @@
                     :items="vacationDaysPerYearItems"
                     item-title="text"
                     item-value="value"
-                    :error-messages="vacationDaysPerYearError"
+                    :error-messages="handleError('vacationDaysPerYear')"
                     @blur="onBlur('vacationDaysPerYear')"
                 />
             </v-card-text>
@@ -71,15 +71,15 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
-import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required, integer } from '@vuelidate/validators';
 
 import { useUserStore } from '@/stores/user';
 import { useContractStore } from '@/stores/contract';
 import getFullNameTitle from '@/helpers/getFullName';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
@@ -90,7 +90,7 @@ export default {
         )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
 
     setup() {
         return { v$: useVuelidate() };
@@ -106,6 +106,7 @@ export default {
         };
 
         return {
+            users: [],
             defaultForm,
             formData: { ...defaultForm },
             vacationDaysPerYearItems: [
@@ -140,90 +141,32 @@ export default {
     },
 
     computed: {
-        ...mapState(useUserStore, { users: 'items' }),
-
         formTitle() {
             return this.editedItem ? 'Edit contract' : 'New contract';
-        },
-
-        userIdError() {
-            return this.handleError('userId');
-        },
-
-        positionError() {
-            return this.handleError('position');
-        },
-
-        startDateError() {
-            return this.handleError('startDate');
-        },
-
-        endDateError() {
-            return this.handleError('endDate');
-        },
-
-        vacationDaysPerYearError() {
-            return this.handleError('vacationDaysPerYear');
         }
     },
 
     async created() {
-        await this.handleGetUsers();
+        await this.doGetUsers();
     },
 
     methods: {
         ...mapActions(useUserStore, { getUsers: 'index' }),
 
         ...mapActions(useContractStore, {
-            createContract: 'store',
-            updateContract: 'update'
+            createItem: 'store',
+            updateItem: 'update'
         }),
 
-        async handleGetUsers() {
+        async doGetUsers() {
             try {
-                await this.getUsers();
+                const { rows } = await this.getUsers();
+
+                this.users = rows;
             } catch (error) {
                 console.error(error);
 
                 this.$toast.error('Cannot get a list of users!');
-            }
-        },
-
-        async save() {
-            this.serverErrors = [];
-
-            this.v$.formData.$touch();
-
-            if (this.v$.formData.$invalid) {
-                return;
-            }
-
-            try {
-                if (this.editedItem) {
-                    await this.updateContract(this.formData);
-
-                    this.$toast.success('Contract has been modified');
-
-                    this.close();
-                } else {
-                    await this.createContract(this.formData);
-
-                    this.$toast.success('Contract has been added');
-
-                    this.close();
-                }
-            } catch (error) {
-                console.error(error);
-
-                if (error?.response?.data?.errors) {
-                    this.serverErrors = error.response.data.errors;
-                }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the contract!'
-                    : 'Error while adding the contract!';
-
-                this.$toast.error(errorText);
             }
         }
     }

@@ -2,7 +2,7 @@
     <v-app>
         <app-header />
 
-        <sidebar v-if="loggedIn" />
+        <app-sidebar v-if="loggedIn" />
 
         <v-main>
             <router-view />
@@ -22,12 +22,14 @@ export default {
     name: 'App',
 
     components: {
-        AppHeader: defineAsyncComponent(
-            () => import('@/components/common/AppHeader')
-        ),
-        Sidebar: defineAsyncComponent(() => import('@/views/layout/Sidebar')),
         AppFooter: defineAsyncComponent(
-            () => import('@/components/common/AppFooter')
+            () => import('@/components/layout/AppFooter')
+        ),
+        AppHeader: defineAsyncComponent(
+            () => import('@/components/layout/AppHeader')
+        ),
+        AppSidebar: defineAsyncComponent(
+            () => import('@/components/layout/AppSidebar')
         )
     },
 

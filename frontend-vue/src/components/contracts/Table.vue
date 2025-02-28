@@ -2,13 +2,13 @@
     <div>
         <v-data-table
             :headers="headers"
-            :items="contracts"
+            :items="items"
             :items-per-page="pagination"
             multi-sort
             class="elevation-1"
         >
             <template #top>
-                <table-header />
+                <table-header @refetch-items="doGetItems" />
             </template>
 
             <template #[`item.actions`]="{ item }">
@@ -30,13 +30,15 @@
             v-if="isAdmin"
             :is-opened="!!editedItem"
             :edited-item="editedItem"
+            @refetch-items="doGetItems"
             @close="closeEditDialog"
         />
 
-        <delete-dialog
-            :is-opened="!!deletedItemId"
-            :deleted-item-id="deletedItemId"
-            @close="closeDeleteDialog"
+        <confirmation-modal
+            :is-opened="!!itemToDeleteId"
+            title="Do you really want to delete this contract?"
+            @confirm="doDeleteItem"
+            @discard="closeDeleteDialog"
         />
     </div>
 </template>
@@ -45,9 +47,9 @@
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-import tableMixin from '@/mixins/tableMixin';
 import { useAuthStore } from '@/stores/auth';
 import { useContractStore } from '@/stores/contract';
+import BaseTable from '@/components/common/BaseTable';
 
 export default {
     name: 'ContractsTable',
@@ -59,17 +61,15 @@ export default {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/contracts/AddEditDialog')
         ),
-        DeleteDialog: defineAsyncComponent(
-            () => import('@/components/contracts/DeleteDialog')
+        ConfirmationModal: defineAsyncComponent(
+            () => import('@/components/modals/ConfirmationModal')
         )
     },
 
-    mixins: [tableMixin],
+    extends: BaseTable,
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
-
-        ...mapState(useContractStore, { contracts: 'items' }),
 
         headers() {
             const employee = [
@@ -96,22 +96,11 @@ export default {
         }
     },
 
-    async created() {
-        await this.handleGetContracts();
-    },
-
     methods: {
-        ...mapActions(useContractStore, { getContracts: 'index' }),
-
-        async handleGetContracts() {
-            try {
-                await this.getContracts();
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of contracts!');
-            }
-        }
+        ...mapActions(useContractStore, {
+            getItems: 'index',
+            deleteItem: 'destroy'
+        })
     }
 };
 </script>

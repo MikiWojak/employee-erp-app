@@ -8,25 +8,25 @@ const router = createRouter({
         {
             path: '/',
             name: 'dashboard',
-            component: () => import('@/views/dashboard/Dashboard'),
+            component: () => import('@/views/dashboard/DashboardPage'),
             meta: { auth: true }
         },
         {
             path: '/contracts',
             name: 'contracts',
-            component: () => import('@/views/contracts/Contracts'),
+            component: () => import('@/views/contracts/ContractsPage'),
             meta: { auth: true }
         },
         {
             path: '/vacations',
             name: 'vacations',
-            component: () => import('@/views/vacations/Vacations'),
+            component: () => import('@/views/vacations/VacationsPage'),
             meta: { auth: true }
         },
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/views/auth/Login'),
+            component: () => import('@/views/auth/LoginPage'),
             meta: { guest: true }
         }
     ]

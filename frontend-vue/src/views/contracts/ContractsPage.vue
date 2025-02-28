@@ -8,7 +8,7 @@
 import { defineAsyncComponent } from 'vue';
 
 export default {
-    name: 'Contracts',
+    name: 'ContractsPage',
 
     components: {
         ContractsTable: defineAsyncComponent(

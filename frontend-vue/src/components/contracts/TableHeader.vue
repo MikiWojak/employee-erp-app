@@ -15,6 +15,7 @@
         <add-edit-dialog
             v-if="isAdmin"
             :is-opened="isAddDialogOpened"
+            @refetch-items="onRefetchItems"
             @close="closeAddDialog"
         />
     </div>
@@ -25,7 +26,7 @@ import { mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 
 import { useAuthStore } from '@/stores/auth';
-import tableHeaderMixin from '@/mixins/tableHeaderMixin';
+import BaseTableHeader from '@/components/common/BaseTableHeader';
 
 export default {
     name: 'TableHeader',
@@ -36,7 +37,7 @@ export default {
         )
     },
 
-    mixins: [tableHeaderMixin],
+    extends: BaseTableHeader,
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin'])

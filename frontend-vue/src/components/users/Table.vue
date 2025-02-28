@@ -2,13 +2,13 @@
     <div>
         <v-data-table
             :headers="headers"
-            :items="users"
+            :items="items"
             :items-per-page="pagination"
             multi-sort
             class="elevation-1"
         >
             <template #top>
-                <table-header />
+                <table-header @refetch-items="doGetItems" />
             </template>
 
             <template #[`item.vacationLeft`]="{ item }">
@@ -35,13 +35,15 @@
         <add-edit-dialog
             :is-opened="!!editedItem"
             :edited-item="editedItem"
+            @refetch-items="doGetItems"
             @close="closeEditDialog"
         />
 
-        <delete-dialog
-            :is-opened="!!deletedItemId"
-            :deleted-item-id="deletedItemId"
-            @close="closeDeleteDialog"
+        <confirmation-modal
+            :is-opened="!!itemToDeleteId"
+            title="Do you really want to delete this user?"
+            @confirm="doDeleteItem"
+            @discard="closeDeleteDialog"
         />
     </div>
 </template>
@@ -51,7 +53,7 @@ import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
 import { useUserStore } from '@/stores/user';
-import tableMixin from '@/mixins/tableMixin';
+import BaseTable from '@/components/common/BaseTable';
 
 export default {
     name: 'UsersTable',
@@ -63,12 +65,12 @@ export default {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/users/AddEditDialog')
         ),
-        DeleteDialog: defineAsyncComponent(
-            () => import('@/components/users/DeleteDialog')
+        ConfirmationModal: defineAsyncComponent(
+            () => import('@/components/modals/ConfirmationModal')
         )
     },
 
-    mixins: [tableMixin],
+    extends: BaseTable,
 
     computed: {
         ...mapState(useUserStore, { users: 'items' }),
@@ -85,12 +87,11 @@ export default {
         }
     },
 
-    async created() {
-        await this.handleGetUsers();
-    },
-
     methods: {
-        ...mapActions(useUserStore, { getUsers: 'index' }),
+        ...mapActions(useUserStore, {
+            getItems: 'index',
+            deleteItem: 'destroy'
+        }),
 
         getVacationLeft(item) {
             return item.vacationDaysSum - item.vacationDaysUsed;
@@ -108,16 +109,6 @@ export default {
             }
 
             return 'red';
-        },
-
-        async handleGetUsers() {
-            try {
-                await this.getUsers();
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of users!');
-            }
         }
     }
 };
