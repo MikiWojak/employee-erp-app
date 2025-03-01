@@ -1,3 +1,7 @@
+<template>
+    <div></div>
+</template>
+
 <script>
 import { useVuelidate } from '@vuelidate/core';
 
