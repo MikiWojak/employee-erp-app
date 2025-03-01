@@ -86,6 +86,12 @@ export default {
     methods: {
         ...mapActions(useAuthStore, ['login']),
 
+        onBlur(param) {
+            this.clearServerError(param);
+            this.v$.formData[param].$touch();
+            this.loginError = '';
+        },
+
         async handleLogin() {
             this.loginError = '';
             this.serverErrors = [];
