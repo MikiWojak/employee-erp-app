@@ -8,7 +8,18 @@
             class="elevation-1"
         >
             <template #top>
-                <table-header @refetch-items="doGetItems" />
+                <v-toolbar flat>
+                    <v-toolbar-title class="text-h6 font-weight-bold">
+                        Vacations list
+                    </v-toolbar-title>
+
+                    <v-spacer />
+
+                    <v-btn
+                        text="New vacation"
+                        @click="openAddEditDialog(null)"
+                    />
+                </v-toolbar>
             </template>
 
             <template #[`item.approved`]="{ item }">
@@ -22,7 +33,7 @@
                     variant="plain"
                     icon="mdi-pencil"
                     :disabled="!isAdmin && item.approved"
-                    @click="openEditDialog(item)"
+                    @click="openAddEditDialog(item)"
                 />
 
                 <v-btn
@@ -35,10 +46,10 @@
         </v-data-table>
 
         <add-edit-dialog
-            :is-opened="!!editedItem"
+            :is-opened="isAddEditDialogOpened"
             :edited-item="editedItem"
-            @refetch-items="doGetItems"
-            @close="closeEditDialog"
+            @success="doGetItems"
+            @close="closeAddEditDialog"
         />
 
         <confirmation-modal
@@ -62,9 +73,6 @@ export default {
     name: 'VacationsTable',
 
     components: {
-        TableHeader: defineAsyncComponent(
-            () => import('@/components/vacations/TableHeader')
-        ),
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/vacations/AddEditDialog')
         ),

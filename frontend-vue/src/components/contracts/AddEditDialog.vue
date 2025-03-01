@@ -11,12 +11,8 @@
             </v-card-title>
 
             <v-card-text>
-                <v-autocomplete
+                <user-select
                     v-model="formData.userId"
-                    :items="users"
-                    :item-title="getFullNameTitle"
-                    item-value="id"
-                    label="User"
                     :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
@@ -58,13 +54,9 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text @click="close">
-                    <span>Cancel</span>
-                </v-btn>
+                <v-btn text="Cancel" @click="close" />
 
-                <v-btn text @click="save">
-                    <span>Save</span>
-                </v-btn>
+                <v-btn text="Save" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -76,9 +68,7 @@ import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, integer } from '@vuelidate/validators';
 
-import { useUserStore } from '@/stores/user';
 import { useContractStore } from '@/stores/contract';
-import getFullNameTitle from '@/helpers/getFullName';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
@@ -86,7 +76,10 @@ export default {
 
     components: {
         DatePicker: defineAsyncComponent(
-            () => import('@/components/common/DatePicker')
+            () => import('@/components/inputs/DatePicker')
+        ),
+        UserSelect: defineAsyncComponent(
+            () => import('@/components/inputs/UserSelect')
         )
     },
 
@@ -112,8 +105,7 @@ export default {
             vacationDaysPerYearItems: [
                 { text: 20, value: 20 },
                 { text: 26, value: 26 }
-            ],
-            getFullNameTitle
+            ]
         };
     },
 
@@ -146,29 +138,11 @@ export default {
         }
     },
 
-    async created() {
-        await this.doGetUsers();
-    },
-
     methods: {
-        ...mapActions(useUserStore, { getUsers: 'index' }),
-
         ...mapActions(useContractStore, {
             createItem: 'store',
             updateItem: 'update'
-        }),
-
-        async doGetUsers() {
-            try {
-                const { rows } = await this.getUsers();
-
-                this.users = rows;
-            } catch (error) {
-                console.error(error);
-
-                this.$toast.error('Cannot get a list of users!');
-            }
-        }
+        })
     }
 };
 </script>

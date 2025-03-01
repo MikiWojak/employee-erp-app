@@ -36,6 +36,15 @@ const isWeekend = value => {
 
 const update = [
     body('userId')
+        .if(async (value, { req }) => {
+            const { loggedUser } = req;
+
+            const isAdmin = await loggedUser.isAdmin();
+
+            if (!isAdmin) {
+                return Promise.reject();
+            }
+        })
         .trim()
         .not()
         .isEmpty()
@@ -121,6 +130,15 @@ const update = [
         ),
 
     body('approved')
+        .if(async (value, { req }) => {
+            const { loggedUser } = req;
+
+            const isAdmin = await loggedUser.isAdmin();
+
+            if (!isAdmin) {
+                return Promise.reject();
+            }
+        })
         .trim()
         .not()
         .isEmpty()

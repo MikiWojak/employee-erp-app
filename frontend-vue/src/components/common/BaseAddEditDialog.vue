@@ -1,8 +1,12 @@
 <script>
 import { useVuelidate } from '@vuelidate/core';
 
+import BaseForm from '@/components/common/BaseForm';
+
 export default {
     name: 'BaseAddEditDialog',
+
+    extends: BaseForm,
 
     props: {
         isOpened: {
@@ -15,7 +19,7 @@ export default {
         }
     },
 
-    emits: ['close', 'refetch-items'],
+    emits: ['close', 'success'],
 
     setup() {
         return { v$: useVuelidate() };
@@ -27,8 +31,7 @@ export default {
         return {
             defaultForm,
             formData: { ...defaultForm },
-            isDialogOpened: false,
-            serverErrors: []
+            isDialogOpened: false
         };
     },
 
@@ -50,11 +53,6 @@ export default {
     },
 
     methods: {
-        onBlur(param) {
-            this.clearServerError(param);
-            this.v$.formData[param].$touch();
-        },
-
         close() {
             this.$emit('close');
             this.v$.formData.$reset();
@@ -66,52 +64,11 @@ export default {
             this.formData = { ...this.defaultForm };
         },
 
-        handleError(param) {
-            const { formData } = this.v$;
-
-            if (!formData[param].$error) {
-                return this.getServerError(param);
-            }
-
-            const vError = formData.$errors.find(
-                error => error.$property === param
-            );
-
-            if (vError) {
-                return vError.$message;
-            }
-
-            return 'Something is wrong there.';
-        },
-
-        getServerError(param) {
-            if (this.serverErrors.length) {
-                const serverError = this.serverErrors.find(
-                    error => error.param === param
-                );
-
-                if (serverError) {
-                    return serverError.message;
-                }
-            }
-
-            return '';
-        },
-
-        clearServerError(param) {
-            this.serverErrors = this.serverErrors.filter(
-                error => error.param !== param
-            );
-        },
-
         onSuccess() {
-            this.$emit('refetch-items');
+            this.$emit('success');
 
             this.close();
         },
-
-        // @TODO Remove after adjustments in API
-        prepareFormDataAfterValidation() {},
 
         async updateItem() {
             return Promise.resolve();
@@ -129,8 +86,6 @@ export default {
             if (this.v$.formData.$invalid) {
                 return;
             }
-
-            this.prepareFormDataAfterValidation();
 
             try {
                 if (this.editedItem) {

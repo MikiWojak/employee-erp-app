@@ -8,14 +8,26 @@
             class="elevation-1"
         >
             <template #top>
-                <table-header @refetch-items="doGetItems" />
+                <v-toolbar flat>
+                    <v-toolbar-title class="text-h6 font-weight-bold">
+                        Contracts list
+                    </v-toolbar-title>
+
+                    <v-spacer />
+
+                    <v-btn
+                        v-if="isAdmin"
+                        text="New contract"
+                        @click="openAddEditDialog(null)"
+                    />
+                </v-toolbar>
             </template>
 
             <template #[`item.actions`]="{ item }">
                 <v-btn
                     variant="plain"
                     icon="mdi-pencil"
-                    @click="openEditDialog(item)"
+                    @click="openAddEditDialog(item)"
                 />
 
                 <v-btn
@@ -28,10 +40,10 @@
 
         <add-edit-dialog
             v-if="isAdmin"
-            :is-opened="!!editedItem"
+            :is-opened="isAddEditDialogOpened"
             :edited-item="editedItem"
-            @refetch-items="doGetItems"
-            @close="closeEditDialog"
+            @success="doGetItems"
+            @close="closeAddEditDialog"
         />
 
         <confirmation-modal
@@ -55,9 +67,6 @@ export default {
     name: 'ContractsTable',
 
     components: {
-        TableHeader: defineAsyncComponent(
-            () => import('@/components/contracts/TableHeader')
-        ),
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/contracts/AddEditDialog')
         ),

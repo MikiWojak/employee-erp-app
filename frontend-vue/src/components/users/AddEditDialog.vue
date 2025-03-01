@@ -55,13 +55,9 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text @click="close">
-                    <span>Cancel</span>
-                </v-btn>
+                <v-btn text="Cancel" @click="close" />
 
-                <v-btn text @click="save">
-                    <span>Save</span>
-                </v-btn>
+                <v-btn text="Save" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -82,7 +78,7 @@ export default {
 
     components: {
         DatePicker: defineAsyncComponent(
-            () => import('@/components/common/DatePicker')
+            () => import('@/components/inputs/DatePicker')
         )
     },
 
