@@ -39,8 +39,10 @@ export default {
         customFields() {
             return [
                 {
+                    component: 'v-chip',
                     name: 'vacationLeft',
-                    value: this.getVacationLeft
+                    value: this.getVacationLeft,
+                    color: this.getVacationLeftColor
                 }
             ];
         }
@@ -52,12 +54,10 @@ export default {
             deleteItem: 'destroy'
         }),
 
-        // @TODO Restore
         getVacationLeft(item) {
             return item.vacationDaysSum - item.vacationDaysUsed;
         },
 
-        // @TODO Restore
         getVacationLeftColor(item) {
             const value = this.getVacationLeft(item);
 

@@ -28,9 +28,12 @@
                 :key="index"
                 #[`item.${field.name}`]="{ item }"
             >
-                <span>
+                <component
+                    :is="field.component || 'span'"
+                    v-bind="getColumnAttributes(field, item)"
+                >
                     {{ field.value(item) }}
-                </span>
+                </component>
             </template>
 
             <template #[`item.actions`]="{ item }">
@@ -189,6 +192,18 @@ export default {
 
         closeDeleteDialog() {
             this.itemToDeleteId = null;
+        },
+
+        getColumnAttributes(field, item) {
+            const { attributes = {} } = field;
+
+            const preparedAttributes = { ...attributes };
+
+            if (typeof field.color === 'function') {
+                preparedAttributes.color = field.color(item);
+            }
+
+            return preparedAttributes;
         }
     }
 };

@@ -50,8 +50,10 @@ export default {
         customFields() {
             return [
                 {
+                    component: 'v-chip',
                     name: 'approved',
-                    value: this.getStatus
+                    value: this.getStatus,
+                    color: this.getColor
                 }
             ];
         }
@@ -71,9 +73,8 @@ export default {
             return item.approved ? 'Approved' : 'Pending';
         },
 
-        // @TODO Restore
-        getColor(status) {
-            return status ? 'green' : 'orange';
+        getColor(item) {
+            return item.approved ? 'green' : 'orange';
         }
     }
 };
