@@ -4,11 +4,9 @@ import axios from '@/services/axios';
 
 export const useVacationStore = defineStore('vacation', {
     actions: {
-        async index() {
+        async index({ page = 1, perPage = 10 } = {}) {
             const { data } = await axios.get('/vacations', {
-                params: {
-                    fetchAll: true
-                }
+                params: { page, perPage }
             });
 
             return data;

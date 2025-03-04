@@ -4,11 +4,9 @@ import axios from '@/services/axios';
 
 export const useUserStore = defineStore('user', {
     actions: {
-        async index() {
+        async index({ page = 1, perPage = 10 } = {}) {
             const { data } = await axios.get('/users', {
-                params: {
-                    fetchAll: true
-                }
+                params: { page, perPage }
             });
 
             return data;

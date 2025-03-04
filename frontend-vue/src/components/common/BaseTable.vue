@@ -1,11 +1,15 @@
 <template>
     <div>
-        <v-data-table
+        <v-data-table-server
+            v-model:page="page"
+            v-model:items-per-page="perPage"
             :headers="headers"
             :items="items"
-            :items-per-page="pagination"
-            multi-sort
-            class="elevation-1"
+            :items-length="total"
+            :loading="loading"
+            item-value="id"
+            :items-per-page-options="perPageOptions"
+            @update:options="doGetItems"
         >
             <template #top>
                 <v-toolbar flat>
@@ -51,7 +55,7 @@
                     @click="openDeleteDialog(item.id)"
                 />
             </template>
-        </v-data-table>
+        </v-data-table-server>
     </div>
 
     <add-edit-dialog
@@ -89,10 +93,20 @@ export default {
             title: 'Table',
             deleteConfirmationModalTitle:
                 'Do you really want to delete this item?',
-            items: [],
             editedItem: null,
             itemToDeleteId: null,
-            isAddEditDialogOpened: false
+            isAddEditDialogOpened: false,
+            perPageOptions: [
+                { value: 10, title: '10' },
+                { value: 25, title: '25' },
+                { value: 50, title: '50' },
+                { value: 100, title: '100' }
+            ],
+            page: 1,
+            perPage: 10,
+            items: [],
+            total: 0,
+            loading: false
         };
     },
 
@@ -109,10 +123,6 @@ export default {
             return [];
         },
 
-        pagination() {
-            return 10;
-        },
-
         headers() {
             return [
                 ...this.baseHeaders,
@@ -127,10 +137,6 @@ export default {
         }
     },
 
-    async created() {
-        await this.doGetItems();
-    },
-
     methods: {
         // eslint-disable-next-line no-unused-vars
         areActionButtonsDisabled(item) {
@@ -143,13 +149,21 @@ export default {
 
         async doGetItems() {
             try {
-                const { rows } = await this.getItems();
+                this.loading = true;
+
+                const { rows, count } = await this.getItems({
+                    page: this.page,
+                    perPage: this.perPage
+                });
 
                 this.items = rows;
+                this.total = count;
             } catch (error) {
                 console.error(error);
 
                 this.$toast.error('Cannot fetch data');
+            } finally {
+                this.loading = false;
             }
         },
 
