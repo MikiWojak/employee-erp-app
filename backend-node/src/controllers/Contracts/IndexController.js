@@ -4,23 +4,14 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const {
-            sorting,
-            pagination,
-            loggedUser,
-            query: { fetchAll }
-        } = req;
+        const { sorting, pagination, loggedUser } = req;
 
-        const fetchAllFlag = fetchAll === 'true';
         const isAdmin = await loggedUser.isAdmin();
 
         let options = {
-            ...sorting
+            ...sorting,
+            ...pagination
         };
-
-        if (!fetchAllFlag) {
-            options = { ...options, ...pagination };
-        }
 
         if (isAdmin) {
             options = {
