@@ -1,5 +1,5 @@
 'use strict';
-const { Model } = require('sequelize');
+const { Model, Sequelize } = require('sequelize');
 const dayjs = require('dayjs');
 
 module.exports = (sequelize, DataTypes) => {
@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'user',
                 foreignKey: 'userId'
             });
+        }
+
+        static get SEARCHABLE_FIELDS() {
+            return ['position'];
         }
     }
 

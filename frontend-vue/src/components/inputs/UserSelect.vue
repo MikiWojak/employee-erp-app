@@ -77,8 +77,6 @@ export default {
         },
 
         async doSearch(search) {
-            console.log(search, this.timer);
-
             if (!search) {
                 return;
             }

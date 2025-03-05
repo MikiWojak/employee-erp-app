@@ -1,36 +1,49 @@
+const { Op } = require('sequelize');
+const deepmerge = require('deepmerge');
+const { isPlainObject } = require('is-plain-object');
+
 class IndexController {
     constructor(contractRepository) {
         this.contractRepository = contractRepository;
     }
 
     async invoke(req, res) {
-        const { sorting, pagination, loggedUser } = req;
+        const { search, sorting, pagination, loggedUser } = req;
 
         const isAdmin = await loggedUser.isAdmin();
 
-        let options = {
+        const baseOptions = {
+            where: search,
             ...sorting,
             ...pagination
         };
 
-        if (isAdmin) {
-            options = {
-                ...options,
-                include: [
-                    {
-                        association: 'user',
-                        required: true
-                    }
-                ]
-            };
-        } else {
-            options = {
-                ...options,
-                where: {
-                    userId: loggedUser.id
-                }
-            };
-        }
+        // @TODO Keep types on merge!!!
+        // @TODO Do I still need deepmerge?
+        const options = isAdmin
+            ? {
+                  ...baseOptions,
+                  include: [
+                      {
+                          association: 'user',
+                          required: true
+                      }
+                  ]
+              }
+            : deepmerge(
+                  baseOptions,
+                  {
+                      where: {
+                          ...search,
+                          userId: loggedUser.id
+                      }
+                  },
+                  {
+                      isMergeableObject: isPlainObject
+                  }
+              );
+
+        console.dir({ options }, { depth: null });
 
         const contracts =
             await this.contractRepository.findAndCountAll(options);
