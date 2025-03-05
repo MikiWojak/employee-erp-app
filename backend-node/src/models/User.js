@@ -1,6 +1,6 @@
 'use strict';
-const { Model } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { Model, Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
@@ -25,7 +25,12 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['firstName', 'lastName', 'email'];
+            return [
+                'firstName',
+                'lastName',
+                'email',
+                Sequelize.literal("CONCAT(firstName, ' ', lastName)")
+            ];
         }
     }
 
@@ -52,6 +57,12 @@ module.exports = (sequelize, DataTypes) => {
             lastName: {
                 allowNull: false,
                 type: DataTypes.STRING
+            },
+            fullName: {
+                type: DataTypes.VIRTUAL,
+                get() {
+                    return `${this.firstName} ${this.lastName}`;
+                }
             },
             dateOfBirth: {
                 allowNull: false,

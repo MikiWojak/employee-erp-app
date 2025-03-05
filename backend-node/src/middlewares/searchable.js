@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 
 module.exports = (fields = []) => {
     return (request, response, next) => {
@@ -11,9 +11,12 @@ module.exports = (fields = []) => {
                 [Op.like]: `%${q}%`
             };
 
-            where[Op.or] = fields.map(field => ({
-                [field]: fieldIncludesQueryString
-            }));
+            where[Op.or] = fields.map(field =>
+                Sequelize.where(
+                    typeof field === 'string' ? Sequelize.col(field) : field,
+                    fieldIncludesQueryString
+                )
+            );
         }
 
         request.search = where;

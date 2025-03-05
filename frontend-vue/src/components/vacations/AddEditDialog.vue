@@ -13,7 +13,7 @@
             <v-card-text>
                 <user-select
                     v-if="isAdmin"
-                    v-model="formData.userId"
+                    v-model="selectedUser"
                     :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
@@ -92,6 +92,7 @@ export default {
 
     data() {
         const defaultForm = {
+            user: null,
             userId: '',
             startDate: '',
             endDate: '',
@@ -100,6 +101,7 @@ export default {
 
         return {
             users: [],
+            selectedUser: null,
             defaultForm,
             formData: { ...defaultForm }
         };
@@ -136,6 +138,23 @@ export default {
         }
     },
 
+    watch: {
+        selectedUser: {
+            handler(newVal) {
+                this.formData.user = newVal;
+                this.formData.userId = newVal?.id || '';
+            }
+        },
+
+        editedItem: {
+            handler(val) {
+                this.formData = val ? { ...val } : { ...this.defaultForm };
+                this.selectedUser = val ? { ...val.user } : null;
+            },
+            immediate: true
+        }
+    },
+
     methods: {
         ...mapActions(useVacationStore, {
             createItem: 'store',
@@ -147,6 +166,11 @@ export default {
             const isWeekend = [0, 6].includes(day);
 
             return !isWeekend;
+        },
+
+        clearInputs() {
+            this.formData = { ...this.defaultForm };
+            this.selectedUser = null;
         }
     }
 };
