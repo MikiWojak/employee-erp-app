@@ -3,7 +3,7 @@
         <v-data-table-server
             v-model:page="page"
             v-model:items-per-page="perPage"
-            :headers="headers"
+            :headers="computedHeaders"
             :items="items"
             :items-length="total"
             :loading="loading"
@@ -13,11 +13,10 @@
         >
             <template #top>
                 <div>
-                    <h1>{{ title }}</h1>
+                    <h1>{{ tableOptions.title }}</h1>
                 </div>
 
                 <div class="d-flex justify-space-between align-center">
-                    <!-- // @TODO Shrink-->
                     <div class="d-flex justify-space-between align-center w-50">
                         <v-text-field
                             v-model="search"
@@ -29,7 +28,7 @@
                     </div>
 
                     <v-btn
-                        v-if="isAddButtonIncluded"
+                        v-if="computedTableOptions.isAddButtonIncluded"
                         text="Add"
                         color="green"
                         prepend-icon="mdi-plus-circle-outline"
@@ -79,7 +78,7 @@
 
     <confirmation-modal
         :is-opened="!!itemToDeleteId"
-        :title="deleteConfirmationModalTitle"
+        :title="tableOptions.deleteConfirmationModalTitle"
         @confirm="doDeleteItem"
         @discard="closeDeleteDialog"
     />
@@ -102,52 +101,53 @@ export default {
 
     data() {
         return {
-            title: 'Table',
-            deleteConfirmationModalTitle:
-                'Do you really want to delete this item?',
-            editedItem: null,
-            itemToDeleteId: null,
-            isAddEditDialogOpened: false,
-            perPageOptions: [
-                { value: 10, title: '10' },
-                { value: 25, title: '25' },
-                { value: 50, title: '50' },
-                { value: 100, title: '100' }
-            ],
             page: 1,
             perPage: 10,
             search: '',
             items: [],
             total: 0,
             loading: false,
-            searchTimer: null
+            searchTimer: null,
+            editedItem: null,
+            itemToDeleteId: null,
+            isAddEditDialogOpened: false,
+            tableOptions: {
+                title: 'Table',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this item?'
+            },
+            perPageOptions: [
+                { value: 10, title: '10' },
+                { value: 25, title: '25' },
+                { value: 50, title: '50' },
+                { value: 100, title: '100' }
+            ]
         };
     },
 
     computed: {
-        isAddButtonIncluded() {
-            return true;
-        },
-
-        areActionButtonsIncluded() {
-            return true;
-        },
-
-        baseHeaders() {
-            return [];
-        },
-
-        headers() {
-            return [
-                ...this.baseHeaders,
-                ...(this.areActionButtonsIncluded
-                    ? [{ title: 'Actions', value: 'actions', sortable: false }]
-                    : [])
-            ];
+        computedTableOptions() {
+            return {
+                isAddButtonIncluded: true,
+                areActionButtonsIncluded: true
+            };
         },
 
         customFields() {
             return [];
+        },
+
+        headers() {
+            return [];
+        },
+
+        computedHeaders() {
+            return [
+                ...this.headers,
+                ...(this.computedTableOptions.areActionButtonsIncluded
+                    ? [{ title: 'Actions', value: 'actions', sortable: false }]
+                    : [])
+            ];
         }
     },
 
@@ -155,6 +155,18 @@ export default {
         // eslint-disable-next-line no-unused-vars
         areActionButtonsDisabled(item) {
             return false;
+        },
+
+        getColumnAttributes(field, item) {
+            const { attributes = {} } = field;
+
+            const preparedAttributes = { ...attributes };
+
+            if (typeof field.color === 'function') {
+                preparedAttributes.color = field.color(item);
+            }
+
+            return preparedAttributes;
         },
 
         async getItems() {
@@ -236,18 +248,6 @@ export default {
 
         closeDeleteDialog() {
             this.itemToDeleteId = null;
-        },
-
-        getColumnAttributes(field, item) {
-            const { attributes = {} } = field;
-
-            const preparedAttributes = { ...attributes };
-
-            if (typeof field.color === 'function') {
-                preparedAttributes.color = field.color(item);
-            }
-
-            return preparedAttributes;
         }
     }
 };

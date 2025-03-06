@@ -1,9 +1,8 @@
 <script>
 import { mapActions } from 'pinia';
-
-import { useUserStore } from '@/stores/user';
 import { defineAsyncComponent } from 'vue';
 
+import { useUserStore } from '@/stores/user';
 import BaseTable from '@/components/common/BaseTable';
 
 export default {
@@ -19,23 +18,15 @@ export default {
 
     data() {
         return {
-            title: 'Employees',
-            deleteConfirmationModalTitle:
-                'Do you really want to delete this user?'
+            tableOptions: {
+                title: 'Employees',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this user?'
+            }
         };
     },
 
     computed: {
-        baseHeaders() {
-            return [
-                { title: 'First name', value: 'firstName' },
-                { title: 'Last name', value: 'lastName' },
-                { title: 'Date of birth', value: 'dateOfBirth' },
-                { title: 'Email', value: 'email' },
-                { title: 'Days off left', value: 'vacationLeft' }
-            ];
-        },
-
         customFields() {
             return [
                 {
@@ -44,6 +35,16 @@ export default {
                     value: this.getVacationLeft,
                     color: this.getVacationLeftColor
                 }
+            ];
+        },
+
+        headers() {
+            return [
+                { title: 'First name', value: 'firstName' },
+                { title: 'Last name', value: 'lastName' },
+                { title: 'Date of birth', value: 'dateOfBirth' },
+                { title: 'Email', value: 'email' },
+                { title: 'Days off left', value: 'vacationLeft' }
             ];
         }
     },

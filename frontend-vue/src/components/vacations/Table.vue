@@ -19,16 +19,29 @@ export default {
 
     data() {
         return {
-            title: 'Vacations',
-            deleteConfirmationModalTitle:
-                'Do you really want to delete this vacation?'
+            tableOptions: {
+                title: 'Vacations',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this vacation?'
+            }
         };
     },
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
 
-        baseHeaders() {
+        customFields() {
+            return [
+                {
+                    component: 'v-chip',
+                    name: 'approved',
+                    value: this.getStatus,
+                    color: this.getColor
+                }
+            ];
+        },
+
+        headers() {
             const employeeHeaders = [
                 { title: 'Start date', value: 'startDate' },
                 { title: 'End date', value: 'endDate' },
@@ -45,17 +58,6 @@ export default {
             }
 
             return employeeHeaders;
-        },
-
-        customFields() {
-            return [
-                {
-                    component: 'v-chip',
-                    name: 'approved',
-                    value: this.getStatus,
-                    color: this.getColor
-                }
-            ];
         }
     },
 

@@ -19,24 +19,25 @@ export default {
 
     data() {
         return {
-            title: 'Contracts',
-            deleteConfirmationModalTitle:
-                'Do you really want to delete this contract?'
+            tableOptions: {
+                title: 'Contracts',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this contract?'
+            }
         };
     },
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
 
-        isAddButtonIncluded() {
-            return this.isAdmin;
+        computedTableOptions() {
+            return {
+                isAddButtonIncluded: this.isAdmin,
+                areActionButtonsIncluded: this.isAdmin
+            };
         },
 
-        areActionButtonsIncluded() {
-            return this.isAdmin;
-        },
-
-        baseHeaders() {
+        headers() {
             const employeeHeaders = [
                 { title: 'Position', value: 'position' },
                 { title: 'Start date', value: 'startDate' },
