@@ -4,11 +4,9 @@ import axios from '@/services/axios';
 
 export const useContractStore = defineStore('contract', {
     actions: {
-        async index() {
+        async index({ page = 1, perPage = 10, search = '' } = {}) {
             const { data } = await axios.get('/contracts', {
-                params: {
-                    fetchAll: true
-                }
+                params: { page, perPage, q: search }
             });
 
             return data;

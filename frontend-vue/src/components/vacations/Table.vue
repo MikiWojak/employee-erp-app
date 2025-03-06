@@ -1,66 +1,3 @@
-<template>
-    <div>
-        <v-data-table
-            :headers="headers"
-            :items="items"
-            :items-per-page="pagination"
-            multi-sort
-            class="elevation-1"
-        >
-            <template #top>
-                <v-toolbar flat>
-                    <v-toolbar-title class="text-h6 font-weight-bold">
-                        Vacations list
-                    </v-toolbar-title>
-
-                    <v-spacer />
-
-                    <v-btn
-                        text="New vacation"
-                        @click="openAddEditDialog(null)"
-                    />
-                </v-toolbar>
-            </template>
-
-            <template #[`item.approved`]="{ item }">
-                <v-chip :color="getColor(item.approved)" dark>
-                    {{ getStatus(item.approved) }}
-                </v-chip>
-            </template>
-
-            <template #[`item.actions`]="{ item }">
-                <v-btn
-                    variant="plain"
-                    icon="mdi-pencil"
-                    :disabled="!isAdmin && item.approved"
-                    @click="openAddEditDialog(item)"
-                />
-
-                <v-btn
-                    variant="plain"
-                    icon="mdi-delete"
-                    :disabled="!isAdmin && item.approved"
-                    @click="openDeleteDialog(item.id)"
-                />
-            </template>
-        </v-data-table>
-
-        <add-edit-dialog
-            :is-opened="isAddEditDialogOpened"
-            :edited-item="editedItem"
-            @success="doGetItems"
-            @close="closeAddEditDialog"
-        />
-
-        <confirmation-modal
-            :is-opened="!!itemToDeleteId"
-            title="Do you really want to delete this vacation?"
-            @confirm="doDeleteItem"
-            @discard="closeDeleteDialog"
-        />
-    </div>
-</template>
-
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
@@ -75,35 +12,52 @@ export default {
     components: {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/vacations/AddEditDialog')
-        ),
-        ConfirmationModal: defineAsyncComponent(
-            () => import('@/components/modals/ConfirmationModal')
         )
     },
 
     extends: BaseTable,
 
+    data() {
+        return {
+            tableOptions: {
+                title: 'Vacations',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this vacation?'
+            }
+        };
+    },
+
     computed: {
         ...mapState(useAuthStore, ['isAdmin']),
 
+        customFields() {
+            return [
+                {
+                    component: 'v-chip',
+                    name: 'approved',
+                    value: this.getStatus,
+                    color: this.getColor
+                }
+            ];
+        },
+
         headers() {
-            const employee = [
+            const employeeHeaders = [
                 { title: 'Start date', value: 'startDate' },
                 { title: 'End date', value: 'endDate' },
                 { title: 'Duration', value: 'duration' },
-                { title: 'Status', value: 'approved' },
-                { title: 'Actions', value: 'actions', sortable: false }
+                { title: 'Status', value: 'approved' }
             ];
 
             if (this.isAdmin) {
                 return [
                     { title: 'First name', value: 'user.firstName' },
                     { title: 'Last name', value: 'user.lastName' },
-                    ...employee
+                    ...employeeHeaders
                 ];
             }
 
-            return employee;
+            return employeeHeaders;
         }
     },
 
@@ -113,12 +67,16 @@ export default {
             deleteItem: 'destroy'
         }),
 
-        getStatus(status) {
-            return status ? 'Approved' : 'Pending';
+        areActionButtonsDisabled(item) {
+            return !this.isAdmin && item.approved;
         },
 
-        getColor(status) {
-            return status ? 'green' : 'orange';
+        getStatus(item) {
+            return item.approved ? 'Approved' : 'Pending';
+        },
+
+        getColor(item) {
+            return item.approved ? 'green' : 'orange';
         }
     }
 };

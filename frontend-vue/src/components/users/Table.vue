@@ -1,67 +1,6 @@
-<template>
-    <div>
-        <v-data-table
-            :headers="headers"
-            :items="items"
-            :items-per-page="pagination"
-            multi-sort
-            class="elevation-1"
-        >
-            <template #top>
-                <v-toolbar flat>
-                    <v-toolbar-title class="text-h6 font-weight-bold">
-                        Employees list
-                    </v-toolbar-title>
-
-                    <v-spacer />
-
-                    <v-btn
-                        text="New employee"
-                        @click="openAddEditDialog(null)"
-                    />
-                </v-toolbar>
-            </template>
-
-            <template #[`item.vacationLeft`]="{ item }">
-                <v-chip dark :color="getVacationLeftColor(item)">
-                    {{ getVacationLeft(item) }}
-                </v-chip>
-            </template>
-
-            <template #[`item.actions`]="{ item }">
-                <v-btn
-                    variant="plain"
-                    icon="mdi-pencil"
-                    @click="openAddEditDialog(item)"
-                />
-
-                <v-btn
-                    variant="plain"
-                    icon="mdi-delete"
-                    @click="openDeleteDialog(item.id)"
-                />
-            </template>
-        </v-data-table>
-
-        <add-edit-dialog
-            :is-opened="isAddEditDialogOpened"
-            :edited-item="editedItem"
-            @success="doGetItems"
-            @close="closeAddEditDialog"
-        />
-
-        <confirmation-modal
-            :is-opened="!!itemToDeleteId"
-            title="Do you really want to delete this user?"
-            @confirm="doDeleteItem"
-            @discard="closeDeleteDialog"
-        />
-    </div>
-</template>
-
 <script>
+import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
-import { mapState, mapActions } from 'pinia';
 
 import { useUserStore } from '@/stores/user';
 import BaseTable from '@/components/common/BaseTable';
@@ -72,16 +11,32 @@ export default {
     components: {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/users/AddEditDialog')
-        ),
-        ConfirmationModal: defineAsyncComponent(
-            () => import('@/components/modals/ConfirmationModal')
         )
     },
 
     extends: BaseTable,
 
+    data() {
+        return {
+            tableOptions: {
+                title: 'Employees',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this user?'
+            }
+        };
+    },
+
     computed: {
-        ...mapState(useUserStore, { users: 'items' }),
+        customFields() {
+            return [
+                {
+                    component: 'v-chip',
+                    name: 'vacationLeft',
+                    value: this.getVacationLeft,
+                    color: this.getVacationLeftColor
+                }
+            ];
+        },
 
         headers() {
             return [
@@ -89,8 +44,7 @@ export default {
                 { title: 'Last name', value: 'lastName' },
                 { title: 'Date of birth', value: 'dateOfBirth' },
                 { title: 'Email', value: 'email' },
-                { title: 'Days off left', value: 'vacationLeft' },
-                { title: 'Actions', value: 'actions', sortable: false }
+                { title: 'Days off left', value: 'vacationLeft' }
             ];
         }
     },

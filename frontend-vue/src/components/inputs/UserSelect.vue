@@ -1,13 +1,19 @@
 <template>
     <v-autocomplete
-        v-model="userId"
+        v-model="user"
         :items="users"
-        :item-title="getFullNameTitle"
+        :loading="loading"
+        hide-no-data
+        item-title="fullName"
         item-value="id"
         label="User"
+        prepend-icon="mdi-account"
+        placeholder="Start typing to Search"
         :error-messages="errorMessages"
+        return-object
         @blur="$emit('blur')"
         @update:model-value="handleInput"
+        @update:search="doSearch"
     />
 </template>
 
@@ -21,8 +27,8 @@ export default {
 
     props: {
         modelValue: {
-            type: String,
-            default: ''
+            type: Object,
+            default: null
         },
 
         errorMessages: {
@@ -36,37 +42,31 @@ export default {
     data() {
         return {
             users: [],
-            userId: null
+            user: null,
+            timer: null,
+            loading: false
         };
     },
 
     watch: {
         modelValue: {
             handler(newVal) {
-                this.userId = newVal;
+                this.user = newVal;
             },
             immediate: true
         }
     },
 
-    async created() {
-        await this.doGetUsers();
-    },
-
     methods: {
         ...mapActions(useUserStore, { getUsers: 'index' }),
-
-        getFullNameTitle(user) {
-            return user ? `${user.firstName} ${user.lastName}` : '';
-        },
 
         handleInput(value) {
             this.$emit('update:model-value', value);
         },
 
-        async doGetUsers() {
+        async doGetUsers(search = '') {
             try {
-                const { rows } = await this.getUsers();
+                const { rows } = await this.getUsers({ search, perPage: 10 });
 
                 this.users = rows;
             } catch (error) {
@@ -74,6 +74,25 @@ export default {
 
                 this.$toast.error('Cannot get a list of users!');
             }
+        },
+
+        async doSearch(search) {
+            if (!search) {
+                return;
+            }
+
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+
+            this.loading = true;
+
+            this.timer = setTimeout(async () => {
+                await this.doGetUsers(search);
+
+                this.loading = false;
+            }, 1000);
         }
     }
 };

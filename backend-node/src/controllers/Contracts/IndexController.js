@@ -4,42 +4,33 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const {
-            sorting,
-            pagination,
-            loggedUser,
-            query: { fetchAll }
-        } = req;
+        const { search, sorting, pagination, loggedUser } = req;
 
-        const fetchAllFlag = fetchAll === 'true';
         const isAdmin = await loggedUser.isAdmin();
 
-        let options = {
-            ...sorting
+        const baseOptions = {
+            where: search,
+            ...sorting,
+            ...pagination
         };
 
-        if (!fetchAllFlag) {
-            options = { ...options, ...pagination };
-        }
-
-        if (isAdmin) {
-            options = {
-                ...options,
-                include: [
-                    {
-                        association: 'user',
-                        required: true
-                    }
-                ]
-            };
-        } else {
-            options = {
-                ...options,
-                where: {
-                    userId: loggedUser.id
-                }
-            };
-        }
+        const options = isAdmin
+            ? {
+                  ...baseOptions,
+                  include: [
+                      {
+                          association: 'user',
+                          required: true
+                      }
+                  ]
+              }
+            : {
+                  ...baseOptions,
+                  where: {
+                      ...search,
+                      userId: loggedUser.id
+                  }
+              };
 
         const contracts =
             await this.contractRepository.findAndCountAll(options);

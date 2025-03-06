@@ -6,10 +6,12 @@ const sorting = require('../middlewares/sorting');
 const validate = require('../middlewares/validate');
 const pagination = require('../middlewares/pagination');
 const loggedOnly = require('../middlewares/loggedOnly');
+const searchable = require('../middlewares/searchable');
 const contractValidator = require('../validators/contract');
 const paginationValidator = require('../validators/pagination');
 
 const {
+    Contract,
     Role: { ADMIN }
 } = require('../models');
 
@@ -22,7 +24,17 @@ module.exports = di => {
     router.get(
         '/',
         loggedOnly(),
-        [paginationValidator.pagination, validate, pagination, sorting()],
+        [
+            paginationValidator.pagination,
+            validate,
+            searchable(
+                Contract.SEARCHABLE_FIELDS,
+                true,
+                Contract.ADMIN_SEARCHABLE_FIELDS
+            ),
+            pagination,
+            sorting()
+        ],
         invoke(indexController)
     );
     router.post(

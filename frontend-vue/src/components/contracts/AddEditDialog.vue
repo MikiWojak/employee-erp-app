@@ -12,7 +12,7 @@
 
             <v-card-text>
                 <user-select
-                    v-model="formData.userId"
+                    v-model="selectedUser"
                     :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
@@ -91,6 +91,7 @@ export default {
 
     data() {
         const defaultForm = {
+            user: null,
             userId: '',
             position: '',
             startDate: '',
@@ -100,6 +101,7 @@ export default {
 
         return {
             users: [],
+            selectedUser: null,
             defaultForm,
             formData: { ...defaultForm },
             vacationDaysPerYearItems: [
@@ -138,11 +140,33 @@ export default {
         }
     },
 
+    watch: {
+        selectedUser: {
+            handler(newVal) {
+                this.formData.user = newVal;
+                this.formData.userId = newVal?.id || '';
+            }
+        },
+
+        editedItem: {
+            handler(val) {
+                this.formData = val ? { ...val } : { ...this.defaultForm };
+                this.selectedUser = val?.user ? { ...val.user } : null;
+            },
+            immediate: true
+        }
+    },
+
     methods: {
         ...mapActions(useContractStore, {
             createItem: 'store',
             updateItem: 'update'
-        })
+        }),
+
+        clearInputs() {
+            this.formData = { ...this.defaultForm };
+            this.selectedUser = null;
+        }
     }
 };
 </script>
