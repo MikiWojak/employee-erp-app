@@ -149,7 +149,7 @@ export default {
         editedItem: {
             handler(val) {
                 this.formData = val ? { ...val } : { ...this.defaultForm };
-                this.selectedUser = val ? { ...val.user } : null;
+                this.selectedUser = val?.user ? { ...val.user } : null;
             },
             immediate: true
         }

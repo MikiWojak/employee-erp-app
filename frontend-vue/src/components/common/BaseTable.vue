@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="d-flex justify-space-between align-center">
-                    <div class="d-flex justify-space-between align-center w-50">
+                    <div class="d-flex align-center w-50">
                         <v-text-field
                             v-model="search"
                             prepend-icon="mdi-magnify"
