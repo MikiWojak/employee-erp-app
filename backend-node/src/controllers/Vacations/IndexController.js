@@ -4,33 +4,33 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const { sorting, pagination, loggedUser } = req;
+        const { search, sorting, pagination, loggedUser } = req;
 
         const isAdmin = await loggedUser.isAdmin();
 
-        let options = {
+        const baseOptions = {
+            where: search,
             ...sorting,
             ...pagination
         };
 
-        if (isAdmin) {
-            options = {
-                ...options,
-                include: [
-                    {
-                        association: 'user',
-                        required: true
-                    }
-                ]
-            };
-        } else {
-            options = {
-                ...options,
-                where: {
-                    userId: loggedUser.id
-                }
-            };
-        }
+        const options = isAdmin
+            ? {
+                  ...baseOptions,
+                  include: [
+                      {
+                          association: 'user',
+                          required: true
+                      }
+                  ]
+              }
+            : {
+                  ...baseOptions,
+                  where: {
+                      ...search,
+                      userId: loggedUser.id
+                  }
+              };
 
         const vacations =
             await this.vacationRepository.findAndCountAll(options);

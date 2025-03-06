@@ -1,4 +1,5 @@
 'use strict';
+
 const bcrypt = require('bcrypt');
 const { Model, Sequelize } = require('sequelize');
 
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             return role.name === Role.ADMIN;
         }
 
-        static get SEARCHABLE_FIELDS() {
+        static get ADMIN_SEARCHABLE_FIELDS() {
             return [
                 'firstName',
                 'lastName',

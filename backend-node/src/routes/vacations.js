@@ -6,8 +6,11 @@ const sorting = require('../middlewares/sorting');
 const validate = require('../middlewares/validate');
 const pagination = require('../middlewares/pagination');
 const loggedOnly = require('../middlewares/loggedOnly');
+const searchable = require('../middlewares/searchable');
 const vacationValidator = require('../validators/vacation');
 const paginationValidator = require('../validators/pagination');
+
+const { Vacation } = require('../models');
 
 module.exports = di => {
     const indexController = di.get('controllers.vacations.indexController');
@@ -18,7 +21,17 @@ module.exports = di => {
     router.get(
         '/',
         loggedOnly(),
-        [paginationValidator.pagination, validate, pagination, sorting()],
+        [
+            paginationValidator.pagination,
+            validate,
+            searchable(
+                Vacation.SEARCHABLE_FIELDS,
+                true,
+                Vacation.ADMIN_SEARCHABLE_FIELDS
+            ),
+            pagination,
+            sorting()
+        ],
         invoke(indexController)
     );
     router.post(

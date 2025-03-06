@@ -1,4 +1,5 @@
 'use strict';
+
 const { Model, Sequelize } = require('sequelize');
 const dayjs = require('dayjs');
 
@@ -12,7 +13,16 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['position'];
+            return ['position', 'vacationDaysPerYear', 'vacationDays'];
+        }
+
+        static get ADMIN_SEARCHABLE_FIELDS() {
+            return [
+                ...this.SEARCHABLE_FIELDS,
+                'user.firstName',
+                'user.lastName',
+                Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")
+            ];
         }
     }
 
