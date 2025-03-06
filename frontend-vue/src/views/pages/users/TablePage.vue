@@ -3,10 +3,10 @@ import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 
 import { useUserStore } from '@/stores/user';
-import BaseTable from '@/components/common/BaseTable';
+import BaseTable from '@/components/pages/BaseTablePage';
 
 export default {
-    name: 'UsersTable',
+    name: 'TablePage',
 
     components: {
         AddEditDialog: defineAsyncComponent(

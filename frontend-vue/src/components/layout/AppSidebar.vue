@@ -15,6 +15,13 @@
             :to="{ name: 'dashboard' }"
         />
 
+        <!-- // @TODO For Admin only!!!-->
+        <v-list-item
+            prepend-icon="mdi-account-multiple"
+            title="Employees"
+            :to="{ name: 'users' }"
+        />
+
         <v-list-item
             prepend-icon="mdi-briefcase-variant"
             title="Contracts"

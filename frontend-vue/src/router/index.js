@@ -8,25 +8,32 @@ const router = createRouter({
         {
             path: '/',
             name: 'dashboard',
-            component: () => import('@/views/dashboard/DashboardPage'),
+            component: () => import('@/views/pages/dashboard/DashboardPage'),
+            meta: { auth: true }
+        },
+        // @TODO For Admin only!!!
+        {
+            path: '/users',
+            name: 'users',
+            component: () => import('@/views/pages/users/TablePage'),
             meta: { auth: true }
         },
         {
             path: '/contracts',
             name: 'contracts',
-            component: () => import('@/views/contracts/ContractsPage'),
+            component: () => import('@/views/pages/contracts/TablePage'),
             meta: { auth: true }
         },
         {
             path: '/vacations',
             name: 'vacations',
-            component: () => import('@/views/vacations/VacationsPage'),
+            component: () => import('@/views/pages/vacations/TablePage'),
             meta: { auth: true }
         },
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/views/auth/LoginPage'),
+            component: () => import('@/views/pages/auth/LoginPage'),
             meta: { guest: true }
         }
     ]

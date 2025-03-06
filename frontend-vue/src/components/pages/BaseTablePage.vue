@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container fluid>
         <v-data-table-server
             v-model:page="page"
             v-model:items-per-page="perPage"
@@ -67,7 +67,7 @@
                 />
             </template>
         </v-data-table-server>
-    </div>
+    </v-container>
 
     <add-edit-dialog
         :is-opened="isAddEditDialogOpened"
@@ -88,7 +88,7 @@
 import { defineAsyncComponent } from 'vue';
 
 export default {
-    name: 'BaseTable',
+    name: 'BaseTablePage',
 
     components: {
         AddEditDialog: defineAsyncComponent(

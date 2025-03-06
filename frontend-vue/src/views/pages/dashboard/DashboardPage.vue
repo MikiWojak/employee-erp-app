@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <v-container fluid>
         <h2>
             Days off left:
             <v-chip x-large :color="getColor(vacationDaysLeft)" dark>
                 {{ vacationDaysLeft }}
             </v-chip>
         </h2>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -15,7 +15,7 @@ import { mapState } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 
 export default {
-    name: 'EmployeePart',
+    name: 'DashboardPage',
 
     computed: {
         ...mapState(useAuthStore, ['vacationDaysLeft'])
