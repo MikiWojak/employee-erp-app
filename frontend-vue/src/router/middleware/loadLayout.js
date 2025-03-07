@@ -4,7 +4,7 @@ import { Layouts } from '@/enums/Layouts';
 
 export const loadLayoutMiddleware = async route => {
     try {
-        const layout = route.meta.layout || Layouts.DEFAULT;
+        const layout = route.meta.layout || Layouts.APP;
         const layoutComponent = await import(`@/layouts/${layout}.vue`);
 
         route.meta.layoutComponent = layoutComponent.default;

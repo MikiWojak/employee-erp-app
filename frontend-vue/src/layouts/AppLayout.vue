@@ -18,7 +18,7 @@
 import { defineAsyncComponent } from 'vue';
 
 export default {
-    name: 'DefaultLayout',
+    name: 'AppLayout',
 
     components: {
         AppFooter: defineAsyncComponent(

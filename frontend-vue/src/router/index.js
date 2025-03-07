@@ -36,7 +36,7 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: () => import('@/views/auth/LoginPage'),
-            meta: { guest: true, layout: Layouts.AUTH }
+            meta: { guest: true, layout: Layouts.BASE }
         }
     ]
 });
