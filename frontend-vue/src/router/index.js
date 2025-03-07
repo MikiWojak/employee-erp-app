@@ -37,6 +37,11 @@ const router = createRouter({
             name: 'login',
             component: () => import('@/views/auth/LoginPage'),
             meta: { guest: true, layout: Layouts.BASE }
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('@/views/errors/NotFoundPage')
         }
     ]
 });
