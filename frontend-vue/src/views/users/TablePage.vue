@@ -3,7 +3,7 @@ import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 
 import { useUserStore } from '@/stores/user';
-import BaseTable from '@/components/pages/BaseTablePage';
+import BaseTable from '@/components/view/BaseTablePage';
 
 export default {
     name: 'TablePage',

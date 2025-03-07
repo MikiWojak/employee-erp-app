@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer permanent color="light-blue-lighten-3">
+    <v-navigation-drawer v-model="isOpen" color="light-blue-lighten-3">
         <v-list-item
             lines="two"
             prepend-icon="mdi-account-circle"
@@ -52,6 +52,19 @@ import { useAuthStore } from '@/stores/auth';
 export default {
     name: 'AppSidebar',
 
+    props: {
+        isSidebarOpen: {
+            type: Boolean,
+            default: false
+        }
+    },
+
+    data() {
+        return {
+            isOpen: false
+        };
+    },
+
     computed: {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
@@ -76,6 +89,18 @@ export default {
 
             return name;
         }
+    },
+
+    watch: {
+        isSidebarOpen: {
+            handler(val) {
+                this.isOpen = val;
+            }
+        }
+    },
+
+    created() {
+        this.isOpen = this.isSidebarOpen;
     },
 
     methods: {

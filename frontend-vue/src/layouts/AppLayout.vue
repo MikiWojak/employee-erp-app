@@ -1,8 +1,8 @@
 <template>
     <v-app>
-        <app-header />
+        <app-header is-toggle-sidebar-icon @toggle-sidebar="toggleSidebar" />
 
-        <app-sidebar />
+        <app-sidebar :is-sidebar-open="isSidebarOpen" />
 
         <v-main>
             <v-container fluid>
@@ -30,6 +30,18 @@ export default {
         AppSidebar: defineAsyncComponent(
             () => import('@/components/layout/AppSidebar')
         )
+    },
+
+    data() {
+        return {
+            isSidebarOpen: true
+        };
+    },
+
+    methods: {
+        toggleSidebar() {
+            this.isSidebarOpen = !this.isSidebarOpen;
+        }
     }
 };
 </script>

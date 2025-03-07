@@ -4,7 +4,7 @@ import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useVacationStore } from '@/stores/vacation';
-import BaseTable from '@/components/pages/BaseTablePage';
+import BaseTable from '@/components/view/BaseTablePage';
 
 export default {
     name: 'TablePage',
