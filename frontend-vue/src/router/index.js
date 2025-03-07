@@ -1,6 +1,9 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
+import { Roles } from '@/enums/Roles';
+import { Layouts } from '@/enums/Layouts';
 import { useAuthStore } from '@/stores/auth';
+import { loadLayoutMiddleware } from '@/router/middleware/loadLayout';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -8,44 +11,52 @@ const router = createRouter({
         {
             path: '/',
             name: 'dashboard',
-            component: () => import('@/views/pages/dashboard/DashboardPage'),
+            component: () => import('@/views/dashboard/DashboardPage'),
             meta: { auth: true }
         },
-        // @TODO For Admin only!!!
         {
             path: '/users',
             name: 'users',
-            component: () => import('@/views/pages/users/TablePage'),
-            meta: { auth: true }
+            component: () => import('@/views/users/TablePage'),
+            meta: { auth: [Roles.ADMIN] }
         },
         {
             path: '/contracts',
             name: 'contracts',
-            component: () => import('@/views/pages/contracts/TablePage'),
+            component: () => import('@/views/contracts/TablePage'),
             meta: { auth: true }
         },
         {
             path: '/vacations',
             name: 'vacations',
-            component: () => import('@/views/pages/vacations/TablePage'),
+            component: () => import('@/views/vacations/TablePage'),
             meta: { auth: true }
         },
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/views/pages/auth/LoginPage'),
-            meta: { guest: true }
+            component: () => import('@/views/auth/LoginPage'),
+            meta: { guest: true, layout: Layouts.AUTH }
         }
     ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+    await loadLayoutMiddleware(to);
+
     const authStore = useAuthStore();
-    const { loggedIn } = authStore;
+    const { loggedIn, loggedUser } = authStore;
 
     if (to.meta.auth) {
         if (!loggedIn) {
             return next({ name: 'login' });
+        }
+
+        if (
+            Array.isArray(to.meta.auth) &&
+            !to.meta.auth.includes(loggedUser.role.name)
+        ) {
+            return next({ name: 'dashboard' });
         }
 
         return next();

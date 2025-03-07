@@ -1,12 +1,10 @@
 <template>
-    <v-container fluid>
-        <h2>
-            Days off left:
-            <v-chip x-large :color="getColor(vacationDaysLeft)" dark>
-                {{ vacationDaysLeft }}
-            </v-chip>
-        </h2>
-    </v-container>
+    <h2>
+        Days off left:
+        <v-chip x-large :color="getColor(vacationDaysLeft)" dark>
+            {{ vacationDaysLeft }}
+        </v-chip>
+    </h2>
 </template>
 
 <script>

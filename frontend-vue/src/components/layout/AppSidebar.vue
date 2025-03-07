@@ -15,8 +15,8 @@
             :to="{ name: 'dashboard' }"
         />
 
-        <!-- // @TODO For Admin only!!!-->
         <v-list-item
+            v-if="isAdmin"
             prepend-icon="mdi-account-multiple"
             title="Employees"
             :to="{ name: 'users' }"
@@ -53,7 +53,7 @@ export default {
     name: 'AppSidebar',
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         fullName() {
             if (!this.loggedUser) {

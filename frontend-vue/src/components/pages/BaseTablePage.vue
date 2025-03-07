@@ -1,73 +1,71 @@
 <template>
-    <v-container fluid>
-        <v-data-table-server
-            v-model:page="page"
-            v-model:items-per-page="perPage"
-            :headers="computedHeaders"
-            :items="items"
-            :items-length="total"
-            :loading="loading"
-            item-value="id"
-            :items-per-page-options="perPageOptions"
-            @update:options="doGetItems"
-        >
-            <template #top>
-                <div>
-                    <h1>{{ tableOptions.title }}</h1>
-                </div>
+    <v-data-table-server
+        v-model:page="page"
+        v-model:items-per-page="perPage"
+        :headers="computedHeaders"
+        :items="items"
+        :items-length="total"
+        :loading="loading"
+        item-value="id"
+        :items-per-page-options="perPageOptions"
+        @update:options="doGetItems"
+    >
+        <template #top>
+            <div>
+                <h1>{{ tableOptions.title }}</h1>
+            </div>
 
-                <div class="d-flex justify-space-between align-center">
-                    <div class="d-flex align-center w-50">
-                        <v-text-field
-                            v-model="search"
-                            prepend-icon="mdi-magnify"
-                            variant="outlined"
-                            hide-details
-                            @update:model-value="doSearch"
-                        />
-                    </div>
-
-                    <v-btn
-                        v-if="computedTableOptions.isAddButtonIncluded"
-                        text="Add"
-                        color="green"
-                        prepend-icon="mdi-plus-circle-outline"
-                        @click="openAddEditDialog(null)"
+            <div class="d-flex justify-space-between align-center">
+                <div class="d-flex align-center w-50">
+                    <v-text-field
+                        v-model="search"
+                        prepend-icon="mdi-magnify"
+                        variant="outlined"
+                        hide-details
+                        @update:model-value="doSearch"
                     />
                 </div>
-            </template>
 
-            <template
-                v-for="(field, index) in customFields"
-                :key="index"
-                #[`item.${field.name}`]="{ item }"
+                <v-btn
+                    v-if="computedTableOptions.isAddButtonIncluded"
+                    text="Add"
+                    color="green"
+                    prepend-icon="mdi-plus-circle-outline"
+                    @click="openAddEditDialog(null)"
+                />
+            </div>
+        </template>
+
+        <template
+            v-for="(field, index) in customFields"
+            :key="index"
+            #[`item.${field.name}`]="{ item }"
+        >
+            <component
+                :is="field.component || 'span'"
+                v-bind="getColumnAttributes(field, item)"
             >
-                <component
-                    :is="field.component || 'span'"
-                    v-bind="getColumnAttributes(field, item)"
-                >
-                    {{ field.value(item) }}
-                </component>
-            </template>
+                {{ field.value(item) }}
+            </component>
+        </template>
 
-            <template #[`item.actions`]="{ item }">
-                <v-btn
-                    variant="plain"
-                    icon="mdi-pencil"
-                    :disabled="areActionButtonsDisabled(item)"
-                    @click="openAddEditDialog(item)"
-                />
+        <template #[`item.actions`]="{ item }">
+            <v-btn
+                variant="plain"
+                icon="mdi-pencil"
+                :disabled="areActionButtonsDisabled(item)"
+                @click="openAddEditDialog(item)"
+            />
 
-                <v-btn
-                    variant="plain"
-                    icon="mdi-delete"
-                    color="red"
-                    :disabled="areActionButtonsDisabled(item)"
-                    @click="openDeleteDialog(item.id)"
-                />
-            </template>
-        </v-data-table-server>
-    </v-container>
+            <v-btn
+                variant="plain"
+                icon="mdi-delete"
+                color="red"
+                :disabled="areActionButtonsDisabled(item)"
+                @click="openDeleteDialog(item.id)"
+            />
+        </template>
+    </v-data-table-server>
 
     <add-edit-dialog
         :is-opened="isAddEditDialogOpened"
