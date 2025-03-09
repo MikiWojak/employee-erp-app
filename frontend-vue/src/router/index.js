@@ -21,10 +21,9 @@ router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
 
     await authStore.me();
+    await loadLayoutMiddleware(to);
 
     const { loggedIn, loggedUser } = authStore;
-
-    await loadLayoutMiddleware(to);
 
     if (auth) {
         if (!loggedIn) {

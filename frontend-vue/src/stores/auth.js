@@ -4,7 +4,7 @@ import axios from '@/services/axios';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        loggedUser: null
+        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null
     }),
 
     getters: {
@@ -43,6 +43,10 @@ export const useAuthStore = defineStore('auth', {
 
         setLoggedUser(loggedUser) {
             this.loggedUser = loggedUser;
+
+            loggedUser
+                ? localStorage.setItem('loggedUser', JSON.stringify(loggedUser))
+                : localStorage.removeItem('loggedUser');
         }
     }
 });
