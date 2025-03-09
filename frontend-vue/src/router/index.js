@@ -10,18 +10,20 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    await loadLayoutMiddleware(to);
-
     const { auth, guest } = to.meta || {};
     const authStore = useAuthStore();
 
     if (!auth && !guest) {
+        await loadLayoutMiddleware(to);
+
         return next();
     }
 
     await authStore.me();
 
     const { loggedIn, loggedUser } = authStore;
+
+    await loadLayoutMiddleware(to);
 
     if (auth) {
         if (!loggedIn) {
