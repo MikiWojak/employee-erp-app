@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 
 import routes from './routes';
 import { useAuthStore } from '@/stores/auth';
-import { loadLayoutMiddleware } from '@/router/middleware/loadLayout';
+import { loadLayoutMiddleware } from './middleware/loadLayoutMiddleware';
 
 const router = createRouter({
     history: createWebHistory(),

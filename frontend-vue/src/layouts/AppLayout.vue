@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <app-header is-toggle-sidebar-icon @toggle-sidebar="toggleSidebar" />
+        <app-header is-toggle-sidebar-enabled @toggle-sidebar="toggleSidebar" />
 
         <app-sidebar :is-sidebar-open="isSidebarOpen" />
 

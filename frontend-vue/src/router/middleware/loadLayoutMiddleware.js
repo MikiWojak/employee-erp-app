@@ -6,9 +6,8 @@ import { useAuthStore } from '@/stores/auth';
 export const loadLayoutMiddleware = async route => {
     try {
         const authStore = useAuthStore();
-        const { loggedIn } = authStore;
 
-        const defaultLayout = loggedIn ? Layouts.APP : Layouts.BASE;
+        const defaultLayout = authStore.loggedIn ? Layouts.APP : Layouts.BASE;
         const layout = route.meta.layout || defaultLayout;
         const layoutComponent = await import(`@/layouts/${layout}.vue`);
 

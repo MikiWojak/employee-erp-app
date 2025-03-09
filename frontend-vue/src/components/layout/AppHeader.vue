@@ -1,7 +1,7 @@
 <template>
     <v-app-bar color="light-blue">
         <v-app-bar-nav-icon
-            v-if="isToggleSidebarIcon"
+            v-if="isToggleSidebarEnabled"
             variant="text"
             @click.stop="$emit('toggle-sidebar')"
         />
@@ -26,16 +26,16 @@ export default {
     name: 'AppHeader',
 
     props: {
-        isToggleSidebarIcon: {
+        isToggleSidebarEnabled: {
             type: Boolean,
             default: false
         }
     },
 
+    emits: ['toggle-sidebar'],
+
     computed: {
         ...mapState(useAuthStore, ['loggedIn'])
-    },
-
-    emits: ['toggle-sidebar']
+    }
 };
 </script>

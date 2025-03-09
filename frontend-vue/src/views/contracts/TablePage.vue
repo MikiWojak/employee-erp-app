@@ -4,7 +4,7 @@ import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useContractStore } from '@/stores/contract';
-import BaseTable from '@/components/view/BaseTablePage';
+import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
     name: 'TablePage',
@@ -15,7 +15,7 @@ export default {
         )
     },
 
-    extends: BaseTable,
+    extends: BaseTablePage,
 
     data() {
         return {

@@ -2,6 +2,8 @@
 import { useVuelidate } from '@vuelidate/core';
 
 export default {
+    name: 'BaseForm',
+
     setup() {
         return { v$: useVuelidate() };
     },
