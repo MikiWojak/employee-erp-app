@@ -42,6 +42,7 @@
 <script>
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
+import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, email, minLength } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
@@ -125,14 +126,17 @@ export default {
                     return;
                 }
 
-                if (response.status === 400 && response?.data?.errors) {
+                if (
+                    response.status === HTTP.BAD_REQUEST &&
+                    response?.data?.errors
+                ) {
                     this.loginError = 'Invalid credentials.';
                     this.serverErrors = error.response.data.errors;
 
                     return;
                 }
 
-                if (response.status === 401) {
+                if (response.status === HTTP.UNAUTHORIZED) {
                     this.loginError = 'Mismatching credentials.';
 
                     return;

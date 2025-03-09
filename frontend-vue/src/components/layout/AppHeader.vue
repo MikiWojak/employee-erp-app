@@ -6,9 +6,11 @@
             @click.stop="$emit('toggle-sidebar')"
         />
 
-        <!-- // @TODO Link to Dashboard / Login - style -->
         <v-app-bar-title class="font-weight-bold">
-            <router-link :to="{ name: loggedIn ? 'dashboard' : 'login' }">
+            <router-link
+                :to="{ name: loggedIn ? 'dashboard' : 'login' }"
+                class="text-decoration-none text-white"
+            >
                 Employee ERP App
             </router-link>
         </v-app-bar-title>

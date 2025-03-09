@@ -4,7 +4,7 @@ import axios from '@/services/axios';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null
+        loggedUser: null
     }),
 
     getters: {
@@ -30,17 +30,17 @@ export const useAuthStore = defineStore('auth', {
         async logout() {
             await axios.post('/auth/logout');
 
-            localStorage.removeItem('loggedUser');
-
             this.setLoggedUser(null);
         },
 
         async me() {
-            const { data: loggedUser } = await axios.get('/auth/me');
+            try {
+                const { data } = await axios.get('/auth/me');
 
-            localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
-
-            this.setLoggedUser(loggedUser);
+                this.setLoggedUser(data);
+            } catch {
+                this.setLoggedUser(null);
+            }
         },
 
         setLoggedUser(loggedUser) {

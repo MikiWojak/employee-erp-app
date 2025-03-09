@@ -112,12 +112,10 @@ export default {
 
                 this.$router.push({ name: 'login' });
 
-                // @TODO Why do I get double notification?
                 this.$toast.info('Logged out');
             } catch (error) {
                 console.error(error);
 
-                // @TODO Why do I get double notification?
                 this.$toast.error('Error while logging out!');
             }
         }
