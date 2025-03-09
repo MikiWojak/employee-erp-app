@@ -11,13 +11,14 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const { auth, guest } = to.meta || {};
-    const authStore = useAuthStore();
 
     if (!auth && !guest) {
         await loadLayoutMiddleware(to);
 
         return next();
     }
+
+    const authStore = useAuthStore();
 
     await authStore.me();
 
