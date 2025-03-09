@@ -17,34 +17,36 @@ export const useAuthStore = defineStore('auth', {
 
     actions: {
         async login({ email, password }) {
-            const { data: loggedUser } = await axios.post('/auth/login', {
+            const { data } = await axios.post('/auth/login', {
                 email,
                 password
             });
 
-            localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
-
-            this.setLoggedUser(loggedUser);
+            this.setLoggedUser(data);
         },
 
         async logout() {
             await axios.post('/auth/logout');
 
-            localStorage.removeItem('loggedUser');
-
             this.setLoggedUser(null);
         },
 
         async me() {
-            const { data: loggedUser } = await axios.get('/auth/me');
+            try {
+                const { data } = await axios.get('/auth/me');
 
-            localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
-
-            this.setLoggedUser(loggedUser);
+                this.setLoggedUser(data);
+            } catch {
+                this.setLoggedUser(null);
+            }
         },
 
         setLoggedUser(loggedUser) {
             this.loggedUser = loggedUser;
+
+            loggedUser
+                ? localStorage.setItem('loggedUser', JSON.stringify(loggedUser))
+                : localStorage.removeItem('loggedUser');
         }
     }
 });

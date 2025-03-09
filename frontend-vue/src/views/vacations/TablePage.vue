@@ -4,10 +4,10 @@ import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useVacationStore } from '@/stores/vacation';
-import BaseTable from '@/components/common/BaseTable';
+import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
-    name: 'VacationsTable',
+    name: 'TablePage',
 
     components: {
         AddEditDialog: defineAsyncComponent(
@@ -15,7 +15,7 @@ export default {
         )
     },
 
-    extends: BaseTable,
+    extends: BaseTablePage,
 
     data() {
         return {

@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer permanent color="light-blue-lighten-3">
+    <v-navigation-drawer v-model="isOpen" color="light-blue-lighten-3">
         <v-list-item
             lines="two"
             prepend-icon="mdi-account-circle"
@@ -13,6 +13,13 @@
             prepend-icon="mdi-home"
             title="Dashboard"
             :to="{ name: 'dashboard' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin"
+            prepend-icon="mdi-account-multiple"
+            title="Employees"
+            :to="{ name: 'users' }"
         />
 
         <v-list-item
@@ -45,8 +52,21 @@ import { useAuthStore } from '@/stores/auth';
 export default {
     name: 'AppSidebar',
 
+    props: {
+        isSidebarOpen: {
+            type: Boolean,
+            default: false
+        }
+    },
+
+    data() {
+        return {
+            isOpen: false
+        };
+    },
+
     computed: {
-        ...mapState(useAuthStore, ['loggedUser']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         fullName() {
             if (!this.loggedUser) {
@@ -71,6 +91,18 @@ export default {
         }
     },
 
+    watch: {
+        isSidebarOpen: {
+            handler(val) {
+                this.isOpen = val;
+            }
+        }
+    },
+
+    created() {
+        this.isOpen = this.isSidebarOpen;
+    },
+
     methods: {
         ...mapActions(useAuthStore, ['logout']),
 
@@ -80,12 +112,10 @@ export default {
 
                 this.$router.push({ name: 'login' });
 
-                // @TODO Why do I get double notification?
                 this.$toast.info('Logged out');
             } catch (error) {
                 console.error(error);
 
-                // @TODO Why do I get double notification?
                 this.$toast.error('Error while logging out!');
             }
         }

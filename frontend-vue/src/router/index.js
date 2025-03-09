@@ -1,50 +1,43 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
+import routes from './routes';
 import { useAuthStore } from '@/stores/auth';
+import { loadLayoutMiddleware } from './middleware/loadLayoutMiddleware';
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [
-        {
-            path: '/',
-            name: 'dashboard',
-            component: () => import('@/views/dashboard/DashboardPage'),
-            meta: { auth: true }
-        },
-        {
-            path: '/contracts',
-            name: 'contracts',
-            component: () => import('@/views/contracts/ContractsPage'),
-            meta: { auth: true }
-        },
-        {
-            path: '/vacations',
-            name: 'vacations',
-            component: () => import('@/views/vacations/VacationsPage'),
-            meta: { auth: true }
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: () => import('@/views/auth/LoginPage'),
-            meta: { guest: true }
-        }
-    ]
+    routes
 });
 
-router.beforeEach((to, from, next) => {
-    const authStore = useAuthStore();
-    const { loggedIn } = authStore;
+router.beforeEach(async (to, from, next) => {
+    const { auth, guest } = to.meta || {};
 
-    if (to.meta.auth) {
+    if (!auth && !guest) {
+        await loadLayoutMiddleware(to);
+
+        return next();
+    }
+
+    const authStore = useAuthStore();
+
+    await authStore.me();
+    await loadLayoutMiddleware(to);
+
+    const { loggedIn, loggedUser } = authStore;
+
+    if (auth) {
         if (!loggedIn) {
             return next({ name: 'login' });
+        }
+
+        if (Array.isArray(auth) && !auth.includes(loggedUser.role.name)) {
+            return next({ name: 'dashboard' });
         }
 
         return next();
     }
 
-    if (to.meta.guest) {
+    if (guest) {
         if (loggedIn) {
             return next({ name: 'dashboard' });
         }

@@ -1,49 +1,48 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col md="8" lg="6" class="mx-auto">
-                <h1>Login</h1>
+    <v-row>
+        <v-col md="8" lg="6" class="mx-auto">
+            <h1>Login</h1>
 
-                <v-form @submit.prevent="handleLogin">
-                    <div class="my-4">
-                        <v-text-field
-                            v-model="formData.email"
-                            label="Email"
-                            outlined
-                            :error-messages="handleError('email')"
-                            @blur="onBlur('email')"
-                        />
-                    </div>
+            <v-form @submit.prevent="handleLogin">
+                <div class="my-4">
+                    <v-text-field
+                        v-model="formData.email"
+                        label="Email"
+                        outlined
+                        :error-messages="handleError('email')"
+                        @blur="onBlur('email')"
+                    />
+                </div>
 
-                    <div class="my-4">
-                        <v-text-field
-                            v-model="formData.password"
-                            type="password"
-                            label="Password"
-                            outlined
-                            :error-messages="handleError('password')"
-                            @blur="onBlur('password')"
-                        />
-                    </div>
+                <div class="my-4">
+                    <v-text-field
+                        v-model="formData.password"
+                        type="password"
+                        label="Password"
+                        outlined
+                        :error-messages="handleError('password')"
+                        @blur="onBlur('password')"
+                    />
+                </div>
 
-                    <div class="my-4">
-                        <v-btn type="submit" width="100%">
-                            <span>Login</span>
-                        </v-btn>
-                    </div>
+                <div class="my-4">
+                    <v-btn type="submit" width="100%">
+                        <span>Login</span>
+                    </v-btn>
+                </div>
 
-                    <v-alert v-if="loginError" type="error" class="my-4">
-                        {{ loginError }}
-                    </v-alert>
-                </v-form>
-            </v-col>
-        </v-row>
-    </v-container>
+                <v-alert v-if="loginError" type="error" class="my-4">
+                    {{ loginError }}
+                </v-alert>
+            </v-form>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
+import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, email, minLength } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
@@ -127,14 +126,17 @@ export default {
                     return;
                 }
 
-                if (response.status === 400 && response?.data?.errors) {
+                if (
+                    response.status === HTTP.BAD_REQUEST &&
+                    response?.data?.errors
+                ) {
                     this.loginError = 'Invalid credentials.';
                     this.serverErrors = error.response.data.errors;
 
                     return;
                 }
 
-                if (response.status === 401) {
+                if (response.status === HTTP.UNAUTHORIZED) {
                     this.loginError = 'Mismatching credentials.';
 
                     return;
