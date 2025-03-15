@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import axios from '@/services/axios';
+import { Roles } from '@/enums/Roles';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -10,7 +11,7 @@ export const useAuthStore = defineStore('auth', {
     getters: {
         loggedIn: state => !!state.loggedUser,
         isAdmin: state =>
-            state.loggedUser?.roles?.some(role => role.name === 'admin'),
+            state.loggedUser?.roles?.some(role => role.name === Roles.ADMIN),
         vacationDaysLeft: state =>
             state.loggedUser?.vacationDaysSum -
                 state.loggedUser?.vacationDaysUsed || 0

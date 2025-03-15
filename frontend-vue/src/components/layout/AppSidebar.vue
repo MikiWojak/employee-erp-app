@@ -69,13 +69,7 @@ export default {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         fullName() {
-            if (!this.loggedUser) {
-                return '';
-            }
-
-            const { firstName, lastName } = this.loggedUser;
-
-            return `${firstName} ${lastName}`;
+            return this.loggedUser?.fullName || '';
         },
 
         roles() {
