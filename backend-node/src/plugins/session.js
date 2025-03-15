@@ -1,4 +1,5 @@
 const di = require('../../src/di');
+
 const client = di.get('redisSessionClient');
 
 const session = require('express-session');

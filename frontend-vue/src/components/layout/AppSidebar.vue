@@ -4,7 +4,7 @@
             lines="two"
             prepend-icon="mdi-account-circle"
             :title="fullName"
-            :subtitle="role"
+            :subtitle="roles"
         />
 
         <v-divider />
@@ -78,16 +78,14 @@ export default {
             return `${firstName} ${lastName}`;
         },
 
-        role() {
+        roles() {
             if (!this.loggedUser) {
                 return '';
             }
 
-            const {
-                role: { name }
-            } = this.loggedUser;
+            const { roles } = this.loggedUser;
 
-            return name;
+            return roles.map(role => role.name).join(', ');
         }
     },
 

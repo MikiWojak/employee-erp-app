@@ -8,10 +8,9 @@ const userRepository = di.get('repositories.user');
 
 module.exports = {
     up: async () => {
-        const { id: adminId } = await roleRepository.findByName(Role.ADMIN);
+        const roleAdmin = await roleRepository.findByName(Role.ADMIN);
 
-        await userRepository.create({
-            roleId: adminId,
+        const admin = await userRepository.create({
             firstName: 'John',
             lastName: 'Admin',
             dateOfBirth: '1985-03-17',
@@ -20,12 +19,11 @@ module.exports = {
             password: 'Qwerty123!'
         });
 
-        const { id: employeeId } = await roleRepository.findByName(
-            Role.EMPLOYEE
-        );
+        await admin.setRoles([roleAdmin]);
 
-        await userRepository.create({
-            roleId: employeeId,
+        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
+
+        const employee = await userRepository.create({
             firstName: 'George',
             lastName: 'Employee',
             dateOfBirth: '1990-09-03',
@@ -33,6 +31,8 @@ module.exports = {
             email: 'employee@erp.test',
             password: 'Qwerty123!'
         });
+
+        await employee.setRoles([roleEmployee]);
     },
 
     down: async queryInterface => {

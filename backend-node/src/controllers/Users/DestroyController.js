@@ -1,5 +1,5 @@
-const { StatusCodes: HTTP } = require('http-status-codes');
 const dayjs = require('dayjs');
+const { StatusCodes: HTTP } = require('http-status-codes');
 
 class DestroyController {
     constructor(userRepository) {

@@ -17,14 +17,6 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
-                roleId: {
-                    allowNull: false,
-                    type: DataTypes.UUID,
-                    references: {
-                        model: 'Roles',
-                        key: 'id'
-                    }
-                },
                 firstName: {
                     allowNull: false,
                     type: DataTypes.STRING

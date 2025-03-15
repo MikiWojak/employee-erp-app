@@ -7,22 +7,26 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate(models) {
-            this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' });
-            this.hasMany(models.Contract, {
+        static associate({ Role, Contract, Vacation }) {
+            this.belongsToMany(Role, {
+                as: 'roles',
+                through: 'Role2User',
+                foreignKey: 'userId'
+            });
+            this.hasMany(Contract, {
                 as: 'contracts',
                 foreignKey: 'userId'
             });
-            this.hasMany(models.Vacation, {
+            this.hasMany(Vacation, {
                 as: 'vacations',
                 foreignKey: 'userId'
             });
         }
 
         async isAdmin() {
-            const role = await this.getRole();
+            const roles = await this.getRoles();
 
-            return role.name === Role.ADMIN;
+            return roles.some(role => role.name === Role.ADMIN);
         }
 
         static get ADMIN_SEARCHABLE_FIELDS() {
@@ -42,14 +46,6 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
-            },
-            roleId: {
-                allowNull: false,
-                type: DataTypes.UUID,
-                references: {
-                    model: 'Roles',
-                    key: 'id'
-                }
             },
             firstName: {
                 allowNull: false,

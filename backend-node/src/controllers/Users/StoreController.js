@@ -1,5 +1,6 @@
-const { Role } = require('../../models');
 const { StatusCodes: HTTP } = require('http-status-codes');
+
+const { Role } = require('../../models');
 
 class StoreController {
     constructor(userRepository, roleRepository) {
@@ -12,12 +13,11 @@ class StoreController {
             body: { firstName, lastName, dateOfBirth, email, password }
         } = req;
 
-        const { id: roleId } = await this.roleRepository.findByName(
+        const roleEmployee = await this.roleRepository.findByName(
             Role.EMPLOYEE
         );
 
-        const { id } = await this.userRepository.create({
-            roleId,
+        const createdUser = await this.userRepository.create({
             firstName,
             lastName,
             dateOfBirth,
@@ -25,7 +25,9 @@ class StoreController {
             password
         });
 
-        const user = await this.userRepository.getById(id);
+        await createdUser.setRoles([roleEmployee]);
+
+        const user = await this.userRepository.getById(createdUser.id);
 
         return res.status(HTTP.CREATED).send(user);
     }
