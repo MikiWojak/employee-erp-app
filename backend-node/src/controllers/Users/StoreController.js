@@ -17,15 +17,30 @@ class StoreController {
             Role.EMPLOYEE
         );
 
-        const createdUser = await this.userRepository.create({
-            firstName,
-            lastName,
-            dateOfBirth,
-            email,
-            password
-        });
+        const transaction = await this.userRepository.getDbTransaction();
 
-        await createdUser.setRoles([roleEmployee]);
+        let createdUser = null;
+
+        try {
+            createdUser = await this.userRepository.create(
+                {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    email,
+                    password
+                },
+                { transaction }
+            );
+
+            await createdUser.setRoles([roleEmployee], { transaction });
+
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+
+            throw error;
+        }
 
         const user = await this.userRepository.getById(createdUser.id);
 
