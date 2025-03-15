@@ -34,7 +34,7 @@ class UserFactory {
 
         await user.setRoles([roleAdmin]);
 
-        return userRepository.findById(user.id);
+        return user;
     }
 
     static async createEmployee(props = {}) {
@@ -44,7 +44,7 @@ class UserFactory {
 
         await user.setRoles([roleEmployee]);
 
-        return userRepository.findById(user.id);
+        return user;
     }
 }
 
