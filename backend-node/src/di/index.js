@@ -1,6 +1,6 @@
-const { ContainerBuilder, JsFileLoader } = require('node-dependency-injection');
 const fs = require('fs');
 const path = require('path');
+const { ContainerBuilder, JsFileLoader } = require('node-dependency-injection');
 
 const srcDir = path.join(__dirname, '..');
 

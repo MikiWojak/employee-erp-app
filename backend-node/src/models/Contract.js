@@ -5,8 +5,8 @@ const { Model, Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Contract extends Model {
-        static associate(models) {
-            this.belongsTo(models.User, {
+        static associate({ User }) {
+            this.belongsTo(User, {
                 as: 'user',
                 foreignKey: 'userId'
             });

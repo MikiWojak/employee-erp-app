@@ -4,7 +4,7 @@
             lines="two"
             prepend-icon="mdi-account-circle"
             :title="fullName"
-            :subtitle="role"
+            :subtitle="roles"
         />
 
         <v-divider />
@@ -69,25 +69,17 @@ export default {
         ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         fullName() {
-            if (!this.loggedUser) {
-                return '';
-            }
-
-            const { firstName, lastName } = this.loggedUser;
-
-            return `${firstName} ${lastName}`;
+            return this.loggedUser?.fullName || '';
         },
 
-        role() {
+        roles() {
             if (!this.loggedUser) {
                 return '';
             }
 
-            const {
-                role: { name }
-            } = this.loggedUser;
+            const { roles } = this.loggedUser;
 
-            return name;
+            return roles.map(role => role.name).join(', ');
         }
     },
 

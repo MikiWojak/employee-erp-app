@@ -113,8 +113,8 @@ export default {
                 }
 
                 const errorMessage = this.editedItem
-                    ? 'Error while modifying the contract!'
-                    : 'Error while adding the contract!';
+                    ? 'Error while modifying the item!'
+                    : 'Error while adding the item!';
 
                 this.$toast.error(errorMessage);
             }

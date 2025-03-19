@@ -7,8 +7,12 @@ const EMPLOYEE = 'employee';
 
 module.exports = (sequelize, DataTypes) => {
     class Role extends Model {
-        static associate(models) {
-            this.hasMany(models.User, { foreignKey: 'roleId' });
+        static associate({ User }) {
+            this.belongsToMany(User, {
+                as: 'users',
+                through: 'Role2User',
+                foreignKey: 'roleId'
+            });
         }
     }
 

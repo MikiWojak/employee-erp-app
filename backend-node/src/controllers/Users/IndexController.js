@@ -14,7 +14,10 @@ class IndexController {
             ...pagination,
             include: [
                 {
-                    association: 'role',
+                    association: 'roles',
+                    through: {
+                        attributes: []
+                    },
                     required: true,
                     where: { name: Role.EMPLOYEE }
                 }

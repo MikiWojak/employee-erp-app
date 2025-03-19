@@ -1,7 +1,7 @@
 'use strict';
 
-const faker = require('faker');
 const dayjs = require('dayjs');
+const faker = require('faker');
 
 const { Role } = require('../models');
 
@@ -14,7 +14,10 @@ module.exports = {
         const users = await userRepository.findAll({
             include: [
                 {
-                    association: 'role',
+                    association: 'roles',
+                    through: {
+                        attributes: []
+                    },
                     required: true,
                     where: { name: Role.EMPLOYEE }
                 }

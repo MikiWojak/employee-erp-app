@@ -30,7 +30,12 @@ router.beforeEach(async (to, from, next) => {
             return next({ name: 'login' });
         }
 
-        if (Array.isArray(auth) && !auth.includes(loggedUser.role.name)) {
+        if (
+            Array.isArray(auth) &&
+            !auth.some(permittedRole =>
+                loggedUser.roles.some(role => role.name === permittedRole)
+            )
+        ) {
             return next({ name: 'dashboard' });
         }
 
