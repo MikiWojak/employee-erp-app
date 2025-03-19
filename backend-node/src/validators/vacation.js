@@ -106,20 +106,24 @@ const update = [
                 endDate,
                 {
                     req: {
-                        params: { id: vacationId },
                         app,
-                        body: { userId, startDate }
+                        body,
+                        loggedUser,
+                        params: { id: vacationId }
                     }
                 }
             ) => {
                 const di = app.get('di');
                 const vacationRepository = di.get('repositories.vacation');
 
+                const isAdmin = await loggedUser.isAdmin();
+                const uid = isAdmin ? body.userId : loggedUser.id;
+
                 const doVacationsOverlap = await checkIfVacationsOverlap(
-                    startDate,
+                    body.startDate,
                     endDate,
                     vacationRepository,
-                    userId,
+                    uid,
                     vacationId
                 );
 

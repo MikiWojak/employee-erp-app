@@ -42,6 +42,10 @@ class StoreController {
             throw error;
         }
 
+        if (!createdUser) {
+            return res.sendStatus(HTTP.INTERNAL_SERVER_ERROR);
+        }
+
         const user = await this.userRepository.getById(createdUser.id);
 
         return res.status(HTTP.CREATED).send(user);
