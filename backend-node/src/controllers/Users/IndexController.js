@@ -6,30 +6,23 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const {
-            search,
-            sorting,
-            pagination,
-            query: { fetchAll }
-        } = req;
+        const { search, sorting, pagination } = req;
 
-        const fetchAllFlag = fetchAll === 'true';
-
-        let options = {
+        const options = {
             where: search,
             ...sorting,
+            ...pagination,
             include: [
                 {
-                    association: 'role',
+                    association: 'roles',
+                    through: {
+                        attributes: []
+                    },
                     required: true,
                     where: { name: Role.EMPLOYEE }
                 }
             ]
         };
-
-        if (!fetchAllFlag) {
-            options = { ...options, ...pagination };
-        }
 
         const users = await this.userRepository.findAndCountAll(options);
 

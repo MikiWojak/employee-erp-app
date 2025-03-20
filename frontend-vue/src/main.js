@@ -1,19 +1,35 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import '@mdi/font/css/materialdesignicons.css';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { VDateInput } from 'vuetify/labs/VDateInput';
+
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 import App from '@/App';
-import store from '@/store';
 import router from '@/router';
-import vuetify from '@/plugins/vuetify';
-import vuelidate from '@/plugins/vuelidate';
-import notifications from '@/plugins/notifications';
 
-Vue.config.productionTip = false;
+const pinia = createPinia();
+const vuetify = createVuetify({
+    components: {
+        ...components,
+        VDateInput
+    },
+    directives
+});
 
-new Vue({
-    router,
-    store,
-    vuetify,
-    vuelidate,
-    notifications,
-    render: h => h(App)
-}).$mount('#app');
+const app = createApp(App);
+
+app.use(pinia);
+app.use(router);
+app.use(vuetify);
+app.use(ToastPlugin, {
+    position: 'bottom'
+});
+
+app.mount('#app');

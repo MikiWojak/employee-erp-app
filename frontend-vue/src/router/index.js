@@ -1,67 +1,56 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createWebHistory, createRouter } from 'vue-router';
 
-import store from '@/store/index';
+import routes from './routes';
+import { useAuthStore } from '@/stores/auth';
+import { loadLayoutMiddleware } from './middleware/loadLayoutMiddleware';
 
-Vue.use(VueRouter);
-
-const router = new VueRouter({
-    mode: 'history',
-
-    routes: [
-        {
-            path: '/',
-            name: 'dashboard',
-            component: () => import('@/views/dashboard/Dashboard'),
-            meta: { auth: true }
-        },
-        {
-            path: '/contracts',
-            name: 'contracts',
-            component: () => import('@/views/contracts/Contracts'),
-            meta: { auth: true }
-        },
-        {
-            path: '/vacations',
-            name: 'vacations',
-            component: () => import('@/views/vacations/Vacations'),
-            meta: { auth: true }
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: () => import('@/views/auth/Login'),
-            meta: { guest: true }
-        }
-    ]
+const router = createRouter({
+    history: createWebHistory(),
+    routes
 });
 
-router.beforeEach((to, from, next) => {
-    const loggedIn = store.getters['auth/loggedIn'];
+router.beforeEach(async (to, from, next) => {
+    const { auth, guest } = to.meta || {};
 
-    if (to.matched.some(record => record.meta.auth)) {
-        // Is NOT logged in?
+    if (!auth && !guest) {
+        await loadLayoutMiddleware(to);
+
+        return next();
+    }
+
+    const authStore = useAuthStore();
+
+    await authStore.me();
+    await loadLayoutMiddleware(to);
+
+    const { loggedIn, loggedUser } = authStore;
+
+    if (auth) {
         if (!loggedIn) {
-            return next({
-                name: 'login'
-            });
+            return next({ name: 'login' });
+        }
+
+        if (
+            Array.isArray(auth) &&
+            !auth.some(permittedRole =>
+                loggedUser.roles.some(role => role.name === permittedRole)
+            )
+        ) {
+            return next({ name: 'dashboard' });
         }
 
         return next();
     }
 
-    if (to.matched.some(record => record.meta.guest)) {
-        // Is logged in?
+    if (guest) {
         if (loggedIn) {
-            return next({
-                name: 'dashboard'
-            });
+            return next({ name: 'dashboard' });
         }
 
         return next();
     }
 
-    return next(); // make sure to always call next()!
+    return next();
 });
 
 export default router;

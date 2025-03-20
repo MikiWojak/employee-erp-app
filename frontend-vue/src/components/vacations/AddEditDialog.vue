@@ -11,14 +11,10 @@
             </v-card-title>
 
             <v-card-text>
-                <v-autocomplete
+                <user-select
                     v-if="isAdmin"
-                    v-model="formData.userId"
-                    :items="users"
-                    :item-text="user => `${user.firstName} ${user.lastName}`"
-                    item-value="id"
-                    label="User"
-                    :error-messages="userIdError"
+                    v-model="selectedUser"
+                    :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
 
@@ -29,7 +25,7 @@
                             label="Start date"
                             :allowed-dates="allowBusinessDays"
                             :max="formData.endDate"
-                            :error-messages="startDateError"
+                            :error-messages="handleError('startDate')"
                             @blur="onBlur('startDate')"
                         />
                     </v-col>
@@ -40,7 +36,7 @@
                             label="End date"
                             :allowed-dates="allowBusinessDays"
                             :min="formData.startDate"
-                            :error-messages="endDateError"
+                            :error-messages="handleError('endDate')"
                             @blur="onBlur('endDate')"
                         />
                     </v-col>
@@ -50,7 +46,7 @@
                     v-if="isAdmin"
                     v-model="formData.approved"
                     label="Approved"
-                    :error-messages="approvedError"
+                    :error-messages="handleError('approved')"
                     @blur="onBlur('approved')"
                 />
             </v-card-text>
@@ -58,34 +54,45 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text @click="close">
-                    <span>Cancel</span>
-                </v-btn>
+                <v-btn text="Cancel" @click="close" />
 
-                <v-btn text @click="save">
-                    <span>Save</span>
-                </v-btn>
+                <v-btn text="Save" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
-import { required, requiredIf } from 'vuelidate/lib/validators';
+import { defineAsyncComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
+import { useVuelidate } from '@vuelidate/core';
+import { required, requiredIf } from '@vuelidate/validators';
+
+import { useAuthStore } from '@/stores/auth';
+import { useVacationStore } from '@/stores/vacation';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/inputs/DatePicker')
+        ),
+        UserSelect: defineAsyncComponent(
+            () => import('@/components/inputs/UserSelect')
+        )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
+            user: null,
             userId: '',
             startDate: '',
             endDate: '',
@@ -93,71 +100,65 @@ export default {
         };
 
         return {
+            users: [],
+            selectedUser: null,
             defaultForm,
             formData: { ...defaultForm }
         };
     },
 
-    validations: {
-        formData: {
-            userId: {
-                required: requiredIf(function () {
-                    return this.isAdmin;
-                })
-            },
-            startDate: {
-                required
-            },
-            endDate: {
-                required
-            },
-            approved: {
-                required: requiredIf(function () {
-                    return this.isAdmin;
-                })
+    validations() {
+        return {
+            formData: {
+                userId: {
+                    required: requiredIf(function () {
+                        return this.isAdmin;
+                    })
+                },
+                startDate: {
+                    required
+                },
+                endDate: {
+                    required
+                },
+                approved: {
+                    required: requiredIf(function () {
+                        return this.isAdmin;
+                    })
+                }
             }
-        }
+        };
     },
 
     computed: {
-        ...mapGetters({
-            loggedUser: 'auth/loggedUser',
-            isAdmin: 'auth/isAdmin',
-            users: 'users/items'
-        }),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         formTitle() {
             return this.editedItem ? 'Edit vacation' : 'New vacation';
-        },
-
-        userIdError() {
-            return this.handleError('userId');
-        },
-
-        startDateError() {
-            return this.handleError('startDate');
-        },
-
-        endDateError() {
-            return this.handleError('endDate');
-        },
-
-        approvedError() {
-            return this.handleError('approved');
         }
     },
 
-    async created() {
-        if (this.isAdmin) {
-            await this.handleGetUsers();
+    watch: {
+        selectedUser: {
+            handler(newVal) {
+                this.formData.user = newVal;
+                this.formData.userId = newVal?.id || '';
+            }
+        },
+
+        editedItem: {
+            handler(val) {
+                this.formData = val ? { ...val } : { ...this.defaultForm };
+                this.selectedUser = val?.user ? { ...val.user } : null;
+            },
+            immediate: true
         }
     },
 
     methods: {
-        ...mapActions({
-            getUsers: 'users/index',
-            createVacation: 'vacations/store',
-            updateVacation: 'vacations/update'
+        ...mapActions(useVacationStore, {
+            createItem: 'store',
+            updateItem: 'update'
         }),
 
         allowBusinessDays(value) {
@@ -167,69 +168,9 @@ export default {
             return !isWeekend;
         },
 
-        async handleGetUsers() {
-            try {
-                await this.getUsers();
-            } catch (error) {
-                console.error(error);
-
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
-            }
-        },
-
-        async save() {
-            this.serverErrors = [];
-
-            this.$v.formData.$touch();
-
-            if (this.$v.formData.$invalid) {
-                return;
-            }
-
-            try {
-                if (this.editedItem) {
-                    await this.updateVacation(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'Vacation has been modified'
-                    });
-
-                    this.close();
-                } else {
-                    if (!this.isAdmin) {
-                        this.formData.userId = this.loggedUser.id;
-                        this.formData.approved = false;
-                    }
-
-                    await this.createVacation(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'Vacation has been added'
-                    });
-
-                    this.close();
-                }
-            } catch (error) {
-                console.error(error);
-
-                if (error?.response?.data?.errors) {
-                    this.serverErrors = error.response.data.errors;
-                }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the vacation!'
-                    : 'Error while adding the vacation!';
-
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
-            }
+        clearInputs() {
+            this.formData = { ...this.defaultForm };
+            this.selectedUser = null;
         }
     }
 };

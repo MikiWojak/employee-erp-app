@@ -31,10 +31,6 @@ class ContractFactory {
         return { ...defaultProps, ...props };
     }
 
-    static build(props) {
-        return contractRepository.build(this.generate(props));
-    }
-
     static create(props) {
         return contractRepository.create(this.generate(props));
     }

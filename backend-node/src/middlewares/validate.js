@@ -9,7 +9,7 @@ module.exports = (request, response, next) => {
     }
 
     const errors = validationErrors.array().map(e => {
-        return { message: e.msg, param: e.param };
+        return { message: e.msg, param: e.path };
     });
 
     return response.status(HTTP.BAD_REQUEST).send({ errors });

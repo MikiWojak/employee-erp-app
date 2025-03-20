@@ -36,6 +36,15 @@ const isWeekend = value => {
 
 const update = [
     body('userId')
+        .if(async (value, { req }) => {
+            const { loggedUser } = req;
+
+            const isAdmin = await loggedUser.isAdmin();
+
+            if (!isAdmin) {
+                return Promise.reject();
+            }
+        })
         .trim()
         .not()
         .isEmpty()
@@ -80,8 +89,15 @@ const update = [
         .custom(endDate => !isWeekend(endDate))
         .withMessage('Date must be a business day.')
         .bail()
-        .custom((endDate, { req: { body: { startDate } } }) =>
-            areDatesInProperOrder(startDate, endDate)
+        .custom(
+            (
+                endDate,
+                {
+                    req: {
+                        body: { startDate }
+                    }
+                }
+            ) => areDatesInProperOrder(startDate, endDate)
         )
         .withMessage('End date can not be before start date.')
         .bail()
@@ -90,20 +106,24 @@ const update = [
                 endDate,
                 {
                     req: {
-                        params: { id: vacationId },
                         app,
-                        body: { userId, startDate }
+                        body,
+                        loggedUser,
+                        params: { id: vacationId }
                     }
                 }
             ) => {
                 const di = app.get('di');
                 const vacationRepository = di.get('repositories.vacation');
 
+                const isAdmin = await loggedUser.isAdmin();
+                const uid = isAdmin ? body.userId : loggedUser.id;
+
                 const doVacationsOverlap = await checkIfVacationsOverlap(
-                    startDate,
+                    body.startDate,
                     endDate,
                     vacationRepository,
-                    userId,
+                    uid,
                     vacationId
                 );
 
@@ -114,6 +134,15 @@ const update = [
         ),
 
     body('approved')
+        .if(async (value, { req }) => {
+            const { loggedUser } = req;
+
+            const isAdmin = await loggedUser.isAdmin();
+
+            if (!isAdmin) {
+                return Promise.reject();
+            }
+        })
         .trim()
         .not()
         .isEmpty()

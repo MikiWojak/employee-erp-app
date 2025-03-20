@@ -1,6 +1,7 @@
 'use strict';
-const faker = require('faker');
+
 const dayjs = require('dayjs');
+const faker = require('faker');
 
 const { Role } = require('../models');
 
@@ -9,10 +10,8 @@ const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
-        const { id: employeeId } = await roleRepository.findByName(
-            Role.EMPLOYEE
-        );
+    up: async () => {
+        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
 
         for (let i = 0; i < 20; i++) {
             const dateOfBirth = dayjs(
@@ -22,18 +21,19 @@ module.exports = {
                 )
             ).format('YYYY-MM-DD');
 
-            await userRepository.create({
-                roleId: employeeId,
+            const employee = await userRepository.create({
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
                 dateOfBirth: dateOfBirth,
                 email: faker.internet.email().toLowerCase(),
-                password: 'test1234'
+                password: 'Qwerty123!'
             });
+
+            await employee.setRoles([roleEmployee]);
         }
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         return queryInterface.bulkDelete('Users', null, {});
     }
 };

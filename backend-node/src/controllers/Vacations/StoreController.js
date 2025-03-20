@@ -17,7 +17,8 @@ class StoreController {
         let vacation;
 
         if (isAdmin) {
-            const transaction = await this.vacationRepository.getDbTransaction();
+            const transaction =
+                await this.vacationRepository.getDbTransaction();
 
             try {
                 const { id } = await this.vacationRepository.create(
@@ -55,12 +56,8 @@ class StoreController {
                 throw error;
             }
         } else {
-            if (loggedUser.id !== userId) {
-                return res.sendStatus(HTTP.FORBIDDEN);
-            }
-
             const { id } = await this.vacationRepository.create({
-                userId,
+                userId: loggedUser.id,
                 startDate,
                 endDate,
                 approved: false

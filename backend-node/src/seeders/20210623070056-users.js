@@ -1,4 +1,5 @@
 'use strict';
+
 const { Role } = require('../models');
 
 const di = require('../di');
@@ -6,37 +7,35 @@ const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
-        // Admin
-        const { id: adminId } = await roleRepository.findByName(Role.ADMIN);
+    up: async () => {
+        const roleAdmin = await roleRepository.findByName(Role.ADMIN);
 
-        await userRepository.create({
-            roleId: adminId,
+        const admin = await userRepository.create({
             firstName: 'John',
             lastName: 'Admin',
             dateOfBirth: '1985-03-17',
 
             email: 'admin@erp.test',
-            password: 'test1234'
+            password: 'Qwerty123!'
         });
 
-        // Employee
-        const { id: employeeId } = await roleRepository.findByName(
-            Role.EMPLOYEE
-        );
+        await admin.setRoles([roleAdmin]);
 
-        await userRepository.create({
-            roleId: employeeId,
+        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
+
+        const employee = await userRepository.create({
             firstName: 'George',
             lastName: 'Employee',
             dateOfBirth: '1990-09-03',
 
             email: 'employee@erp.test',
-            password: 'test1234'
+            password: 'Qwerty123!'
         });
+
+        await employee.setRoles([roleEmployee]);
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         return queryInterface.bulkDelete('Users', null, {});
     }
 };

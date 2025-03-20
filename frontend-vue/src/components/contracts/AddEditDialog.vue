@@ -11,20 +11,16 @@
             </v-card-title>
 
             <v-card-text>
-                <v-autocomplete
-                    v-model="formData.userId"
-                    :items="users"
-                    :item-text="user => `${user.firstName} ${user.lastName}`"
-                    item-value="id"
-                    label="User"
-                    :error-messages="userIdError"
+                <user-select
+                    v-model="selectedUser"
+                    :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                 />
 
                 <v-text-field
                     v-model="formData.position"
                     label="Position"
-                    :error-messages="positionError"
+                    :error-messages="handleError('position')"
                     @blur="onBlur('position')"
                 />
 
@@ -32,7 +28,7 @@
                     v-model="formData.startDate"
                     label="Start date"
                     :max="formData.endDate"
-                    :error-messages="startDateError"
+                    :error-messages="handleError('startDate')"
                     @blur="onBlur('startDate')"
                 />
 
@@ -40,7 +36,7 @@
                     v-model="formData.endDate"
                     label="End date"
                     :min="formData.startDate"
-                    :error-messages="endDateError"
+                    :error-messages="handleError('endDate')"
                     @blur="onBlur('endDate')"
                 />
 
@@ -48,7 +44,9 @@
                     v-model="formData.vacationDaysPerYear"
                     label="Days off/year"
                     :items="vacationDaysPerYearItems"
-                    :error-messages="vacationDaysPerYearError"
+                    item-title="text"
+                    item-value="value"
+                    :error-messages="handleError('vacationDaysPerYear')"
                     @blur="onBlur('vacationDaysPerYear')"
                 />
             </v-card-text>
@@ -56,34 +54,44 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text @click="close">
-                    <span>Cancel</span>
-                </v-btn>
+                <v-btn text="Cancel" @click="close" />
 
-                <v-btn text @click="save">
-                    <span>Save</span>
-                </v-btn>
+                <v-btn text="Save" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { required, integer } from 'vuelidate/lib/validators';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required, integer } from '@vuelidate/validators';
+
+import { useContractStore } from '@/stores/contract';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/inputs/DatePicker')
+        ),
+        UserSelect: defineAsyncComponent(
+            () => import('@/components/inputs/UserSelect')
+        )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
+            user: null,
             userId: '',
             position: '',
             startDate: '',
@@ -92,6 +100,8 @@ export default {
         };
 
         return {
+            users: [],
+            selectedUser: null,
             defaultForm,
             formData: { ...defaultForm },
             vacationDaysPerYearItems: [
@@ -101,125 +111,61 @@ export default {
         };
     },
 
-    validations: {
-        formData: {
-            userId: {
-                required
-            },
-            position: {
-                required
-            },
-            startDate: {
-                required
-            },
-            endDate: {
-                required
-            },
-            vacationDaysPerYear: {
-                required,
-                integer
+    validations() {
+        return {
+            formData: {
+                userId: {
+                    required
+                },
+                position: {
+                    required
+                },
+                startDate: {
+                    required
+                },
+                endDate: {
+                    required
+                },
+                vacationDaysPerYear: {
+                    required,
+                    integer
+                }
             }
-        }
+        };
     },
 
     computed: {
-        ...mapGetters({
-            users: 'users/items'
-        }),
-
         formTitle() {
             return this.editedItem ? 'Edit contract' : 'New contract';
-        },
-
-        userIdError() {
-            return this.handleError('userId');
-        },
-
-        positionError() {
-            return this.handleError('position');
-        },
-
-        startDateError() {
-            return this.handleError('startDate');
-        },
-
-        endDateError() {
-            return this.handleError('endDate');
-        },
-
-        vacationDaysPerYearError() {
-            return this.handleError('vacationDaysPerYear');
         }
     },
 
-    async created() {
-        await this.handleGetUsers();
-    },
-
-    methods: {
-        ...mapActions({
-            getUsers: 'users/index',
-            createContract: 'contracts/store',
-            updateContract: 'contracts/update'
-        }),
-
-        async handleGetUsers() {
-            try {
-                await this.getUsers();
-            } catch (error) {
-                console.error(error);
-                this.$notify({
-                    type: 'error',
-                    text: 'Cannot get a list of users!'
-                });
+    watch: {
+        selectedUser: {
+            handler(newVal) {
+                this.formData.user = newVal;
+                this.formData.userId = newVal?.id || '';
             }
         },
 
-        async save() {
-            this.serverErrors = [];
+        editedItem: {
+            handler(val) {
+                this.formData = val ? { ...val } : { ...this.defaultForm };
+                this.selectedUser = val?.user ? { ...val.user } : null;
+            },
+            immediate: true
+        }
+    },
 
-            this.$v.formData.$touch();
+    methods: {
+        ...mapActions(useContractStore, {
+            createItem: 'store',
+            updateItem: 'update'
+        }),
 
-            if (this.$v.formData.$invalid) {
-                return;
-            }
-
-            try {
-                if (this.editedItem) {
-                    await this.updateContract(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'Contract has been modified'
-                    });
-
-                    this.close();
-                } else {
-                    await this.createContract(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'Contract has been added'
-                    });
-
-                    this.close();
-                }
-            } catch (error) {
-                console.error(error);
-
-                if (error?.response?.data?.errors) {
-                    this.serverErrors = error.response.data.errors;
-                }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the contract!'
-                    : 'Error while adding the contract!';
-
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
-            }
+        clearInputs() {
+            this.formData = { ...this.defaultForm };
+            this.selectedUser = null;
         }
     }
 };

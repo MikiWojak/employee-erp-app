@@ -14,14 +14,14 @@
                 <v-text-field
                     v-model="formData.firstName"
                     label="First name"
-                    :error-messages="firstNameError"
+                    :error-messages="handleError('firstName')"
                     @blur="onBlur('firstName')"
                 />
 
                 <v-text-field
                     v-model="formData.lastName"
                     label="Last name"
-                    :error-messages="lastNameError"
+                    :error-messages="handleError('lastName')"
                     @blur="onBlur('lastName')"
                 />
 
@@ -29,7 +29,7 @@
                     v-model="formData.dateOfBirth"
                     label="Date of birth"
                     :max="maxDate"
-                    :error-messages="dateOfBirthError"
+                    :error-messages="handleError('dateOfBirth')"
                     @blur="onBlur('dateOfBirth')"
                 />
 
@@ -37,7 +37,7 @@
                     v-model="formData.email"
                     type="email"
                     label="Email"
-                    :error-messages="emailError"
+                    :error-messages="handleError('email')"
                     @blur="onBlur('email')"
                 />
 
@@ -46,7 +46,7 @@
                     v-model="formData.password"
                     type="password"
                     label="Password"
-                    :error-messages="passwordError"
+                    :error-messages="handleError('password')"
                     hint="At least 8 letters"
                     @blur="onBlur('password')"
                 />
@@ -55,37 +55,38 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text @click="close">
-                    <span>Cancel</span>
-                </v-btn>
+                <v-btn text="Cancel" @click="close" />
 
-                <v-btn text @click="save">
-                    <span>Save</span>
-                </v-btn>
+                <v-btn text="Save" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import {
-    required,
-    requiredIf,
-    email,
-    minLength
-} from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
-import addEditDialogMixin from '@/mixins/addEditDialogMixin';
+import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required, requiredIf, email, minLength } from '@vuelidate/validators';
+
+import { useUserStore } from '@/stores/user';
+import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
 export default {
     name: 'AddEditDialog',
 
     components: {
-        DatePicker: () => import('@/components/common/DatePicker')
+        DatePicker: defineAsyncComponent(
+            () => import('@/components/inputs/DatePicker')
+        )
     },
 
-    mixins: [addEditDialogMixin],
+    extends: BaseAddEditDialog,
+
+    setup() {
+        return { v$: useVuelidate() };
+    },
 
     data() {
         const defaultForm = {
@@ -103,108 +104,43 @@ export default {
         };
     },
 
-    validations: {
-        formData: {
-            firstName: {
-                required
-            },
-            lastName: {
-                required
-            },
-            dateOfBirth: {
-                required
-            },
-            email: {
-                required,
-                email
-            },
-            password: {
-                required: requiredIf(function () {
-                    return !this.editedItem;
-                }),
-                minLength: minLength(8)
+    validations() {
+        return {
+            formData: {
+                firstName: {
+                    required
+                },
+                lastName: {
+                    required
+                },
+                dateOfBirth: {
+                    required
+                },
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required: requiredIf(function () {
+                        return !this.editedItem;
+                    }),
+                    minLength: minLength(8)
+                }
             }
-        }
+        };
     },
 
     computed: {
         formTitle() {
             return this.editedItem ? 'Edit employee' : 'New employee';
-        },
-
-        firstNameError() {
-            return this.handleError('firstName');
-        },
-
-        lastNameError() {
-            return this.handleError('lastName');
-        },
-
-        dateOfBirthError() {
-            return this.handleError('dateOfBirth');
-        },
-
-        emailError() {
-            return this.handleError('email');
-        },
-
-        passwordError() {
-            return this.handleError('password');
         }
     },
 
     methods: {
-        ...mapActions({
-            createUser: 'users/store',
-            updateUser: 'users/update'
-        }),
-
-        async save() {
-            this.serverErrors = [];
-
-            this.$v.formData.$touch();
-
-            if (this.$v.formData.$invalid) {
-                return;
-            }
-
-            try {
-                if (this.editedItem) {
-                    await this.updateUser(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'User has been modified'
-                    });
-
-                    this.close();
-                } else {
-                    await this.createUser(this.formData);
-
-                    this.$notify({
-                        type: 'success',
-                        text: 'User has been added'
-                    });
-
-                    this.close();
-                }
-            } catch (error) {
-                console.error(error);
-
-                if (error?.response?.data?.errors) {
-                    this.serverErrors = error.response.data.errors;
-                }
-
-                const errorText = this.editedItem
-                    ? 'Error while modifying the user!'
-                    : 'Error while adding the user!';
-
-                this.$notify({
-                    type: 'error',
-                    text: errorText
-                });
-            }
-        }
+        ...mapActions(useUserStore, {
+            createItem: 'store',
+            updateItem: 'update'
+        })
     }
 };
 </script>

@@ -1,4 +1,5 @@
 'use strict';
+
 const dayjs = require('dayjs');
 
 const { Role } = require('../models');
@@ -8,11 +9,14 @@ const userRepository = di.get('repositories.user');
 const vacationRepository = di.get('repositories.vacation');
 
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
+    up: async () => {
         const users = await userRepository.findAll({
             include: [
                 {
-                    association: 'role',
+                    association: 'roles',
+                    through: {
+                        attributes: []
+                    },
                     required: true,
                     where: { name: Role.EMPLOYEE }
                 },
@@ -68,7 +72,7 @@ module.exports = {
         }
     },
 
-    down: async (queryInterface, Sequelize) => {
+    down: async queryInterface => {
         await queryInterface.bulkDelete('Vacations', null, {});
     }
 };

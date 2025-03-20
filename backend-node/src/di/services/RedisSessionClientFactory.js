@@ -1,5 +1,5 @@
 const {
-    redis: { url, port }
+    redisSession: { url, port, pass }
 } = require('../../config');
 
 const redis = require('redis');
@@ -8,7 +8,8 @@ class RedisSessionClientFactory {
     static create() {
         const redisClient = redis.createClient({
             host: url,
-            port
+            port,
+            password: pass
         });
 
         return redisClient;

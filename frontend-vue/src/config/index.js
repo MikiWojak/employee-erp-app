@@ -1,5 +1,5 @@
-const config = {
-    apiURL: process.env.VUE_APP_API_URL
+export default {
+    env: import.meta.env.VITE_ENV,
+    port: import.meta.env.VITE_PORT,
+    apiUrl: import.meta.env.VITE_API_URL
 };
-
-module.exports = config;

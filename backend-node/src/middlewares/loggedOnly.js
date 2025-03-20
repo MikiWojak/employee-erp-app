@@ -20,7 +20,9 @@ function loggedOnly(...permittedRoles) {
 
         if (
             permittedRoles.length &&
-            !permittedRoles.includes(loggedUser.role.name)
+            !permittedRoles.some(permittedRole =>
+                loggedUser.roles.some(role => role.name === permittedRole)
+            )
         ) {
             return res.sendStatus(HTTP.FORBIDDEN);
         }

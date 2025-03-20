@@ -1,6 +1,7 @@
 'use strict';
-const faker = require('faker');
+
 const dayjs = require('dayjs');
+const faker = require('faker');
 
 const { Role } = require('../models');
 
@@ -9,11 +10,14 @@ const userRepository = di.get('repositories.user');
 const contractRepository = di.get('repositories.contract');
 
 module.exports = {
-    async up(queryInterface, Sequelize) {
+    up: async () => {
         const users = await userRepository.findAll({
             include: [
                 {
-                    association: 'role',
+                    association: 'roles',
+                    through: {
+                        attributes: []
+                    },
                     required: true,
                     where: { name: Role.EMPLOYEE }
                 }
@@ -69,7 +73,7 @@ module.exports = {
         }
     },
 
-    async down(queryInterface, Sequelize) {
+    down: async queryInterface => {
         await queryInterface.bulkDelete('Contracts', null, {});
     }
 };

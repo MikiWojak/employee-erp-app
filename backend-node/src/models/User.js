@@ -1,31 +1,41 @@
 'use strict';
-const { Model } = require('sequelize');
+
 const bcrypt = require('bcrypt');
+const { Model, Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate(models) {
-            this.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' });
-            this.hasMany(models.Contract, {
+        static associate({ Role, Contract, Vacation }) {
+            this.belongsToMany(Role, {
+                as: 'roles',
+                through: 'Role2User',
+                foreignKey: 'userId'
+            });
+            this.hasMany(Contract, {
                 as: 'contracts',
                 foreignKey: 'userId'
             });
-            this.hasMany(models.Vacation, {
+            this.hasMany(Vacation, {
                 as: 'vacations',
                 foreignKey: 'userId'
             });
         }
 
         async isAdmin() {
-            const role = await this.getRole();
+            const roles = await this.getRoles();
 
-            return role.name === Role.ADMIN;
+            return roles.some(role => role.name === Role.ADMIN);
         }
 
-        static get SEARCHABLE_FIELDS() {
-            return ['firstName', 'lastName', 'email'];
+        static get ADMIN_SEARCHABLE_FIELDS() {
+            return [
+                'firstName',
+                'lastName',
+                'email',
+                Sequelize.literal("CONCAT(firstName, ' ', lastName)")
+            ];
         }
     }
 
@@ -37,14 +47,6 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
             },
-            roleId: {
-                allowNull: false,
-                type: DataTypes.UUID,
-                references: {
-                    model: 'Roles',
-                    key: 'id'
-                }
-            },
             firstName: {
                 allowNull: false,
                 type: DataTypes.STRING
@@ -52,6 +54,12 @@ module.exports = (sequelize, DataTypes) => {
             lastName: {
                 allowNull: false,
                 type: DataTypes.STRING
+            },
+            fullName: {
+                type: DataTypes.VIRTUAL,
+                get() {
+                    return `${this.firstName} ${this.lastName}`;
+                }
             },
             dateOfBirth: {
                 allowNull: false,

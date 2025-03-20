@@ -1,5 +1,6 @@
-const { Role } = require('../../models');
 const { StatusCodes: HTTP } = require('http-status-codes');
+
+const { Role } = require('../../models');
 
 class StoreController {
     constructor(userRepository, roleRepository) {
@@ -12,20 +13,40 @@ class StoreController {
             body: { firstName, lastName, dateOfBirth, email, password }
         } = req;
 
-        const { id: roleId } = await this.roleRepository.findByName(
+        const roleEmployee = await this.roleRepository.findByName(
             Role.EMPLOYEE
         );
 
-        const { id } = await this.userRepository.create({
-            roleId,
-            firstName,
-            lastName,
-            dateOfBirth,
-            email,
-            password
-        });
+        const transaction = await this.userRepository.getDbTransaction();
 
-        const user = await this.userRepository.getById(id);
+        let createdUser = null;
+
+        try {
+            createdUser = await this.userRepository.create(
+                {
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    email,
+                    password
+                },
+                { transaction }
+            );
+
+            await createdUser.setRoles([roleEmployee], { transaction });
+
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+
+            throw error;
+        }
+
+        if (!createdUser) {
+            return res.sendStatus(HTTP.INTERNAL_SERVER_ERROR);
+        }
+
+        const user = await this.userRepository.getById(createdUser.id);
 
         return res.status(HTTP.CREATED).send(user);
     }
