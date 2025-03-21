@@ -24,6 +24,13 @@ services:
         volumes:
             - redis_session.data:/data
 
+    maildev:
+        image: soulteary/maildev
+        restart: unless-stopped
+        ports:
+            - 1080:1080
+            - 1025:1025
+
 volumes:
     db.data:
     redis_session.data:

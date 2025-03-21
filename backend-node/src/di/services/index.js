@@ -21,6 +21,14 @@ module.exports = {
             }
         },
 
+        mailer: {
+            arguments: [],
+            factory: {
+                class: 'di/services/Mailer',
+                method: 'create'
+            }
+        },
+
         'services.getLoggedInUserHandler': {
             class: 'services/GetLoggedInUserHandler',
             arguments: ['@repositories.user']

@@ -42,6 +42,13 @@ const config = {
         url: env('REDIS_SESSION_URL'),
         port: env('REDIS_SESSION_PORT'),
         pass: env('REDIS_SESSION_PASS')
+    },
+    email: {
+        host: env('EMAIL_HOST', 'localhost'),
+        port: parseInt(env('EMAIL_PORT', 1025)),
+        username: env('EMAIL_USERNAME'),
+        password: env('EMAIL_PASSWORD'),
+        address: env('EMAIL_ADDRESS')
     }
 };
 
