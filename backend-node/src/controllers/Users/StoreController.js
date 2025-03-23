@@ -47,14 +47,11 @@ class StoreController {
             return res.sendStatus(HTTP.INTERNAL_SERVER_ERROR);
         }
 
-        const info = await this.mailer.sendMail({
-            from: 'info@erp.test',
+        await this.mailer.send({
             to: email,
             subject: 'Welcome!',
             html: `<p>Hello ${firstName} ${lastName}!</p><p>It's nice to have you on board!</p> `
         });
-
-        console.log('Message sent: %s', info.messageId);
 
         const user = await this.userRepository.getById(createdUser.id);
 

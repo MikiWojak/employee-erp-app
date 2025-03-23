@@ -46,8 +46,9 @@ const config = {
     email: {
         host: env('EMAIL_HOST', 'localhost'),
         port: parseInt(env('EMAIL_PORT', 1025)),
-        username: env('EMAIL_USERNAME'),
-        password: env('EMAIL_PASSWORD'),
+        secure: isEnabled('EMAIL_SECURE'),
+        user: env('EMAIL_USER'),
+        pass: env('EMAIL_PASS'),
         address: env('EMAIL_ADDRESS')
     }
 };

@@ -2,7 +2,8 @@ const config = require('../../config');
 
 module.exports = {
     parameters: {
-        config
+        config,
+        email: config.email
     },
     services: {
         sequelize: {
@@ -22,11 +23,8 @@ module.exports = {
         },
 
         mailer: {
-            arguments: [],
-            factory: {
-                class: 'di/services/Mailer',
-                method: 'create'
-            }
+            class: 'services/Mailer',
+            arguments: ['%email%']
         },
 
         'services.getLoggedInUserHandler': {
