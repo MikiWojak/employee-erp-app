@@ -50,7 +50,9 @@ class StoreController {
         await this.mailer.send({
             to: email,
             subject: 'Welcome!',
-            html: `<p>Hello ${firstName} ${lastName}!</p><p>It's nice to have you on board!</p> `
+            context: {
+                fullName: `${firstName} ${lastName}`
+            }
         });
 
         const user = await this.userRepository.getById(createdUser.id);
