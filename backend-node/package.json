@@ -24,6 +24,7 @@
         "dev": "nodemon ./src/index.js"
     },
     "dependencies": {
+        "amqplib": "0.10.5",
         "bcrypt": "5.1.1",
         "body-parser": "1.20.3",
         "connect-redis": "6.0.0",
