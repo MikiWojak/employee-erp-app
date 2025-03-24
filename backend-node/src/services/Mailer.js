@@ -33,8 +33,7 @@ class Mailer {
     }
 
     // @TODO Queues
-    // @TODO HTML Templates
-    async send({ to, subject, template = 'welcome', context = {} }) {
+    async send({ to, subject, template, context = {} }) {
         try {
             const info = await this.transporter.sendMail({
                 from: this.fromAddress,

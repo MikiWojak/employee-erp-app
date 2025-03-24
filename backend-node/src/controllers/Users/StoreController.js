@@ -47,15 +47,16 @@ class StoreController {
             return res.sendStatus(HTTP.INTERNAL_SERVER_ERROR);
         }
 
+        const user = await this.userRepository.getById(createdUser.id);
+
         await this.mailer.send({
             to: email,
-            subject: 'Welcome!',
+            subject: 'Welcome',
+            template: 'user_store',
             context: {
-                fullName: `${firstName} ${lastName}`
+                fullName: `${user.firstName} ${user.lastName}`
             }
         });
-
-        const user = await this.userRepository.getById(createdUser.id);
 
         return res.status(HTTP.CREATED).send(user);
     }
