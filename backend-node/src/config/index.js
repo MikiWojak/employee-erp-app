@@ -43,6 +43,12 @@ const config = {
         port: env('REDIS_SESSION_PORT'),
         pass: env('REDIS_SESSION_PASS')
     },
+    rabbitmq: {
+        host: env('RABBITMQ_HOST', 'localhost'),
+        port: parseInt(env('RABBITMQ_PORT', 5672)),
+        user: env('RABBITMQ_DEFAULT_USER'),
+        password: env('RABBITMQ_DEFAULT_PASS')
+    },
     email: {
         host: env('EMAIL_HOST', 'localhost'),
         port: parseInt(env('EMAIL_PORT', 1025)),
@@ -50,6 +56,9 @@ const config = {
         user: env('EMAIL_USER'),
         pass: env('EMAIL_PASS'),
         address: env('EMAIL_ADDRESS')
+    },
+    queues: {
+        email: 'email-queue'
     }
 };
 

@@ -3,7 +3,9 @@ const config = require('../../config');
 module.exports = {
     parameters: {
         config,
-        email: config.email
+        email: config.email,
+        rabbitmq: config.rabbitmq,
+        'queues.email': config.queues.email
     },
     services: {
         sequelize: {
@@ -24,12 +26,23 @@ module.exports = {
 
         mailer: {
             class: 'services/Mailer',
-            arguments: ['%email%']
+            arguments: ['%email%', '@queues.producer.email']
         },
 
         'services.getLoggedInUserHandler': {
             class: 'services/GetLoggedInUserHandler',
             arguments: ['@repositories.user']
+        },
+
+        // @TODO Consider parsing connect / channel like `sequelize`
+        'queues.producer.email': {
+            class: 'services/queues/Producer',
+            arguments: ['%rabbitmq%', '%queues.email%']
+        },
+
+        'queues.consumer.email': {
+            class: 'services/queues/consumers/EmailConsumer',
+            arguments: ['%queues.email%']
         }
     }
 };

@@ -28,9 +28,12 @@ services:
         image: rabbitmq:4.0-management
         container_name: ${COMPOSE_PROJECT_NAME}.rabbitmq.docker
         restart: unless-stopped
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
         ports:
-            - 127.0.0.1:5672:5672
-            - 127.0.0.1:15672:15672
+            - 127.0.0.1:${RABBITMQ_PORT}:5672
+            - 127.0.0.1:${RABBITMQ_MANAGEMENT_PORT}:15672
 
     maildev:
         image: soulteary/maildev

@@ -2,8 +2,12 @@ const path = require('node:path');
 const nodemailer = require('nodemailer');
 const { default: hbs } = require('nodemailer-express-handlebars');
 
+// @TODO Rename to SendEmailHandler
+// @TODO Restore sending emails
 class Mailer {
-    constructor(emailConfig) {
+    constructor(emailConfig, emailProducer) {
+        this.emailProducer = emailProducer;
+
         const { host, port, secure, user, pass, address } = emailConfig;
 
         const hbsOptions = {
@@ -28,22 +32,29 @@ class Mailer {
 
         this.fromAddress = address;
         this.transporter = transporter;
-
-        console.log('Mailer created!');
     }
 
-    // @TODO Queues
     async send({ to, subject, template, context = {} }) {
         try {
-            const info = await this.transporter.sendMail({
-                from: this.fromAddress,
-                to,
-                subject,
-                template,
-                context
-            });
+            // const info = await this.transporter.sendMail({
+            //     from: this.fromAddress,
+            //     to,
+            //     subject,
+            //     template,
+            //     context
+            // });
 
-            console.log(`Email sent: ${info.messageId}`);
+            await this.emailProducer.produce(
+                JSON.stringify({
+                    from: this.fromAddress,
+                    to,
+                    subject,
+                    template,
+                    context
+                })
+            );
+
+            // console.log(`Email sent: ${info.messageId}`);
         } catch (error) {
             console.error('Error while sending an email!');
             console.error(error);
