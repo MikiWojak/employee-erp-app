@@ -10,7 +10,7 @@ module.exports = {
             arguments: [
                 '@repositories.contract',
                 '@repositories.user',
-                '@mailer'
+                '@services.sendEmail'
             ]
         },
 

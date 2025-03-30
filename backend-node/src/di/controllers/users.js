@@ -7,7 +7,11 @@ module.exports = {
 
         'controllers.users.storeController': {
             class: 'controllers/Users/StoreController',
-            arguments: ['@repositories.user', '@repositories.role', '@mailer']
+            arguments: [
+                '@repositories.user',
+                '@repositories.role',
+                '@services.sendEmail'
+            ]
         },
 
         'controllers.users.updateController': {

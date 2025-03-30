@@ -3,7 +3,7 @@ class AbstractConsumer {
         this.queue = queue;
     }
 
-    consume(msg) {}
+    consume(message) {}
 }
 
 module.exports = AbstractConsumer;
