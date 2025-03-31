@@ -26,7 +26,7 @@ module.exports = {
 
         'services.sendEmail': {
             class: 'services/SendEmailHandler',
-            arguments: ['@queues.producer.email']
+            arguments: ['@queues.producer.email', '@factories.email']
         },
 
         'services.getLoggedInUserHandler': {

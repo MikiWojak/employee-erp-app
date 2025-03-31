@@ -1,18 +1,14 @@
 class SendEmailHandler {
-    constructor(emailProducer) {
+    constructor(emailProducer, emailFactory) {
         this.emailProducer = emailProducer;
+        this.emailFactory = emailFactory;
     }
 
-    async send({ to, subject, template, context = {} }) {
+    async handle(type, to, data = {}) {
         try {
-            await this.emailProducer.produce(
-                JSON.stringify({
-                    to,
-                    subject,
-                    template,
-                    context
-                })
-            );
+            const emailData = this.emailFactory.create(type, to, data);
+
+            await this.emailProducer.produce(JSON.stringify(emailData));
         } catch (error) {
             console.error('Error while sending email to queue!');
             console.error(error);
