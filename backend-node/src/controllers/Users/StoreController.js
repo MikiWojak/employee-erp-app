@@ -50,8 +50,7 @@ class StoreController {
         const user = await this.userRepository.getById(createdUser.id);
 
         await this.sendEmailHandler.handle('UserStore', email, {
-            firstName: user.firstName,
-            lastName: user.lastName
+            firstName: user.firstName
         });
 
         return res.status(HTTP.CREATED).send(user);

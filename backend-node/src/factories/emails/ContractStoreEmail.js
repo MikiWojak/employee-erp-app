@@ -4,9 +4,9 @@ class ContractStoreEmail extends BaseEmail {
     _template = 'contract_store';
     _subject = 'New contract';
 
-    _generate({ firstName, lastName, position, startDate, endDate }) {
+    _generate({ firstName, position, startDate, endDate }) {
         return {
-            fullName: `${firstName} ${lastName}`,
+            firstName,
             position,
             startDate,
             endDate

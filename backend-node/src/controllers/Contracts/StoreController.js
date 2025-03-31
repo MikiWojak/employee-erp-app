@@ -66,7 +66,6 @@ class StoreController {
             contract.user.email,
             {
                 firstName,
-                lastName,
                 position: contract.position,
                 startDate: contract.startDate,
                 endDate: contract.endDate
