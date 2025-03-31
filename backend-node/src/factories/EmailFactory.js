@@ -8,8 +8,14 @@ class EmailFactory {
     };
 
     create(emailType, to, data) {
-        // @TODO What if not exist?
         const fullEmailType = `${emailType}Email`;
+
+        if (!this.emailTypes.hasOwnProperty(fullEmailType)) {
+            throw new Error(
+                `${emailType} (${fullEmailType}) is not a valid email type`
+            );
+        }
+
         const emailTemplate = new this.emailTypes[fullEmailType]();
 
         return emailTemplate.generate(to, data);
