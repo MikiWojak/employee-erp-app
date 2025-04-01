@@ -1,5 +1,6 @@
 const path = require('node:path');
 const nodemailer = require('nodemailer');
+// @TODO Check problems with tests
 const { default: hbs } = require('nodemailer-express-handlebars');
 
 const AbstractConsumer = require('./AbstractConsumer');

@@ -23,6 +23,9 @@ describe('Contracts', () => {
     let dataToSend;
 
     beforeEach(async () => {
+        const sendEmailHandlerMock = di.get('services.sendEmail');
+        jest.spyOn(sendEmailHandlerMock, 'handle').mockImplementation(() => {});
+
         await truncateDatabase();
 
         await roleRepository.create({ name: Role.ADMIN });

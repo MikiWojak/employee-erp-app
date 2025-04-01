@@ -38,7 +38,7 @@ npm run dev
 cp .env.test.example .env.test
 
 # Docker setup
-docker-compose --env-file .env.test up -d
+docker compose -f docker-compose.prod.yml --env-file .env.test up -d
 
 # Database setup
 npm run db-setup-test
@@ -47,5 +47,5 @@ npm run db-setup-test
 npm test
 
 # Close docker containers
-docker-compose --env-file .env.test down
+docker compose -f docker-compose.prod.yml --env-file .env.test down
 ```
