@@ -1,13 +1,13 @@
 const path = require('node:path');
 const nodemailer = require('nodemailer');
-// @TODO Check problems with tests
-const { default: hbs } = require('nodemailer-express-handlebars');
 
 const AbstractConsumer = require('./AbstractConsumer');
 
 class EmailConsumer extends AbstractConsumer {
     constructor(queue, emailConfig) {
         super(queue);
+
+        const { default: hbs } = require('nodemailer-express-handlebars');
 
         const { host, port, secure, user, pass, address } = emailConfig;
 
@@ -45,7 +45,7 @@ class EmailConsumer extends AbstractConsumer {
             const parsedMessage = JSON.parse(message.content.toString());
             const { to, subject, template, context } = parsedMessage;
 
-            const info = await this.transporter.sendMail({
+            await this.transporter.sendMail({
                 from: this.fromAddress,
                 to,
                 subject,
@@ -53,7 +53,7 @@ class EmailConsumer extends AbstractConsumer {
                 context
             });
 
-            console.log(`Email sent: ${info.messageId}`);
+            console.log(`Email sent`);
         } catch (error) {
             console.error('Error while sending an email!');
             console.error(error);

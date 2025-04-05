@@ -20,15 +20,19 @@ const di = require('./di');
             await connection.close();
         });
 
-        const emailConsumer = di.get('queues.consumer.email');
+        const addConsumerToQueue = async (queueName, consumerDIName) => {
+            const emailConsumer = di.get(consumerDIName);
 
-        await channel.assertQueue(queues.email, { durable: true });
-        await channel.consume(
-            queues.email,
-            message => emailConsumer.consume(message),
-            { noAck: true }
-        );
-        console.log(`Consumer subscribed to queue: ${queues.email}`);
+            await channel.assertQueue(queueName, { durable: true });
+            await channel.consume(
+                queueName,
+                message => emailConsumer.consume(message),
+                { noAck: true }
+            );
+            console.log(`Consumer subscribed to queue: ${queueName}`);
+        };
+
+        await addConsumerToQueue(queues.email, 'queues.consumer.email');
 
         console.log('Waiting for messages...');
     } catch (err) {
