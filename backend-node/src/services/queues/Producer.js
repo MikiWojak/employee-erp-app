@@ -25,6 +25,8 @@ class Producer {
             );
 
             this.channel = await this.connection.createChannel();
+
+            await this.channel.assertQueue(this.queue, { durable: true });
         } catch (error) {
             console.error(error);
             console.error('No connection to queue channel!');
@@ -37,7 +39,9 @@ class Producer {
                 await this.connect();
             }
 
-            this.channel.sendToQueue(this.queue, Buffer.from(message));
+            this.channel.sendToQueue(this.queue, Buffer.from(message), {
+                persistent: true
+            });
 
             console.log(`Message sent to queue "${this.queue}"`);
         } catch (error) {
