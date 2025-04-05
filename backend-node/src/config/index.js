@@ -44,10 +44,15 @@ const config = {
         pass: env('REDIS_SESSION_PASS')
     },
     rabbitmq: {
-        host: env('RABBITMQ_HOST', 'localhost'),
-        port: parseInt(env('RABBITMQ_PORT', 5672)),
-        user: env('RABBITMQ_DEFAULT_USER'),
-        password: env('RABBITMQ_DEFAULT_PASS')
+        url:
+            'amqp://' +
+            env('RABBITMQ_DEFAULT_USER', '') +
+            ':' +
+            env('RABBITMQ_DEFAULT_PASS', '') +
+            '@' +
+            env('RABBITMQ_HOST', 'localhost') +
+            ':' +
+            parseInt(env('RABBITMQ_PORT', 5672))
     },
     email: {
         host: env('EMAIL_HOST', 'localhost'),

@@ -1,12 +1,9 @@
-const amqp = require('amqplib');
-
 class Producer {
-    connection;
     channel;
     connected = false;
 
-    constructor(rabbitmqOptions, queue) {
-        this.rabbitmqOptions = rabbitmqOptions;
+    constructor(connection, queue) {
+        this.connection = connection;
         this.queue = queue;
     }
 
@@ -18,13 +15,9 @@ class Producer {
         this.connected = true;
 
         try {
-            const { user, password, host, port } = this.rabbitmqOptions;
-
-            this.connection = await amqp.connect(
-                `amqp://${user}:${password}@${host}:${port}`
+            this.channel = await Promise.resolve(this.connection).then(
+                connection => connection.createChannel()
             );
-
-            this.channel = await this.connection.createChannel();
 
             await this.channel.assertQueue(this.queue, { durable: true });
         } catch (error) {

@@ -1,16 +1,9 @@
-const amqp = require('amqplib');
-
-const {
-    queues,
-    rabbitmq: { user, password, host, port }
-} = require('./config');
 const di = require('./di');
+const { queues } = require('./config');
 
 (async () => {
     try {
-        const connection = await amqp.connect(
-            `amqp://${user}:${password}@${host}:${port}`
-        );
+        const connection = await di.get('queues.connection');
         const channel = await connection.createChannel();
 
         process.once('SIGINT', async () => {
