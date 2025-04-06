@@ -1,28 +1,13 @@
 const di = require('./di');
 const { queues } = require('./config');
+const onShutdown = require('./plugins/shutdown');
 
 (async () => {
     try {
         const channel = await di.get('queues.channel');
 
-        const onShutdown = async () => {
-            console.info('Closing queues');
-
-            try {
-                const connection = await di.get('queues.connection');
-
-                await connection.close();
-
-                process.exit(0);
-            } catch (error) {
-                console.error('Error on closing app!');
-
-                process.exit(1);
-            }
-        };
-
-        process.once('SIGINT', onShutdown);
-        process.once('SIGTERM', onShutdown);
+        process.once('SIGINT', async () => onShutdown(di));
+        process.once('SIGTERM', async () => onShutdown(di));
 
         const addConsumerToQueue = async (queueName, consumerDIName) => {
             const emailConsumer = di.get(consumerDIName);

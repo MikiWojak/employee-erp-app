@@ -47,13 +47,13 @@ const config = {
         timeout: parseInt(env('RABBITMQ_TIMEOUT', 10000)),
         url:
             'amqp://' +
-            env('RABBITMQ_DEFAULT_USER', '') +
+            env('RABBITMQ_DEFAULT_USER', 'guest') +
             ':' +
-            env('RABBITMQ_DEFAULT_PASS', '') +
+            env('RABBITMQ_DEFAULT_PASS', 'guest') +
             '@' +
             env('RABBITMQ_HOST', 'localhost') +
             ':' +
-            parseInt(env('RABBITMQ_PORT', 5672))
+            env('RABBITMQ_PORT', 5672)
     },
     email: {
         host: env('EMAIL_HOST', 'localhost'),

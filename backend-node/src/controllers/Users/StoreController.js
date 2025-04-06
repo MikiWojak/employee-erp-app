@@ -1,6 +1,7 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 const { Role } = require('../../models');
+const { EmailTypes } = require('../../enums/EmailTypes');
 
 class StoreController {
     constructor(userRepository, roleRepository, sendEmailHandler) {
@@ -49,7 +50,7 @@ class StoreController {
 
         const user = await this.userRepository.getById(createdUser.id);
 
-        await this.sendEmailHandler.handle('UserStore', email, {
+        await this.sendEmailHandler.handle(EmailTypes.UserStore, email, {
             firstName: user.firstName
         });
 

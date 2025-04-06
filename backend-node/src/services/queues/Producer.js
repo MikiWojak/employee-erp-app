@@ -1,5 +1,5 @@
 class Producer {
-    connected = false;
+    #connected = false;
 
     constructor(channel, queue) {
         this.channel = channel;
@@ -7,11 +7,11 @@ class Producer {
     }
 
     async connect() {
-        if (this.connected) {
+        if (this.#connected) {
             return;
         }
 
-        this.connected = true;
+        this.#connected = true;
 
         try {
             this.channel = await this.channel;
@@ -19,13 +19,15 @@ class Producer {
             await this.channel.assertQueue(this.queue, { durable: true });
         } catch (error) {
             console.error(error);
-            console.error('No connection to queue channel!');
+            console.error(
+                `No connection to channel for queue "${this.queue}"!`
+            );
         }
     }
 
     async produce(message) {
         try {
-            if (!this.connected) {
+            if (!this.#connected) {
                 await this.connect();
             }
 
@@ -36,8 +38,7 @@ class Producer {
             console.info(`Message sent to queue "${this.queue}"`);
         } catch (error) {
             console.error(error);
-
-            console.info(`Failed to send message to queue "${this.queue}"`);
+            console.error(`Failed to send message to queue "${this.queue}"`);
         }
     }
 }

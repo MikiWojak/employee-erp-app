@@ -13,6 +13,8 @@ const sessionOptions = require('./plugins/session');
 const errorHandler = require('./plugins/errorHandler');
 const router = require('./routes')(di);
 
+const onShutdown = require('./plugins/shutdown');
+
 const app = express();
 app.use(cors(corsOptions));
 app.use(
@@ -33,23 +35,7 @@ const server = app.listen(port, () => {
     console.info(`Example app listening at ${url}`);
 });
 
-const onShutdown = async () => {
-    console.info('Closing app');
-
-    try {
-        const connection = await di.get('queues.connection');
-
-        await connection.close();
-
-        process.exit(0);
-    } catch (error) {
-        console.error('Error on closing app!');
-
-        process.exit(1);
-    }
-};
-
-process.once('SIGINT', onShutdown);
-process.once('SIGTERM', onShutdown);
+process.once('SIGINT', async () => onShutdown(di));
+process.once('SIGTERM', async () => onShutdown(di));
 
 module.exports = server;

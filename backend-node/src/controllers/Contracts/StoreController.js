@@ -1,5 +1,7 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
+const { EmailTypes } = require('../../enums/EmailTypes');
+
 class StoreController {
     constructor(contractRepository, userRepository, sendEmailHandler) {
         this.contractRepository = contractRepository;
@@ -28,8 +30,6 @@ class StoreController {
                 { transaction }
             );
 
-            contractId = id;
-
             const vacationDaysSum = await this.contractRepository.sum(
                 'vacationDays',
                 {
@@ -45,6 +45,8 @@ class StoreController {
             await user.update({ vacationDaysSum }, { transaction });
 
             await transaction.commit();
+
+            contractId = id;
         } catch (error) {
             await transaction.rollback();
 
@@ -62,7 +64,7 @@ class StoreController {
         } = contract;
 
         await this.sendEmailHandler.handle(
-            'ContractStore',
+            EmailTypes.ContractStore,
             contract.user.email,
             {
                 firstName,

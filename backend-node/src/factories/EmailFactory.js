@@ -2,7 +2,7 @@ const UserStoreEmail = require('./emails/UserStoreEmail');
 const ContractStoreEmail = require('./emails/ContractStoreEmail');
 
 class EmailFactory {
-    emailTypes = {
+    #emailTypes = {
         UserStoreEmail,
         ContractStoreEmail
     };
@@ -10,13 +10,13 @@ class EmailFactory {
     create(emailType, to, data) {
         const fullEmailType = `${emailType}Email`;
 
-        if (!this.emailTypes.hasOwnProperty(fullEmailType)) {
+        if (!this.#emailTypes.hasOwnProperty(fullEmailType)) {
             throw new Error(
                 `${emailType} (${fullEmailType}) is not a valid email type`
             );
         }
 
-        const emailTemplate = new this.emailTypes[fullEmailType]();
+        const emailTemplate = new this.#emailTypes[fullEmailType]();
 
         return emailTemplate.generate(to, data);
     }
