@@ -33,7 +33,7 @@ class EmailConsumer extends AbstractConsumer {
     }
 
     async consume(message) {
-        console.log(`Received message from queue "${this.queue}"`);
+        console.info(`Received message from queue "${this.queue}"`);
 
         if (!message) {
             console.warn('No message to send!');
@@ -53,7 +53,7 @@ class EmailConsumer extends AbstractConsumer {
                 context
             });
 
-            console.log(`Email sent`);
+            console.info(`Email sent`);
         } catch (error) {
             console.error('Error while sending an email!');
             console.error(error);

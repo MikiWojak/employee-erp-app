@@ -1,4 +1,4 @@
-class QueueConnectionFactory {
+class ConnectionFactory {
     static async create(amqplib, rabbitmqConfig) {
         const connection = await amqplib.connect(rabbitmqConfig.url);
 
@@ -9,4 +9,4 @@ class QueueConnectionFactory {
     }
 }
 
-module.exports = QueueConnectionFactory;
+module.exports = ConnectionFactory;

@@ -37,14 +37,22 @@ module.exports = {
         'queues.connection': {
             arguments: ['%amqplib', '%rabbitmqConfig%'],
             factory: {
-                class: 'services/factories/QueueConnectionFactory',
+                class: 'services/factories/queues/ConnectionFactory',
+                method: 'create'
+            }
+        },
+
+        'queues.channel': {
+            arguments: ['@queues.connection'],
+            factory: {
+                class: 'services/factories/queues/ChannelFactory',
                 method: 'create'
             }
         },
 
         'queues.producer.email': {
             class: 'services/queues/Producer',
-            arguments: ['@queues.connection', '%queues.email%']
+            arguments: ['@queues.channel', '%queues.email%']
         },
 
         'queues.consumer.email': {

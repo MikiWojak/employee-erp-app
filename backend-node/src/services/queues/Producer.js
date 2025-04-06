@@ -1,23 +1,20 @@
 class Producer {
-    channel;
     connected = false;
 
-    constructor(connection, queue) {
-        this.connection = connection;
+    constructor(channel, queue) {
+        this.channel = channel;
         this.queue = queue;
     }
 
     async connect() {
-        if (this.connected && this.channel) {
+        if (this.connected) {
             return;
         }
 
         this.connected = true;
 
         try {
-            this.channel = await Promise.resolve(this.connection).then(
-                connection => connection.createChannel()
-            );
+            this.channel = await this.channel;
 
             await this.channel.assertQueue(this.queue, { durable: true });
         } catch (error) {
@@ -28,7 +25,7 @@ class Producer {
 
     async produce(message) {
         try {
-            if (!this.channel) {
+            if (!this.connected) {
                 await this.connect();
             }
 

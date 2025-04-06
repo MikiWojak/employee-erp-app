@@ -3,15 +3,26 @@ const { queues } = require('./config');
 
 (async () => {
     try {
-        const connection = await di.get('queues.connection');
-        const channel = await connection.createChannel();
+        const channel = await di.get('queues.channel');
 
-        process.once('SIGINT', async () => {
-            console.log('Closing consumer subscriptions');
+        const onShutdown = async () => {
+            console.info('Closing queues');
 
-            await channel.close();
-            await connection.close();
-        });
+            try {
+                const connection = await di.get('queues.connection');
+
+                await connection.close();
+
+                process.exit(0);
+            } catch (error) {
+                console.error('Error on closing app!');
+
+                process.exit(1);
+            }
+        };
+
+        process.once('SIGINT', onShutdown);
+        process.once('SIGTERM', onShutdown);
 
         const addConsumerToQueue = async (queueName, consumerDIName) => {
             const emailConsumer = di.get(consumerDIName);
