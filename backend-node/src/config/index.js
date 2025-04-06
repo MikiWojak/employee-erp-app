@@ -44,6 +44,7 @@ const config = {
         pass: env('REDIS_SESSION_PASS')
     },
     rabbitmq: {
+        timeout: parseInt(env('RABBITMQ_TIMEOUT', 10000)),
         url:
             'amqp://' +
             env('RABBITMQ_DEFAULT_USER', '') +

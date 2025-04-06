@@ -58,7 +58,7 @@ class StoreController {
         const contract = await this.contractRepository.getById(contractId);
 
         const {
-            user: { firstName, lastName }
+            user: { firstName }
         } = contract;
 
         await this.sendEmailHandler.handle(

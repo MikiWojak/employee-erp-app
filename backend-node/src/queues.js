@@ -33,12 +33,12 @@ const { queues } = require('./config');
                 message => emailConsumer.consume(message),
                 { noAck: true }
             );
-            console.log(`Consumer subscribed to queue: ${queueName}`);
+            console.info(`Consumer subscribed to queue: ${queueName}`);
         };
 
         await addConsumerToQueue(queues.email, 'queues.consumer.email');
 
-        console.log('Waiting for messages...');
+        console.info('Waiting for messages...');
     } catch (err) {
         console.error(err);
     }

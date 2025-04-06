@@ -33,11 +33,11 @@ class Producer {
                 persistent: true
             });
 
-            console.log(`Message sent to queue "${this.queue}"`);
+            console.info(`Message sent to queue "${this.queue}"`);
         } catch (error) {
             console.error(error);
 
-            console.log(`Failed to send message to queue "${this.queue}"`);
+            console.info(`Failed to send message to queue "${this.queue}"`);
         }
     }
 }
