@@ -8,7 +8,7 @@ module.exports = {
         sequelize: {
             arguments: ['%sequelize', '%config%'],
             factory: {
-                class: 'di/services/SequelizeFactory',
+                class: 'services/factories/SequelizeFactory',
                 method: 'create'
             }
         },
@@ -16,7 +16,7 @@ module.exports = {
         redisSessionClient: {
             arguments: [],
             factory: {
-                class: 'di/services/RedisSessionClientFactory',
+                class: 'services/factories/RedisSessionClientFactory',
                 method: 'create'
             }
         },
@@ -24,6 +24,11 @@ module.exports = {
         'services.getLoggedInUserHandler': {
             class: 'services/GetLoggedInUserHandler',
             arguments: ['@repositories.user']
+        },
+
+        'services.sendEmail': {
+            class: 'services/SendEmailHandler',
+            arguments: ['@queues.producer.email', '@factories.email']
         }
     }
 };

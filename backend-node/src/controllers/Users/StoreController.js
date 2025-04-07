@@ -3,9 +3,10 @@ const { StatusCodes: HTTP } = require('http-status-codes');
 const { Role } = require('../../models');
 
 class StoreController {
-    constructor(userRepository, roleRepository) {
+    constructor(userRepository, roleRepository, sendEmailHandler) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.sendEmailHandler = sendEmailHandler;
     }
 
     async invoke(req, res) {
@@ -47,6 +48,10 @@ class StoreController {
         }
 
         const user = await this.userRepository.getById(createdUser.id);
+
+        await this.sendEmailHandler.handle('UserStore', email, {
+            firstName: user.firstName
+        });
 
         return res.status(HTTP.CREATED).send(user);
     }

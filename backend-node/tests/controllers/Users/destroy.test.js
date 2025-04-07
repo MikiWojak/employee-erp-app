@@ -38,13 +38,16 @@ describe('Users', () => {
     });
 
     afterEach(async () => {
-        await deletedUser.setRoles([])
+        await deletedUser.setRoles([]);
         await deletedUser.destroy({ force: true });
 
         await request.post('/api/auth/logout');
     });
 
-    afterAll(() => {
+    afterAll(async () => {
+        const queueConnection = await di.get('queues.connection');
+        await queueConnection.close();
+
         redisSessionClient.quit();
         sequelize.close();
         server.close();

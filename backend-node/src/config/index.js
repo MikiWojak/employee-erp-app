@@ -42,6 +42,29 @@ const config = {
         url: env('REDIS_SESSION_URL'),
         port: env('REDIS_SESSION_PORT'),
         pass: env('REDIS_SESSION_PASS')
+    },
+    rabbitmq: {
+        timeout: parseInt(env('RABBITMQ_TIMEOUT', 10000)),
+        url:
+            'amqp://' +
+            env('RABBITMQ_DEFAULT_USER', 'guest') +
+            ':' +
+            env('RABBITMQ_DEFAULT_PASS', 'guest') +
+            '@' +
+            env('RABBITMQ_HOST', 'localhost') +
+            ':' +
+            env('RABBITMQ_PORT', 5672)
+    },
+    email: {
+        host: env('EMAIL_HOST', 'localhost'),
+        port: parseInt(env('EMAIL_PORT', 1025)),
+        secure: isEnabled('EMAIL_SECURE'),
+        user: env('EMAIL_USER'),
+        pass: env('EMAIL_PASS'),
+        address: env('EMAIL_ADDRESS')
+    },
+    queues: {
+        email: 'email-queue'
     }
 };
 

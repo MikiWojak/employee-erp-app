@@ -38,14 +38,6 @@ services:
         volumes:
             - rabbitmq.data:/var/lib/rabbitmq
 
-    maildev:
-        image: soulteary/maildev
-        container_name: ${COMPOSE_PROJECT_NAME}.maildev.docker
-        restart: unless-stopped
-        ports:
-            - 127.0.0.1:1080:1080
-            - 127.0.0.1:${EMAIL_PORT}:1025
-
 volumes:
     db.data:
     redis_session.data:

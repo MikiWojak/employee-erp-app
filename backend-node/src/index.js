@@ -13,6 +13,8 @@ const sessionOptions = require('./plugins/session');
 const errorHandler = require('./plugins/errorHandler');
 const router = require('./routes')(di);
 
+const onShutdown = require('./plugins/shutdown');
+
 const app = express();
 app.use(cors(corsOptions));
 app.use(
@@ -30,7 +32,10 @@ app.use('/api', router);
 app.use(errorHandler);
 
 const server = app.listen(port, () => {
-    console.log(`Example app listening at ${url}`);
+    console.info(`Example app listening at ${url}`);
 });
+
+process.once('SIGINT', async () => onShutdown(di));
+process.once('SIGTERM', async () => onShutdown(di));
 
 module.exports = server;
