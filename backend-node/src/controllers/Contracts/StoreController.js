@@ -1,7 +1,5 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
-const { EmailTypes } = require('../../enums/EmailTypes');
-
 class StoreController {
     constructor(contractRepository, userRepository, sendEmailHandler) {
         this.contractRepository = contractRepository;
@@ -64,7 +62,7 @@ class StoreController {
         } = contract;
 
         await this.sendEmailHandler.handle(
-            EmailTypes.ContractStore,
+            'ContractStore',
             contract.user.email,
             {
                 firstName,
