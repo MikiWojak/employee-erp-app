@@ -18,6 +18,11 @@ module.exports = {
         'repositories.vacation': {
             class: 'repositories/Vacation',
             arguments: ['@sequelize']
+        },
+
+        'repositories.passwordReset': {
+            class: 'repositories/PasswordReset',
+            arguments: ['@sequelize']
         }
     }
 };
