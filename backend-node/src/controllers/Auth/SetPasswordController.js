@@ -1,5 +1,8 @@
 const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
 const { StatusCodes: HTTP } = require('http-status-codes');
+
+dayjs.extend(utc);
 
 class SetPasswordController {
     constructor(userRepository, passwordResetRepository) {
@@ -13,27 +16,9 @@ class SetPasswordController {
         } = req;
 
         const passwordReset =
-            await this.passwordResetRepository.findByToken(token);
+            await this.passwordResetRepository.validateToken(token);
 
         if (!passwordReset) {
-            return res.sendStatus(HTTP.FORBIDDEN);
-        }
-
-        // @TODO Check UTC Time
-        const tokenExpiresAt = dayjs(passwordReset.expiresAt).format();
-        const dateTimeNow = dayjs().format();
-
-        // @TODO Remove after debug
-        console.log({
-            expiresAt: passwordReset.expiresAt,
-            tokenExpiresAt,
-            dateTimeNow,
-            expiresAtType: typeof passwordReset.expiresAt,
-            tokenExpiresAtType: typeof tokenExpiresAt,
-            dateTimeNowType: typeof dateTimeNow
-        });
-
-        if (tokenExpiresAt < dateTimeNow) {
             return res.sendStatus(HTTP.FORBIDDEN);
         }
 
@@ -49,7 +34,7 @@ class SetPasswordController {
             await user.update({ password }, { transaction });
 
             await passwordReset.update(
-                { expiresAt: dateTimeNow },
+                { expiresAt: dayjs().utc().format() },
                 { transaction }
             );
 

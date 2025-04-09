@@ -21,8 +21,12 @@ const login = [
         .withMessage(`This field must have at least 8 letters.`)
 ];
 
+const checkToken = [
+    body('token').trim().not().isEmpty().withMessage('This field is required.')
+];
+
 const setPassword = [
-    body('token').trim().not().isEmpty().withMessage('This field is required.'),
+    ...checkToken,
 
     body('password')
         .trim()
@@ -42,4 +46,4 @@ const setPassword = [
         .custom((value, { req }) => value === req.body.password)
 ];
 
-module.exports = { login, setPassword };
+module.exports = { login, checkToken, setPassword };

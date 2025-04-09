@@ -13,6 +13,9 @@ module.exports = di => {
     const setPasswordController = di.get(
         'controllers.auth.setPasswordController'
     );
+    const checkSetPasswordTokenController = di.get(
+        'controllers.auth.checkSetPasswordTokenController'
+    );
 
     router.post(
         '/login',
@@ -21,6 +24,11 @@ module.exports = di => {
     );
     router.post('/logout', invoke(logoutController));
     router.get('/me', loggedOnly(), invoke(meController));
+    router.post(
+        '/check-set-password-token',
+        [authValidator.checkToken, validate],
+        invoke(checkSetPasswordTokenController)
+    );
     router.post(
         '/set-password',
         [authValidator.setPassword, validate],

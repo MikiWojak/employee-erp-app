@@ -18,6 +18,11 @@ module.exports = {
         'controllers.auth.setPasswordController': {
             class: 'controllers/Auth/SetPasswordController',
             arguments: ['@repositories.user', '@repositories.passwordReset']
+        },
+
+        'controllers.auth.checkSetPasswordTokenController': {
+            class: 'controllers/Auth/CheckSetPasswordTokenController',
+            arguments: ['@repositories.passwordReset']
         }
     }
 };

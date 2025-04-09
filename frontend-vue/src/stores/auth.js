@@ -43,15 +43,18 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        // @TODO Will I return data?
+        async checkSetPasswordToken({ token }) {
+            await axios.post('/auth/check-set-password-token', {
+                token
+            });
+        },
+
         async setPassword({ token, password, passwordConfirmation }) {
-            const { data } = await axios.post('/auth/set-password', {
+            await axios.post('/auth/set-password', {
                 token,
                 password,
                 passwordConfirmation
             });
-
-            return data;
         },
 
         setLoggedUser(loggedUser) {

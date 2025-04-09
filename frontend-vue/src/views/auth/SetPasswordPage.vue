@@ -1,6 +1,10 @@
 <template>
     <v-row>
-        <v-col md="8" lg="6" class="mx-auto">
+        <v-col v-if="isTokenInvalid" md="8" lg="6" class="mx-auto">
+            <h1>Invalid token!</h1>
+        </v-col>
+
+        <v-col v-else md="8" lg="6" class="mx-auto">
             <h1>Set password</h1>
 
             <v-form @submit.prevent="handleSetPassword">
@@ -49,8 +53,6 @@ import { required, minLength, sameAs } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
 
-// @TODO Check token on enter page
-
 export default {
     name: 'SetPasswordPage',
 
@@ -66,7 +68,8 @@ export default {
                 password: '',
                 passwordConfirmation: ''
             },
-            setPasswordError: ''
+            setPasswordError: '',
+            formStatus: null
         };
     },
 
@@ -85,8 +88,26 @@ export default {
         };
     },
 
+    computed: {
+        isTokenInvalid() {
+            return this.formStatus === 'invalid';
+        }
+    },
+
+    async created() {
+        try {
+            await this.checkSetPasswordToken({
+                token: this.$route.query.token
+            });
+        } catch (error) {
+            console.log(error);
+
+            this.formStatus = 'invalid';
+        }
+    },
+
     methods: {
-        ...mapActions(useAuthStore, ['setPassword']),
+        ...mapActions(useAuthStore, ['setPassword', 'checkSetPasswordToken']),
 
         onBlur(param) {
             this.clearServerError(param);
