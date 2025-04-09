@@ -43,6 +43,17 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        // @TODO Will I return data?
+        async setPassword({ token, password, passwordConfirmation }) {
+            const { data } = await axios.post('/auth/set-password', {
+                token,
+                password,
+                passwordConfirmation
+            });
+
+            return data;
+        },
+
         setLoggedUser(loggedUser) {
             this.loggedUser = loggedUser;
 

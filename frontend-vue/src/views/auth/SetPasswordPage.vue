@@ -1,19 +1,9 @@
 <template>
     <v-row>
         <v-col md="8" lg="6" class="mx-auto">
-            <h1>Login</h1>
+            <h1>Set password</h1>
 
-            <v-form @submit.prevent="handleLogin">
-                <div class="my-4">
-                    <v-text-field
-                        v-model="formData.email"
-                        label="Email"
-                        outlined
-                        :error-messages="handleError('email')"
-                        @blur="onBlur('email')"
-                    />
-                </div>
-
+            <v-form @submit.prevent="handleSetPassword">
                 <div class="my-4">
                     <v-text-field
                         v-model="formData.password"
@@ -26,13 +16,24 @@
                 </div>
 
                 <div class="my-4">
+                    <v-text-field
+                        v-model="formData.passwordConfirmation"
+                        type="password"
+                        label="Password confirmation"
+                        outlined
+                        :error-messages="handleError('passwordConfirmation')"
+                        @blur="onBlur('passwordConfirmation')"
+                    />
+                </div>
+
+                <div class="my-4">
                     <v-btn type="submit" width="100%">
-                        <span>Login</span>
+                        <span>Set password</span>
                     </v-btn>
                 </div>
 
-                <v-alert v-if="loginError" type="error" class="my-4">
-                    {{ loginError }}
+                <v-alert v-if="setPasswordError" type="error" class="my-4">
+                    {{ setPasswordError }}
                 </v-alert>
             </v-form>
         </v-col>
@@ -43,13 +44,13 @@
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { required, email, minLength } from '@vuelidate/validators';
+import { required, minLength, sameAs } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
 
 export default {
-    name: 'LoginPage',
+    name: 'SetPasswordPage',
 
     extends: BaseForm,
 
@@ -60,39 +61,39 @@ export default {
     data() {
         return {
             formData: {
-                email: '',
-                password: ''
+                password: '',
+                passwordConfirmation: ''
             },
-            loginError: ''
+            setPasswordError: ''
         };
     },
 
     validations() {
         return {
             formData: {
-                email: {
-                    required,
-                    email
-                },
                 password: {
                     required,
                     minLength: minLength(8)
+                },
+                passwordConfirmation: {
+                    required,
+                    sameAs: sameAs(this.formData.password)
                 }
             }
         };
     },
 
     methods: {
-        ...mapActions(useAuthStore, ['login']),
+        ...mapActions(useAuthStore, ['setPassword']),
 
         onBlur(param) {
             this.clearServerError(param);
             this.v$.formData[param].$touch();
-            this.loginError = '';
+            this.setPasswordError = '';
         },
 
-        async handleLogin() {
-            this.loginError = '';
+        async handleSetPassword() {
+            this.setPasswordError = '';
             this.serverErrors = [];
 
             this.v$.formData.$touch();
@@ -104,25 +105,21 @@ export default {
             this.v$.formData.$reset();
 
             try {
-                const { email, password } = this.formData;
-
-                await this.login({
-                    email,
-                    password
+                await this.setPassword({
+                    token: this.$route.query.token,
+                    ...this.formData
                 });
 
-                this.$router.push({ name: 'dashboard' });
+                this.$router.push({ name: 'login' });
 
-                this.$toast.success('Logged in successfully');
+                this.$toast.success('Password changed successfully.');
             } catch (error) {
-                this.formData.password = '';
-
                 const { response } = error;
 
                 if (!response) {
                     console.error(error);
 
-                    this.loginError = 'Something went wrong...';
+                    this.setPasswordError = 'Something went wrong...';
 
                     return;
                 }
@@ -131,21 +128,21 @@ export default {
                     response.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
-                    this.loginError = 'Invalid credentials.';
+                    this.setPasswordError = 'Recheck your form.';
                     this.serverErrors = error.response.data.errors;
 
                     return;
                 }
 
-                if (response.status === HTTP.UNAUTHORIZED) {
-                    this.loginError = 'Mismatching credentials.';
+                if (response.status === HTTP.FORBIDDEN) {
+                    this.setPasswordError = 'Invalid token.';
 
                     return;
                 }
 
                 console.error(error);
 
-                this.loginError = 'Error unknown.';
+                this.setPasswordError = 'Error unknown.';
             }
         }
     }
