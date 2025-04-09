@@ -17,7 +17,7 @@ class StoreController {
 
     async invoke(req, res) {
         const {
-            body: { firstName, lastName, dateOfBirth, email, password }
+            body: { firstName, lastName, dateOfBirth, email }
         } = req;
 
         const roleEmployee = await this.roleRepository.findByName(
@@ -34,8 +34,7 @@ class StoreController {
                     firstName,
                     lastName,
                     dateOfBirth,
-                    email,
-                    password
+                    email
                 },
                 { transaction }
             );

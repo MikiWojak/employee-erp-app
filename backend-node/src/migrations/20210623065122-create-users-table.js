@@ -35,7 +35,8 @@ module.exports = {
                     type: DataTypes.STRING
                 },
                 password: {
-                    allowNull: false,
+                    allowNull: true,
+                    defaultValue: null,
                     type: DataTypes.STRING
                 },
                 vacationDaysSum: {

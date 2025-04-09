@@ -40,16 +40,6 @@
                     :error-messages="handleError('email')"
                     @blur="onBlur('email')"
                 />
-
-                <v-text-field
-                    v-if="!editedItem"
-                    v-model="formData.password"
-                    type="password"
-                    label="Password"
-                    :error-messages="handleError('password')"
-                    hint="At least 8 letters"
-                    @blur="onBlur('password')"
-                />
             </v-card-text>
 
             <v-card-actions>
@@ -68,7 +58,7 @@ import dayjs from 'dayjs';
 import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, requiredIf, email, minLength } from '@vuelidate/validators';
+import { required, email } from '@vuelidate/validators';
 
 import { useUserStore } from '@/stores/user';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
@@ -93,8 +83,7 @@ export default {
             firstName: '',
             lastName: '',
             dateOfBirth: '',
-            email: '',
-            password: ''
+            email: ''
         };
 
         return {
@@ -119,12 +108,6 @@ export default {
                 email: {
                     required,
                     email
-                },
-                password: {
-                    required: requiredIf(function () {
-                        return !this.editedItem;
-                    }),
-                    minLength: minLength(8)
                 }
             }
         };

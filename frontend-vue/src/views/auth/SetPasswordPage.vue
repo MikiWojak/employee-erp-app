@@ -49,6 +49,8 @@ import { required, minLength, sameAs } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
 
+// @TODO Check token on enter page
+
 export default {
     name: 'SetPasswordPage',
 
