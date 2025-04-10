@@ -39,6 +39,7 @@ const setPassword = [
         .withMessage('This field is required.')
         .bail()
         .custom((value, { req }) => value === req.body.password)
+        .withMessage('This field must be the same as "password".')
 ];
 
 module.exports = { login, checkToken, setPassword };
