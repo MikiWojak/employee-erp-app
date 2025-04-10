@@ -1,5 +1,18 @@
 const { body } = require('express-validator');
 
+const checkToken = [body('token').trim()];
+
+const password = [
+    body('password')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isLength(8)
+        .withMessage(`This field must have at least 8 letters.`)
+];
+
 const login = [
     body('email')
         .trim()
@@ -11,29 +24,13 @@ const login = [
         .isEmail()
         .withMessage('Wrong email format.'),
 
-    body('password')
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage('This field is required.')
-        .bail()
-        .isLength(8)
-        .withMessage(`This field must have at least 8 letters.`)
+    ...password
 ];
-
-const checkToken = [body('token').trim()];
 
 const setPassword = [
     ...checkToken,
 
-    body('password')
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage('This field is required.')
-        .bail()
-        .isLength(8)
-        .withMessage(`This field must have at least 8 letters.`),
+    ...password,
 
     body('passwordConfirmation')
         .trim()

@@ -34,11 +34,7 @@ module.exports = {
 
         'services.auth.getPasswordSetLink': {
             class: 'services/auth/GetPasswordSetLinkHandler',
-            arguments: [
-                '%frontendUrl%',
-                '@repositories.user',
-                '@repositories.passwordReset'
-            ]
+            arguments: ['%frontendUrl%', '@repositories.passwordReset']
         }
     }
 };
