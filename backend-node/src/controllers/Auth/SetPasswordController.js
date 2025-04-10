@@ -5,9 +5,10 @@ const { StatusCodes: HTTP } = require('http-status-codes');
 dayjs.extend(utc);
 
 class SetPasswordController {
-    constructor(userRepository, passwordResetRepository) {
+    constructor(userRepository, passwordResetRepository, sendEmailHandler) {
         this.userRepository = userRepository;
         this.passwordResetRepository = passwordResetRepository;
+        this.sendEmailHandler = sendEmailHandler;
     }
 
     async invoke(req, res) {
@@ -44,6 +45,12 @@ class SetPasswordController {
 
             throw error;
         }
+
+        await this.sendEmailHandler.handle(
+            'PasswordChanged',
+            passwordReset.user.email,
+            { firstName: passwordReset.user.firstName }
+        );
 
         return res.sendStatus(HTTP.NO_CONTENT);
     }

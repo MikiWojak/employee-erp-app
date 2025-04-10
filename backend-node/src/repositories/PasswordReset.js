@@ -34,7 +34,7 @@ class PasswordResetRepository extends AbstractRepository {
             include: [
                 {
                     association: 'user',
-                    attributes: ['id'],
+                    attributes: ['id', 'firstName', 'lastName', 'email'],
                     required: true
                 }
             ]
