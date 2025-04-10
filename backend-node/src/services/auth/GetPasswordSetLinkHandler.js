@@ -14,10 +14,6 @@ class GetPasswordSetLinkHandler {
             expiresAt: dayjs().add(3, 'hour').format()
         });
 
-        if (!passwordReset) {
-            return null;
-        }
-
         return `${this.frontendUrl}/set-password?token=${passwordReset.token}`;
     }
 }

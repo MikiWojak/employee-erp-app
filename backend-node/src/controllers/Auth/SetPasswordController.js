@@ -46,11 +46,9 @@ class SetPasswordController {
             throw error;
         }
 
-        await this.sendEmailHandler.handle(
-            'PasswordChanged',
-            passwordReset.user.email,
-            { firstName: passwordReset.user.firstName }
-        );
+        await this.sendEmailHandler.handle('PasswordChanged', user.email, {
+            firstName: user.firstName
+        });
 
         return res.sendStatus(HTTP.NO_CONTENT);
     }

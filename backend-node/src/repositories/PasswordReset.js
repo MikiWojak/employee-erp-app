@@ -1,6 +1,6 @@
 const dayjs = require('dayjs');
-const deepmerge = require('deepmerge');
 const { Op } = require('sequelize');
+const deepmerge = require('deepmerge');
 const utc = require('dayjs/plugin/utc');
 
 dayjs.extend(utc);
@@ -23,18 +23,16 @@ class PasswordResetRepository extends AbstractRepository {
             return null;
         }
 
-        const dateTimeNow = dayjs().utc().format();
-
         return this.findByToken(token, {
             where: {
                 expiresAt: {
-                    [Op.gte]: dateTimeNow
+                    [Op.gte]: dayjs().utc().format()
                 }
             },
             include: [
                 {
                     association: 'user',
-                    attributes: ['id', 'firstName', 'lastName', 'email'],
+                    attributes: ['id'],
                     required: true
                 }
             ]

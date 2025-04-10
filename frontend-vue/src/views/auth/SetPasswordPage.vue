@@ -178,7 +178,7 @@ export default {
                 }
 
                 if (
-                    response.status === HTTP.BAD_REQUEST &&
+                    response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
                     this.setPasswordError = 'Recheck your form.';
