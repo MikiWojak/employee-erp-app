@@ -21,9 +21,7 @@ const login = [
         .withMessage(`This field must have at least 8 letters.`)
 ];
 
-const checkToken = [
-    body('token').trim().not().isEmpty().withMessage('This field is required.')
-];
+const checkToken = [body('token').trim()];
 
 const setPassword = [
     ...checkToken,

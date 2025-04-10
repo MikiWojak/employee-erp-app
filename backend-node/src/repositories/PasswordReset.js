@@ -19,6 +19,10 @@ class PasswordResetRepository extends AbstractRepository {
     }
 
     validateToken(token) {
+        if (!token?.trim()) {
+            return null;
+        }
+
         const dateTimeNow = dayjs().utc().format();
 
         return this.findByToken(token, {

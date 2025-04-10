@@ -1,10 +1,28 @@
 <template>
-    <v-row>
-        <v-col v-if="isTokenInvalid" md="8" lg="6" class="mx-auto">
-            <h1>Invalid token!</h1>
-        </v-col>
+    <div v-if="isTokenInvalid" class="d-flex flex-column align-center">
+        <h1 class="text-red">Invalid token!</h1>
 
-        <v-col v-else md="8" lg="6" class="mx-auto">
+        <v-btn
+            :to="{ name: loggedIn ? 'dashboard' : 'login' }"
+            color="light-blue"
+        >
+            {{ btnTitle }}
+        </v-btn>
+    </div>
+
+    <div v-else-if="isPasswordChanged" class="d-flex flex-column align-center">
+        <h1>Password has been changed</h1>
+
+        <v-btn
+            :to="{ name: loggedIn ? 'dashboard' : 'login' }"
+            color="light-blue"
+        >
+            {{ btnTitle }}
+        </v-btn>
+    </div>
+
+    <v-row v-else>
+        <v-col md="8" lg="6" class="mx-auto">
             <h1>Set password</h1>
 
             <v-form @submit.prevent="handleSetPassword">
@@ -45,7 +63,7 @@
 </template>
 
 <script>
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, minLength, sameAs } from '@vuelidate/validators';
@@ -89,8 +107,20 @@ export default {
     },
 
     computed: {
+        ...mapState(useAuthStore, ['loggedIn']),
+
         isTokenInvalid() {
             return this.formStatus === 'invalid';
+        },
+
+        isPasswordChanged() {
+            return this.formStatus === 'success';
+        },
+
+        btnTitle() {
+            const page = this.loggedIn ? 'Dashboard' : 'Login';
+
+            return `Go to ${page} Page`;
         }
     },
 
@@ -100,9 +130,11 @@ export default {
                 token: this.$route.query.token
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
-            this.formStatus = 'invalid';
+            if (error?.response?.status === HTTP.FORBIDDEN) {
+                this.formStatus = 'invalid';
+            }
         }
     },
 
@@ -133,9 +165,7 @@ export default {
                     ...this.formData
                 });
 
-                this.$router.push({ name: 'login' });
-
-                this.$toast.success('Password changed successfully.');
+                this.formStatus = 'success';
             } catch (error) {
                 const { response } = error;
 
@@ -158,7 +188,7 @@ export default {
                 }
 
                 if (response.status === HTTP.FORBIDDEN) {
-                    this.setPasswordError = 'Invalid token.';
+                    this.formStatus = 'invalid';
 
                     return;
                 }
