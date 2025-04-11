@@ -119,25 +119,17 @@ export default {
 
                 const { response } = error;
 
-                if (!response) {
-                    console.error(error);
-
-                    this.loginError = 'Something went wrong...';
-
-                    return;
-                }
-
                 if (
-                    response.status === HTTP.BAD_REQUEST &&
+                    response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
                     this.loginError = 'Invalid credentials.';
-                    this.serverErrors = error.response.data.errors;
+                    this.serverErrors = response.data.errors;
 
                     return;
                 }
 
-                if (response.status === HTTP.UNAUTHORIZED) {
+                if (response?.status === HTTP.UNAUTHORIZED) {
                     this.loginError = 'Mismatching credentials.';
 
                     return;
@@ -145,7 +137,7 @@ export default {
 
                 console.error(error);
 
-                this.loginError = 'Error unknown.';
+                this.loginError = 'Something went wrong...';
             }
         }
     }

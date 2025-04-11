@@ -2,23 +2,13 @@
     <div v-if="isTokenInvalid" class="d-flex flex-column align-center">
         <h1 class="text-red">Invalid token!</h1>
 
-        <v-btn
-            :to="{ name: loggedIn ? 'dashboard' : 'login' }"
-            color="light-blue"
-        >
-            {{ btnTitle }}
-        </v-btn>
+        <back-home-button />
     </div>
 
     <div v-else-if="isPasswordChanged" class="d-flex flex-column align-center">
         <h1>Password has been changed</h1>
 
-        <v-btn
-            :to="{ name: loggedIn ? 'dashboard' : 'login' }"
-            color="light-blue"
-        >
-            {{ btnTitle }}
-        </v-btn>
+        <back-home-button />
     </div>
 
     <v-row v-else>
@@ -63,16 +53,21 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'pinia';
+import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, minLength, sameAs } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
+import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
     name: 'SetPasswordPage',
+
+    components: {
+        BackHomeButton
+    },
 
     extends: BaseForm,
 
@@ -107,20 +102,12 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedIn']),
-
         isTokenInvalid() {
             return this.formStatus === 'invalid';
         },
 
         isPasswordChanged() {
             return this.formStatus === 'success';
-        },
-
-        btnTitle() {
-            const page = this.loggedIn ? 'Dashboard' : 'Login';
-
-            return `Go to ${page} Page`;
         }
     },
 
@@ -169,25 +156,17 @@ export default {
             } catch (error) {
                 const { response } = error;
 
-                if (!response) {
-                    console.error(error);
-
-                    this.setPasswordError = 'Something went wrong...';
-
-                    return;
-                }
-
                 if (
                     response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
                     this.setPasswordError = 'Recheck your form.';
-                    this.serverErrors = error.response.data.errors;
+                    this.serverErrors = response.data.errors;
 
                     return;
                 }
 
-                if (response.status === HTTP.FORBIDDEN) {
+                if (response?.status === HTTP.FORBIDDEN) {
                     this.formStatus = 'invalid';
 
                     return;
@@ -195,7 +174,7 @@ export default {
 
                 console.error(error);
 
-                this.setPasswordError = 'Error unknown.';
+                this.setPasswordError = 'Something went wrong...';
             }
         }
     }
