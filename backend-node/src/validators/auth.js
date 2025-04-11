@@ -2,6 +2,18 @@ const { body } = require('express-validator');
 
 const checkToken = [body('token').trim()];
 
+const sendResetPasswordLink = [
+    body('email')
+        .trim()
+        .toLowerCase()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isEmail()
+        .withMessage('Wrong email format.')
+];
+
 const password = [
     body('password')
         .trim()
@@ -13,19 +25,7 @@ const password = [
         .withMessage(`This field must have at least 8 letters.`)
 ];
 
-const login = [
-    body('email')
-        .trim()
-        .toLowerCase()
-        .not()
-        .isEmpty()
-        .withMessage('This field is required.')
-        .bail()
-        .isEmail()
-        .withMessage('Wrong email format.'),
-
-    ...password
-];
+const login = [...sendResetPasswordLink, ...password];
 
 const setPassword = [
     ...checkToken,
@@ -42,4 +42,4 @@ const setPassword = [
         .withMessage('This field must be the same as field "password".')
 ];
 
-module.exports = { login, checkToken, setPassword };
+module.exports = { login, checkToken, setPassword, sendResetPasswordLink };
