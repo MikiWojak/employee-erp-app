@@ -7,7 +7,7 @@
             reset password link.
         </p>
 
-        <back-home-button class="my-4"/>
+        <back-home-button class="my-4" />
     </div>
 
     <v-row v-else>
@@ -38,6 +38,14 @@
                 >
                     {{ sendResetPasswordLinkError }}
                 </v-alert>
+
+                <div class="d-flex justify-center my-4">
+                    <v-btn
+                        :to="{ name: 'login' }"
+                        text="Login page"
+                        variant="plain"
+                    />
+                </div>
             </v-form>
         </v-col>
     </v-row>

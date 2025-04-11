@@ -1,10 +1,9 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StoreController {
-    constructor(contractRepository, userRepository, sendEmailHandler) {
+    constructor(contractRepository, userRepository) {
         this.contractRepository = contractRepository;
         this.userRepository = userRepository;
-        this.sendEmailHandler = sendEmailHandler;
     }
 
     async invoke(req, res) {
@@ -56,21 +55,6 @@ class StoreController {
         }
 
         const contract = await this.contractRepository.getById(contractId);
-
-        const {
-            user: { firstName }
-        } = contract;
-
-        await this.sendEmailHandler.handle(
-            'ContractStore',
-            contract.user.email,
-            {
-                firstName,
-                position: contract.position,
-                startDate: contract.startDate,
-                endDate: contract.endDate
-            }
-        );
 
         return res.status(HTTP.CREATED).send(contract);
     }

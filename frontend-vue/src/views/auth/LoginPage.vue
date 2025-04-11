@@ -35,10 +35,12 @@
                     {{ loginError }}
                 </v-alert>
 
-                <div class="my-4">
-                    <router-link :to="{ name: 'forgot-password' }">
-                        Forgot your password?
-                    </router-link>
+                <div class="d-flex justify-center my-4">
+                    <v-btn
+                        :to="{ name: 'forgot-password' }"
+                        text="Forgot your password?"
+                        variant="plain"
+                    />
                 </div>
             </v-form>
         </v-col>

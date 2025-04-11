@@ -7,11 +7,7 @@ module.exports = {
 
         'controllers.contracts.storeController': {
             class: 'controllers/Contracts/StoreController',
-            arguments: [
-                '@repositories.contract',
-                '@repositories.user',
-                '@services.sendEmail'
-            ]
+            arguments: ['@repositories.contract', '@repositories.user']
         },
 
         'controllers.contracts.updateController': {

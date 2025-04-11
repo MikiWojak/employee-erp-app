@@ -22,7 +22,7 @@ module.exports = {
 
         'controllers.users.destroyController': {
             class: 'controllers/Users/DestroyController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@services.sendEmail']
         }
     }
 };
