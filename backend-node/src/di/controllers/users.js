@@ -10,7 +10,8 @@ module.exports = {
             arguments: [
                 '@repositories.user',
                 '@repositories.role',
-                '@services.sendEmail'
+                '@services.sendEmail',
+                '@services.auth.getPasswordSetLink'
             ]
         },
 

@@ -2,7 +2,8 @@ const config = require('../../config');
 
 module.exports = {
     parameters: {
-        config
+        config,
+        frontendUrl: config.app.frontendUrl
     },
     services: {
         sequelize: {
@@ -29,6 +30,11 @@ module.exports = {
         'services.sendEmail': {
             class: 'services/SendEmailHandler',
             arguments: ['@queues.producer.email', '@factories.email']
+        },
+
+        'services.auth.getPasswordSetLink': {
+            class: 'services/auth/GetPasswordSetLinkHandler',
+            arguments: ['%frontendUrl%', '@repositories.passwordReset']
         }
     }
 };

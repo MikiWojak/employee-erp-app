@@ -13,6 +13,20 @@ module.exports = {
         'controllers.auth.logoutController': {
             class: 'controllers/Auth/LogoutController',
             arguments: []
+        },
+
+        'controllers.auth.setPasswordController': {
+            class: 'controllers/Auth/SetPasswordController',
+            arguments: [
+                '@repositories.user',
+                '@repositories.passwordReset',
+                '@services.sendEmail'
+            ]
+        },
+
+        'controllers.auth.checkSetPasswordTokenController': {
+            class: 'controllers/Auth/CheckSetPasswordTokenController',
+            arguments: ['@repositories.passwordReset']
         }
     }
 };

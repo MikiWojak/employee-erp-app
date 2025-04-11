@@ -1,6 +1,6 @@
 <template>
     <v-footer app color="light-blue" class="justify-center">
-        &copy; 2021 Mikołaj Żarnowski
+        &copy; 2025 Mikołaj Żarnowski
     </v-footer>
 </template>
 

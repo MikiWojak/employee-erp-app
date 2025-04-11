@@ -43,6 +43,20 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async checkSetPasswordToken({ token }) {
+            await axios.post('/auth/check-set-password-token', {
+                token
+            });
+        },
+
+        async setPassword({ token, password, passwordConfirmation }) {
+            await axios.post('/auth/set-password', {
+                token,
+                password,
+                passwordConfirmation
+            });
+        },
+
         setLoggedUser(loggedUser) {
             this.loggedUser = loggedUser;
 

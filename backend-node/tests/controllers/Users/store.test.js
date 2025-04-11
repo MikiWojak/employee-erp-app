@@ -93,10 +93,6 @@ describe('Users', () => {
                     expect.objectContaining({
                         param: 'email',
                         message: 'This field is required.'
-                    }),
-                    expect.objectContaining({
-                        param: 'password',
-                        message: 'This field is required.'
                     })
                 ])
             );
@@ -124,10 +120,6 @@ describe('Users', () => {
                     expect.objectContaining({
                         param: 'email',
                         message: 'Wrong email format.'
-                    }),
-                    expect.objectContaining({
-                        param: 'password',
-                        message: 'This field must have at least 8 letters.'
                     })
                 ])
             );

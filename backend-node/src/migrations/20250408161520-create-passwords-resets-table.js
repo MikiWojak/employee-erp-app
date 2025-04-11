@@ -9,7 +9,7 @@ const {
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable(
-            'Users',
+            'PasswordResets',
             {
                 id: {
                     allowNull: false,
@@ -17,37 +17,21 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
-                firstName: {
+                userId: {
+                    allowNull: false,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
+                token: {
                     allowNull: false,
                     type: DataTypes.STRING
                 },
-                lastName: {
+                expiresAt: {
                     allowNull: false,
-                    type: DataTypes.STRING
-                },
-                dateOfBirth: {
-                    allowNull: false,
-                    type: DataTypes.DATEONLY
-                },
-                email: {
-                    allowNull: false,
-                    unique: true,
-                    type: DataTypes.STRING
-                },
-                password: {
-                    allowNull: true,
-                    defaultValue: null,
-                    type: DataTypes.STRING
-                },
-                vacationDaysSum: {
-                    allowNull: false,
-                    type: DataTypes.INTEGER,
-                    defaultValue: 0
-                },
-                vacationDaysUsed: {
-                    allowNull: false,
-                    type: DataTypes.INTEGER,
-                    defaultValue: 0
+                    type: DataTypes.DATE
                 },
                 createdAt: {
                     allowNull: false,
@@ -58,10 +42,6 @@ module.exports = {
                     allowNull: false,
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.fn('now')
-                },
-                deletedAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: null
                 }
             },
             {
@@ -71,6 +51,6 @@ module.exports = {
         );
     },
     down: async queryInterface => {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('PasswordResets');
     }
 };

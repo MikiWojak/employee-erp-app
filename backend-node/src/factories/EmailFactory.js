@@ -1,10 +1,12 @@
 const UserStoreEmail = require('./emails/UserStoreEmail');
 const ContractStoreEmail = require('./emails/ContractStoreEmail');
+const PasswordChangedEmail = require('./emails/PasswordChangedEmail');
 
 class EmailFactory {
     #emailTypes = {
         UserStoreEmail,
-        ContractStoreEmail
+        ContractStoreEmail,
+        PasswordChangedEmail
     };
 
     create(emailType, to, data) {

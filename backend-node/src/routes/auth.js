@@ -10,6 +10,12 @@ module.exports = di => {
     const meController = di.get('controllers.auth.meController');
     const loginController = di.get('controllers.auth.loginController');
     const logoutController = di.get('controllers.auth.logoutController');
+    const setPasswordController = di.get(
+        'controllers.auth.setPasswordController'
+    );
+    const checkSetPasswordTokenController = di.get(
+        'controllers.auth.checkSetPasswordTokenController'
+    );
 
     router.post(
         '/login',
@@ -18,6 +24,16 @@ module.exports = di => {
     );
     router.post('/logout', invoke(logoutController));
     router.get('/me', loggedOnly(), invoke(meController));
+    router.post(
+        '/check-set-password-token',
+        [authValidator.checkToken, validate],
+        invoke(checkSetPasswordTokenController)
+    );
+    router.post(
+        '/set-password',
+        [authValidator.setPassword, validate],
+        invoke(setPasswordController)
+    );
 
     return router;
 };

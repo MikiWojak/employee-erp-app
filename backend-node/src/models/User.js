@@ -71,7 +71,8 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING
             },
             password: {
-                allowNull: false,
+                allowNull: true,
+                defaultValue: null,
                 type: DataTypes.STRING
             },
             vacationDaysSum: {
@@ -96,8 +97,14 @@ module.exports = (sequelize, DataTypes) => {
             },
 
             hooks: {
-                async beforeSave(user, options) {
-                    if (options.fields && options.fields.includes('password')) {
+                beforeCreate: async user => {
+                    if (user.password) {
+                        user.password = await bcrypt.hash(user.password, 10);
+                    }
+                },
+
+                beforeUpdate: async user => {
+                    if (user.password) {
                         user.password = await bcrypt.hash(user.password, 10);
                     }
                 }
