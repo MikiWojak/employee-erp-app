@@ -55,10 +55,11 @@ import { required, email } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
-import BackHomeButton from '@/components/common/BackHomeButton.vue';
+import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
     name: 'ForgotPasswordPage',
+
     components: { BackHomeButton },
 
     extends: BaseForm,
