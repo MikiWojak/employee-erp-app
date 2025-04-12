@@ -11,6 +11,7 @@
                         outlined
                         :error-messages="handleError('email')"
                         @blur="onBlur('email')"
+                        @input="clearServerError('email')"
                     />
                 </div>
 
@@ -22,6 +23,7 @@
                         outlined
                         :error-messages="handleError('password')"
                         @blur="onBlur('password')"
+                        @input="clearServerError('password')"
                     />
                 </div>
 

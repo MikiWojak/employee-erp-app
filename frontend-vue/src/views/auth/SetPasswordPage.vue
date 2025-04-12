@@ -24,6 +24,7 @@
                         outlined
                         :error-messages="handleError('password')"
                         @blur="onBlur('password')"
+                        @input="clearServerError('password')"
                     />
                 </div>
 
@@ -35,6 +36,7 @@
                         outlined
                         :error-messages="handleError('passwordConfirmation')"
                         @blur="onBlur('passwordConfirmation')"
+                        @input="clearServerError('passwordConfirmation')"
                     />
                 </div>
 
@@ -54,19 +56,21 @@
 
 <script>
 import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, minLength, sameAs } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
-import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
     name: 'SetPasswordPage',
 
     components: {
-        BackHomeButton
+        BackHomeButton: defineAsyncComponent(
+            () => import('@/components/common/BackHomeButton')
+        )
     },
 
     extends: BaseForm,

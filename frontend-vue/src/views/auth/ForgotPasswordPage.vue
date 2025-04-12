@@ -22,6 +22,7 @@
                         outlined
                         :error-messages="handleError('email')"
                         @blur="onBlur('email')"
+                        @input="clearServerError('email')"
                     />
                 </div>
 
@@ -49,18 +50,22 @@
 
 <script>
 import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, email } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
-import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
     name: 'ForgotPasswordPage',
 
-    components: { BackHomeButton },
+    components: {
+        BackHomeButton: defineAsyncComponent(
+            () => import('@/components/common/BackHomeButton')
+        )
+    },
 
     extends: BaseForm,
 

@@ -16,10 +16,12 @@ function loggedOnly(...permittedRoles) {
             permittedRoles = [permittedRoles];
         }
 
+        const rolesInfo = await loggedUser.rolesInfo();
+
         if (
             permittedRoles.length &&
             !permittedRoles.some(permittedRole =>
-                loggedUser.roles.some(role => role.name === permittedRole)
+                rolesInfo.includes(permittedRole)
             )
         ) {
             return res.sendStatus(HTTP.FORBIDDEN);

@@ -16,6 +16,7 @@
                     label="First name"
                     :error-messages="handleError('firstName')"
                     @blur="onBlur('firstName')"
+                    @input="clearServerError('firstName')"
                 />
 
                 <v-text-field
@@ -23,6 +24,7 @@
                     label="Last name"
                     :error-messages="handleError('lastName')"
                     @blur="onBlur('lastName')"
+                    @input="clearServerError('lastName')"
                 />
 
                 <date-picker
@@ -31,6 +33,7 @@
                     :max="maxDate"
                     :error-messages="handleError('dateOfBirth')"
                     @blur="onBlur('dateOfBirth')"
+                    @update:model-value="clearServerError('dateOfBirth')"
                 />
 
                 <v-text-field
@@ -39,6 +42,7 @@
                     label="Email"
                     :error-messages="handleError('email')"
                     @blur="onBlur('email')"
+                    @input="clearServerError('email')"
                 />
             </v-card-text>
 

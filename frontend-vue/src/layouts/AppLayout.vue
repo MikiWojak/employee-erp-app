@@ -6,7 +6,7 @@
 
         <v-main>
             <v-container fluid>
-                <router-view />
+                <slot />
             </v-container>
         </v-main>
 

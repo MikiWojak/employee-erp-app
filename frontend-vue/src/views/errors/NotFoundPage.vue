@@ -7,13 +7,15 @@
 </template>
 
 <script>
-import BackHomeButton from '@/components/common/BackHomeButton';
+import { defineAsyncComponent } from 'vue';
 
 export default {
     name: 'NotFoundPage',
 
     components: {
-        BackHomeButton
+        BackHomeButton: defineAsyncComponent(
+            () => import('@/components/common/BackHomeButton')
+        )
     }
 };
 </script>
