@@ -39,6 +39,12 @@ export default [
         meta: { guest: true, layout: Layouts.BASE }
     },
     {
+        path: '/forgot-password',
+        name: 'forgot-password',
+        component: () => import('@/views/auth/ForgotPasswordPage'),
+        meta: { guest: true, layout: Layouts.BASE }
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
         component: () => import('@/views/errors/NotFoundPage')

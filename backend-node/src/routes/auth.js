@@ -16,6 +16,9 @@ module.exports = di => {
     const checkSetPasswordTokenController = di.get(
         'controllers.auth.checkSetPasswordTokenController'
     );
+    const sendResetPasswordLinkController = di.get(
+        'controllers.auth.sendResetPasswordLinkController'
+    );
 
     router.post(
         '/login',
@@ -33,6 +36,11 @@ module.exports = di => {
         '/set-password',
         [authValidator.setPassword, validate],
         invoke(setPasswordController)
+    );
+    router.post(
+        '/send-reset-password-link',
+        [authValidator.sendResetPasswordLink, validate],
+        invoke(sendResetPasswordLinkController)
     );
 
     return router;

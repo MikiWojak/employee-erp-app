@@ -1,9 +1,20 @@
 <template>
-    <v-row>
-        <v-col md="8" lg="6" class="mx-auto">
-            <h1>Login</h1>
+    <div v-if="formSent" class="d-flex flex-column align-center">
+        <h1>Reset password link sent!</h1>
 
-            <v-form @submit.prevent="handleLogin">
+        <p>
+            If your account exists in the system you will get an email with the
+            reset password link.
+        </p>
+
+        <back-home-button class="my-4" />
+    </div>
+
+    <v-row v-else>
+        <v-col md="8" lg="6" class="mx-auto">
+            <h1>Forgot password?</h1>
+
+            <v-form @submit.prevent="handleSendResetPasswordLink">
                 <div class="my-4">
                     <v-text-field
                         v-model="formData.email"
@@ -15,19 +26,8 @@
                 </div>
 
                 <div class="my-4">
-                    <v-text-field
-                        v-model="formData.password"
-                        type="password"
-                        label="Password"
-                        outlined
-                        :error-messages="handleError('password')"
-                        @blur="onBlur('password')"
-                    />
-                </div>
-
-                <div class="my-4">
                     <v-btn type="submit" width="100%">
-                        <span>Login</span>
+                        <span>Send reset password link</span>
                     </v-btn>
                 </div>
 
@@ -37,8 +37,8 @@
 
                 <div class="d-flex justify-center my-4">
                     <v-btn
-                        :to="{ name: 'forgot-password' }"
-                        text="Forgot your password?"
+                        :to="{ name: 'login' }"
+                        text="Login page"
                         variant="plain"
                     />
                 </div>
@@ -51,13 +51,16 @@
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { required, email, minLength } from '@vuelidate/validators';
+import { required, email } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
+import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
-    name: 'LoginPage',
+    name: 'ForgotPasswordPage',
+
+    components: { BackHomeButton },
 
     extends: BaseForm,
 
@@ -68,9 +71,9 @@ export default {
     data() {
         return {
             formData: {
-                email: '',
-                password: ''
+                email: ''
             },
+            formSent: false,
             formErrorMessage: ''
         };
     },
@@ -81,17 +84,13 @@ export default {
                 email: {
                     required,
                     email
-                },
-                password: {
-                    required,
-                    minLength: minLength(8)
                 }
             }
         };
     },
 
     methods: {
-        ...mapActions(useAuthStore, ['login']),
+        ...mapActions(useAuthStore, ['sendResetPasswordLink']),
 
         onBlur(param) {
             this.clearServerError(param);
@@ -99,7 +98,7 @@ export default {
             this.formErrorMessage = '';
         },
 
-        async handleLogin() {
+        async handleSendResetPasswordLink() {
             this.formErrorMessage = '';
             this.serverErrors = [];
 
@@ -112,16 +111,11 @@ export default {
             this.v$.formData.$reset();
 
             try {
-                const { email, password } = this.formData;
+                const { email } = this.formData;
 
-                await this.login({
-                    email,
-                    password
-                });
+                await this.sendResetPasswordLink({ email });
 
-                this.$router.push({ name: 'dashboard' });
-
-                this.$toast.success('Logged in successfully');
+                this.formSent = true;
             } catch (error) {
                 this.formData.password = '';
 
@@ -133,12 +127,6 @@ export default {
                 ) {
                     this.formErrorMessage = 'Invalid credentials.';
                     this.serverErrors = response.data.errors;
-
-                    return;
-                }
-
-                if (response?.status === HTTP.UNAUTHORIZED) {
-                    this.formErrorMessage = 'Mismatching credentials.';
 
                     return;
                 }

@@ -44,8 +44,8 @@
                     </v-btn>
                 </div>
 
-                <v-alert v-if="setPasswordError" type="error" class="my-4">
-                    {{ setPasswordError }}
+                <v-alert v-if="formErrorMessage" type="error" class="my-4">
+                    {{ formErrorMessage }}
                 </v-alert>
             </v-form>
         </v-col>
@@ -81,7 +81,7 @@ export default {
                 password: '',
                 passwordConfirmation: ''
             },
-            setPasswordError: '',
+            formErrorMessage: '',
             formStatus: null
         };
     },
@@ -131,11 +131,11 @@ export default {
         onBlur(param) {
             this.clearServerError(param);
             this.v$.formData[param].$touch();
-            this.setPasswordError = '';
+            this.formErrorMessage = '';
         },
 
         async handleSetPassword() {
-            this.setPasswordError = '';
+            this.formErrorMessage = '';
             this.serverErrors = [];
 
             this.v$.formData.$touch();
@@ -160,7 +160,7 @@ export default {
                     response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
-                    this.setPasswordError = 'Recheck your form.';
+                    this.formErrorMessage = 'Recheck your form.';
                     this.serverErrors = response.data.errors;
 
                     return;
@@ -174,7 +174,7 @@ export default {
 
                 console.error(error);
 
-                this.setPasswordError = 'Something went wrong...';
+                this.formErrorMessage = 'Something went wrong...';
             }
         }
     }
