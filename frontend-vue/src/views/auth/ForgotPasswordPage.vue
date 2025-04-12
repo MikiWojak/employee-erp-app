@@ -31,12 +31,8 @@
                     </v-btn>
                 </div>
 
-                <v-alert
-                    v-if="sendResetPasswordLinkError"
-                    type="error"
-                    class="my-4"
-                >
-                    {{ sendResetPasswordLinkError }}
+                <v-alert v-if="formErrorMessage" type="error" class="my-4">
+                    {{ formErrorMessage }}
                 </v-alert>
 
                 <div class="d-flex justify-center my-4">
@@ -77,7 +73,7 @@ export default {
                 email: ''
             },
             formSent: false,
-            sendResetPasswordLinkError: ''
+            formErrorMessage: ''
         };
     },
 
@@ -98,11 +94,11 @@ export default {
         onBlur(param) {
             this.clearServerError(param);
             this.v$.formData[param].$touch();
-            this.sendResetPasswordLinkError = '';
+            this.formErrorMessage = '';
         },
 
         async handleSendResetPasswordLink() {
-            this.sendResetPasswordLinkError = '';
+            this.formErrorMessage = '';
             this.serverErrors = [];
 
             this.v$.formData.$touch();
@@ -128,7 +124,7 @@ export default {
                     response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
-                    this.sendResetPasswordLinkError = 'Invalid credentials.';
+                    this.formErrorMessage = 'Invalid credentials.';
                     this.serverErrors = response.data.errors;
 
                     return;
@@ -136,7 +132,7 @@ export default {
 
                 console.error(error);
 
-                this.sendResetPasswordLinkError = 'Something went wrong...';
+                this.formErrorMessage = 'Something went wrong...';
             }
         }
     }

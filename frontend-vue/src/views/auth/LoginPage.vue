@@ -31,8 +31,8 @@
                     </v-btn>
                 </div>
 
-                <v-alert v-if="loginError" type="error" class="my-4">
-                    {{ loginError }}
+                <v-alert v-if="formErrorMessage" type="error" class="my-4">
+                    {{ formErrorMessage }}
                 </v-alert>
 
                 <div class="d-flex justify-center my-4">
@@ -71,7 +71,7 @@ export default {
                 email: '',
                 password: ''
             },
-            loginError: ''
+            formErrorMessage: ''
         };
     },
 
@@ -96,11 +96,11 @@ export default {
         onBlur(param) {
             this.clearServerError(param);
             this.v$.formData[param].$touch();
-            this.loginError = '';
+            this.formErrorMessage = '';
         },
 
         async handleLogin() {
-            this.loginError = '';
+            this.formErrorMessage = '';
             this.serverErrors = [];
 
             this.v$.formData.$touch();
@@ -131,21 +131,21 @@ export default {
                     response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
-                    this.loginError = 'Invalid credentials.';
+                    this.formErrorMessage = 'Invalid credentials.';
                     this.serverErrors = response.data.errors;
 
                     return;
                 }
 
                 if (response?.status === HTTP.UNAUTHORIZED) {
-                    this.loginError = 'Mismatching credentials.';
+                    this.formErrorMessage = 'Mismatching credentials.';
 
                     return;
                 }
 
                 console.error(error);
 
-                this.loginError = 'Something went wrong...';
+                this.formErrorMessage = 'Something went wrong...';
             }
         }
     }
