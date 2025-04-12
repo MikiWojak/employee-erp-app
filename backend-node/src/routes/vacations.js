@@ -13,10 +13,10 @@ const paginationValidator = require('../validators/pagination');
 const { Vacation } = require('../models');
 
 module.exports = di => {
-    const indexController = di.get('controllers.vacations.indexController');
-    const storeController = di.get('controllers.vacations.storeController');
-    const updateController = di.get('controllers.vacations.updateController');
-    const destroyController = di.get('controllers.vacations.destroyController');
+    const indexController = di.get('controllers.vacations.index');
+    const storeController = di.get('controllers.vacations.store');
+    const updateController = di.get('controllers.vacations.update');
+    const destroyController = di.get('controllers.vacations.destroy');
 
     router.get(
         '/',

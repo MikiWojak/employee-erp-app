@@ -1,11 +1,11 @@
 module.exports = {
     services: {
-        'controllers.users.indexController': {
+        'controllers.users.index': {
             class: 'controllers/Users/IndexController',
             arguments: ['@repositories.user']
         },
 
-        'controllers.users.storeController': {
+        'controllers.users.store': {
             class: 'controllers/Users/StoreController',
             arguments: [
                 '@repositories.user',
@@ -15,12 +15,12 @@ module.exports = {
             ]
         },
 
-        'controllers.users.updateController': {
+        'controllers.users.update': {
             class: 'controllers/Users/UpdateController',
             arguments: ['@repositories.user']
         },
 
-        'controllers.users.destroyController': {
+        'controllers.users.destroy': {
             class: 'controllers/Users/DestroyController',
             arguments: ['@repositories.user', '@services.sendEmail']
         }

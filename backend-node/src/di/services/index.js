@@ -22,7 +22,7 @@ module.exports = {
             }
         },
 
-        'services.getLoggedInUserHandler': {
+        'services.getLoggedInUser': {
             class: 'services/GetLoggedInUserHandler',
             arguments: ['@repositories.user']
         },

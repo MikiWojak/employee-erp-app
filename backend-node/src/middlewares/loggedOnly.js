@@ -3,9 +3,7 @@ const { StatusCodes: HTTP } = require('http-status-codes');
 function loggedOnly(...permittedRoles) {
     return async (req, res, next) => {
         const di = req.app.get('di');
-        const getLoggedInUserHandler = di.get(
-            'services.getLoggedInUserHandler'
-        );
+        const getLoggedInUserHandler = di.get('services.getLoggedInUser');
         const loggedUser = await getLoggedInUserHandler.handle(req);
 
         if (!loggedUser) {
