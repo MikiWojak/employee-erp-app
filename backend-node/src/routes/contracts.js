@@ -16,10 +16,10 @@ const {
 } = require('../models');
 
 module.exports = di => {
-    const indexController = di.get('controllers.contracts.indexController');
-    const storeController = di.get('controllers.contracts.storeController');
-    const updateController = di.get('controllers.contracts.updateController');
-    const destroyController = di.get('controllers.contracts.destroyController');
+    const indexController = di.get('controllers.contracts.index');
+    const storeController = di.get('controllers.contracts.store');
+    const updateController = di.get('controllers.contracts.update');
+    const destroyController = di.get('controllers.contracts.destroy');
 
     router.get(
         '/',

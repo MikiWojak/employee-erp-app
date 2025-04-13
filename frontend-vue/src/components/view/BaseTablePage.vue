@@ -77,6 +77,7 @@
     <confirmation-modal
         :is-opened="!!itemToDeleteId"
         :title="tableOptions.deleteConfirmationModalTitle"
+        :loading="confirmationModalLoading"
         @confirm="doDeleteItem"
         @discard="closeDeleteDialog"
     />
@@ -108,6 +109,7 @@ export default {
             searchTimer: null,
             editedItem: null,
             itemToDeleteId: null,
+            confirmationModalLoading: false,
             isAddEditDialogOpened: false,
             tableOptions: {
                 title: 'Table',
@@ -217,17 +219,23 @@ export default {
             }
 
             try {
+                this.confirmationModalLoading = true;
+
                 await this.deleteItem(this.itemToDeleteId);
 
                 await this.doGetItems();
 
                 this.$toast.success('Item has been deleted');
 
+                this.confirmationModalLoading = false;
+
                 this.closeDeleteDialog();
             } catch (error) {
                 console.error(error);
 
                 this.$toast.error('Error while deleting the item!');
+            } finally {
+                this.confirmationModalLoading = false;
             }
         },
 

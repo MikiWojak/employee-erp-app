@@ -4,7 +4,7 @@
 
         <v-main>
             <v-container>
-                <router-view />
+                <slot />
             </v-container>
         </v-main>
 

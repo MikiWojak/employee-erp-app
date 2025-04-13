@@ -1,21 +1,21 @@
 module.exports = {
     services: {
-        'controllers.auth.loginController': {
+        'controllers.auth.login': {
             class: 'controllers/Auth/LoginController',
             arguments: ['@repositories.user']
         },
 
-        'controllers.auth.meController': {
+        'controllers.auth.me': {
             class: 'controllers/Auth/MeController',
             arguments: ['@repositories.user']
         },
 
-        'controllers.auth.logoutController': {
+        'controllers.auth.logout': {
             class: 'controllers/Auth/LogoutController',
             arguments: []
         },
 
-        'controllers.auth.setPasswordController': {
+        'controllers.auth.setPassword': {
             class: 'controllers/Auth/SetPasswordController',
             arguments: [
                 '@repositories.user',
@@ -24,12 +24,12 @@ module.exports = {
             ]
         },
 
-        'controllers.auth.checkSetPasswordTokenController': {
+        'controllers.auth.checkSetPasswordToken': {
             class: 'controllers/Auth/CheckSetPasswordTokenController',
             arguments: ['@repositories.passwordReset']
         },
 
-        'controllers.auth.sendResetPasswordLinkController': {
+        'controllers.auth.sendResetPasswordLink': {
             class: 'controllers/Auth/SendResetPasswordLinkController',
             arguments: [
                 '@repositories.user',

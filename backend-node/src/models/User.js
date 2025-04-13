@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
             });
         }
 
+        async rolesInfo() {
+            const roles = await this.getRoles();
+
+            return roles.map(role => role.name);
+        }
+
         async isAdmin() {
             const roles = await this.getRoles();
 

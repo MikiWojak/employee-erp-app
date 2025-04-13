@@ -22,11 +22,12 @@
                         outlined
                         :error-messages="handleError('email')"
                         @blur="onBlur('email')"
+                        @input="clearServerError('email')"
                     />
                 </div>
 
                 <div class="my-4">
-                    <v-btn type="submit" width="100%">
+                    <v-btn type="submit" width="100%" :disabled="loading">
                         <span>Send reset password link</span>
                     </v-btn>
                 </div>
@@ -49,18 +50,22 @@
 
 <script>
 import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, email } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
-import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
     name: 'ForgotPasswordPage',
 
-    components: { BackHomeButton },
+    components: {
+        BackHomeButton: defineAsyncComponent(
+            () => import('@/components/common/BackHomeButton')
+        )
+    },
 
     extends: BaseForm,
 
@@ -73,8 +78,9 @@ export default {
             formData: {
                 email: ''
             },
-            formSent: false,
-            formErrorMessage: ''
+            formErrorMessage: '',
+            loading: false,
+            formSent: false
         };
     },
 
@@ -111,6 +117,8 @@ export default {
             this.v$.formData.$reset();
 
             try {
+                this.loading = true;
+
                 const { email } = this.formData;
 
                 await this.sendResetPasswordLink({ email });
@@ -134,6 +142,8 @@ export default {
                 console.error(error);
 
                 this.formErrorMessage = 'Something went wrong...';
+            } finally {
+                this.loading = false;
             }
         }
     }

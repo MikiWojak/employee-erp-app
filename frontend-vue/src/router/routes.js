@@ -1,5 +1,12 @@
 import { Roles } from '@/enums/Roles';
 import { Layouts } from '@/enums/Layouts';
+import { useAuthStore } from '@/stores/auth';
+
+const layoutOnErrorEncountered = to => {
+    const authStore = useAuthStore();
+
+    to.meta.layout = authStore.loggedIn ? Layouts.APP : Layouts.BASE;
+};
 
 export default [
     {
@@ -47,6 +54,7 @@ export default [
     {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
-        component: () => import('@/views/errors/NotFoundPage')
+        component: () => import('@/views/errors/NotFoundPage'),
+        beforeEnter: layoutOnErrorEncountered
     }
 ];

@@ -24,6 +24,7 @@
                         outlined
                         :error-messages="handleError('password')"
                         @blur="onBlur('password')"
+                        @input="clearServerError('password')"
                     />
                 </div>
 
@@ -35,11 +36,12 @@
                         outlined
                         :error-messages="handleError('passwordConfirmation')"
                         @blur="onBlur('passwordConfirmation')"
+                        @input="clearServerError('passwordConfirmation')"
                     />
                 </div>
 
                 <div class="my-4">
-                    <v-btn type="submit" width="100%">
+                    <v-btn type="submit" width="100%" :disabled="loading">
                         <span>Set password</span>
                     </v-btn>
                 </div>
@@ -54,19 +56,21 @@
 
 <script>
 import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import { required, minLength, sameAs } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
-import BackHomeButton from '@/components/common/BackHomeButton';
 
 export default {
     name: 'SetPasswordPage',
 
     components: {
-        BackHomeButton
+        BackHomeButton: defineAsyncComponent(
+            () => import('@/components/common/BackHomeButton')
+        )
     },
 
     extends: BaseForm,
@@ -82,6 +86,7 @@ export default {
                 passwordConfirmation: ''
             },
             formErrorMessage: '',
+            loading: false,
             formStatus: null
         };
     },
@@ -147,6 +152,8 @@ export default {
             this.v$.formData.$reset();
 
             try {
+                this.loading = true;
+
                 await this.setPassword({
                     token: this.$route.query.token,
                     ...this.formData
@@ -175,6 +182,8 @@ export default {
                 console.error(error);
 
                 this.formErrorMessage = 'Something went wrong...';
+            } finally {
+                this.loading = false;
             }
         }
     }

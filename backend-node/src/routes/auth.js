@@ -7,17 +7,15 @@ const loggedOnly = require('../middlewares/loggedOnly');
 const authValidator = require('../validators/auth');
 
 module.exports = di => {
-    const meController = di.get('controllers.auth.meController');
-    const loginController = di.get('controllers.auth.loginController');
-    const logoutController = di.get('controllers.auth.logoutController');
-    const setPasswordController = di.get(
-        'controllers.auth.setPasswordController'
-    );
+    const meController = di.get('controllers.auth.me');
+    const loginController = di.get('controllers.auth.login');
+    const logoutController = di.get('controllers.auth.logout');
+    const setPasswordController = di.get('controllers.auth.setPassword');
     const checkSetPasswordTokenController = di.get(
-        'controllers.auth.checkSetPasswordTokenController'
+        'controllers.auth.checkSetPasswordToken'
     );
     const sendResetPasswordLinkController = di.get(
-        'controllers.auth.sendResetPasswordLinkController'
+        'controllers.auth.sendResetPasswordLink'
     );
 
     router.post(
