@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="my-4">
-                    <v-btn type="submit" width="100%">
+                    <v-btn type="submit" width="100%" :disabled="loading">
                         <span>Login</span>
                     </v-btn>
                 </div>
@@ -73,7 +73,8 @@ export default {
                 email: '',
                 password: ''
             },
-            formErrorMessage: ''
+            formErrorMessage: '',
+            loading: false
         };
     },
 
@@ -114,6 +115,8 @@ export default {
             this.v$.formData.$reset();
 
             try {
+                this.loading = true;
+
                 const { email, password } = this.formData;
 
                 await this.login({
@@ -148,6 +151,8 @@ export default {
                 console.error(error);
 
                 this.formErrorMessage = 'Something went wrong...';
+            } finally {
+                this.loading = false;
             }
         }
     }

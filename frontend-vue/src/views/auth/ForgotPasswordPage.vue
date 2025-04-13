@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="my-4">
-                    <v-btn type="submit" width="100%">
+                    <v-btn type="submit" width="100%" :disabled="loading">
                         <span>Send reset password link</span>
                     </v-btn>
                 </div>
@@ -78,8 +78,9 @@ export default {
             formData: {
                 email: ''
             },
-            formSent: false,
-            formErrorMessage: ''
+            formErrorMessage: '',
+            loading: false,
+            formSent: false
         };
     },
 
@@ -116,6 +117,8 @@ export default {
             this.v$.formData.$reset();
 
             try {
+                this.loading = true;
+
                 const { email } = this.formData;
 
                 await this.sendResetPasswordLink({ email });
@@ -139,6 +142,8 @@ export default {
                 console.error(error);
 
                 this.formErrorMessage = 'Something went wrong...';
+            } finally {
+                this.loading = false;
             }
         }
     }

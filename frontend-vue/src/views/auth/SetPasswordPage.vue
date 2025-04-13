@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="my-4">
-                    <v-btn type="submit" width="100%">
+                    <v-btn type="submit" width="100%" :disabled="loading">
                         <span>Set password</span>
                     </v-btn>
                 </div>
@@ -86,6 +86,7 @@ export default {
                 passwordConfirmation: ''
             },
             formErrorMessage: '',
+            loading: false,
             formStatus: null
         };
     },
@@ -151,6 +152,8 @@ export default {
             this.v$.formData.$reset();
 
             try {
+                this.loading = true;
+
                 await this.setPassword({
                     token: this.$route.query.token,
                     ...this.formData
@@ -179,6 +182,8 @@ export default {
                 console.error(error);
 
                 this.formErrorMessage = 'Something went wrong...';
+            } finally {
+                this.loading = false;
             }
         }
     }

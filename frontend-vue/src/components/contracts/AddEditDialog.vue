@@ -61,9 +61,9 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text="Cancel" @click="close" />
+                <v-btn text="Cancel" :disabled="loading" @click="close" />
 
-                <v-btn text="Save" @click="save" />
+                <v-btn text="Save" :disabled="loading" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>
