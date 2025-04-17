@@ -62,6 +62,15 @@ export const useAuthStore = defineStore('auth', {
             await axios.post('/auth/send-reset-password-link', { email });
         },
 
+        async updateProfile(multipartFormData) {
+            const { data } = await axios.put(
+                '/auth/profile',
+                multipartFormData
+            );
+
+            this.setLoggedUser(data);
+        },
+
         setLoggedUser(loggedUser) {
             this.loggedUser = loggedUser;
 

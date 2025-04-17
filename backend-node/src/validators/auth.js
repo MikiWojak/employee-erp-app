@@ -42,4 +42,59 @@ const setPassword = [
         .withMessage('This field must be the same as field "password".')
 ];
 
-module.exports = { login, checkToken, setPassword, sendResetPasswordLink };
+const updateProfile = [
+    body('firstName')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.'),
+
+    body('lastName')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.'),
+
+    body('dateOfBirth')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isDate()
+        .withMessage('Wrong date format. Should be YYYY-MM-DD.')
+        .bail()
+        .toDate()
+        .isBefore()
+        .withMessage('Date must be no later than today.'),
+
+    body('email')
+        .trim()
+        .toLowerCase()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isEmail()
+        .withMessage('Wrong email format.')
+        .bail()
+        .custom(async (email, { req: { app, loggedUser } }) => {
+            const di = app.get('di');
+            const userRepository = di.get('repositories.user');
+            const user = await userRepository.findByEmail(email);
+
+            if (user && user.id !== loggedUser.id) {
+                return Promise.reject('Email is already in use.');
+            }
+        })
+
+    // @TODO Validate 'avatar'
+];
+
+module.exports = {
+    login,
+    checkToken,
+    setPassword,
+    updateProfile,
+    sendResetPasswordLink
+};

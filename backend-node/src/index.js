@@ -1,6 +1,7 @@
 const {
     app: { url, port }
 } = require('./config/index');
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -30,6 +31,8 @@ app.set('di', di);
 app.use('/api', router);
 
 app.use(errorHandler);
+
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 const server = app.listen(port, () => {
     console.info(`Example app listening at ${url}`);

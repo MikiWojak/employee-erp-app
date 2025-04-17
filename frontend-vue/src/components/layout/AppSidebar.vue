@@ -1,10 +1,11 @@
 <template>
     <v-navigation-drawer v-model="isOpen" color="light-blue-lighten-3">
         <v-list-item
+            v-bind="userInfoAvatarProps"
             lines="two"
-            prepend-icon="mdi-account-circle"
             :title="fullName"
             :subtitle="roles"
+            :to="{ name: 'profile' }"
         />
 
         <v-divider />
@@ -48,6 +49,7 @@
 import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
+import getFullImagePath from '@/helpers/getFullImagePath';
 
 export default {
     name: 'AppSidebar',
@@ -70,6 +72,22 @@ export default {
 
         fullName() {
             return this.loggedUser?.fullName || '';
+        },
+
+        userInfoAvatarProps() {
+            const { avatarUrl = null } = this.loggedUser;
+
+            if (!avatarUrl) {
+                return {
+                    'prepend-icon': 'mdi-account-circle'
+                };
+            }
+
+            const fullPosterUrl = getFullImagePath(avatarUrl);
+
+            return {
+                'prepend-avatar': fullPosterUrl
+            };
         },
 
         roles() {

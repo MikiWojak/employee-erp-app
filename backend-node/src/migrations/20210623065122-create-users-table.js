@@ -49,6 +49,11 @@ module.exports = {
                     type: DataTypes.INTEGER,
                     defaultValue: 0
                 },
+                avatarUrl: {
+                    allowNull: true,
+                    defaultValue: null,
+                    type: DataTypes.STRING
+                },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,
