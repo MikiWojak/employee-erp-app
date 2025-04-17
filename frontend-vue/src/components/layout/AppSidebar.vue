@@ -75,18 +75,18 @@ export default {
         },
 
         userInfoAvatarProps() {
-            const { avatarUrl = null } = this.loggedUser;
+            const { avatar = null } = this.loggedUser;
 
-            if (!avatarUrl) {
+            if (!avatar) {
                 return {
                     'prepend-icon': 'mdi-account-circle'
                 };
             }
 
-            const fullPosterUrl = getFullImagePath(avatarUrl);
+            const fullAvatarUrl = getFullImagePath(avatar);
 
             return {
-                'prepend-avatar': fullPosterUrl
+                'prepend-avatar': fullAvatarUrl
             };
         },
 

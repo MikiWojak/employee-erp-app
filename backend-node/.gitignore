@@ -17,5 +17,7 @@ coverage
 
 .DS_Store
 
+tmp
+
 public/uploads/images/*
 !public/uploads/images/.gitkeep

@@ -1,8 +1,9 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class UpdateProfileController {
-    constructor(userRepository) {
+    constructor(userRepository, storeMediaHandler) {
         this.userRepository = userRepository;
+        this.storeMediaHandler = storeMediaHandler;
     }
 
     async invoke(req, res) {
@@ -23,6 +24,8 @@ class UpdateProfileController {
             return res.sendStatus(HTTP.NOT_FOUND);
         }
 
+        const avatar = await this.storeMediaHandler.handle(file);
+
         const data = {
             firstName,
             lastName,
@@ -30,14 +33,8 @@ class UpdateProfileController {
             email
         };
 
-        if (file && Object.keys(file).length) {
-            const [, ...avatarUrlParts] = file.path.split('/');
-            const avatarUrl = avatarUrlParts.join('/');
-
-            data.avatarUrl = avatarUrl;
-        }
-
         await user.update(data);
+        await user.setAvatar(avatar);
 
         const updatedUser = await this.userRepository.getById(id);
 

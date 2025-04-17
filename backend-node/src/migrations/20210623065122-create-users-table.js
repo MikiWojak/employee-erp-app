@@ -49,10 +49,14 @@ module.exports = {
                     type: DataTypes.INTEGER,
                     defaultValue: 0
                 },
-                avatarUrl: {
+                avatarId: {
                     allowNull: true,
                     defaultValue: null,
-                    type: DataTypes.STRING
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Media',
+                        key: 'id'
+                    }
                 },
                 createdAt: {
                     allowNull: false,
