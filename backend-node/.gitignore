@@ -19,5 +19,5 @@ coverage
 
 tmp
 
-public/uploads/images/*
-!public/uploads/images/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
