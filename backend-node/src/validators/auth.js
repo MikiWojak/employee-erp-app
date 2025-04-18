@@ -88,10 +88,56 @@ const updateProfile = [
             }
         }),
 
-    // @TODO Validate 'file' (new Avatar)
+    body('avatar')
+        .custom(avatar => {
+            if (!avatar) {
+                return true;
+            }
 
-    // @TODO Validate 'avatar' (existing)
-    body('avatarId').optional({ values: 'falsy' })
+            let parsedAvatar;
+
+            try {
+                parsedAvatar = JSON.parse(avatar);
+            } catch (error) {
+                throw new Error('Invalid JSON.');
+            }
+
+            if (!parsedAvatar?.id) {
+                throw new Error('Existing avatar must have ID.');
+            }
+
+            return true;
+        })
+        .bail()
+        .customSanitizer(avatar => {
+            if (!avatar) {
+                return null;
+            }
+
+            return JSON.parse(avatar);
+        })
+        .bail()
+        .custom((avatar, { req: { file } }) => {
+            if (!file) {
+                return true;
+            }
+
+            const supportedFormats = ['image/jpeg', 'image/png'];
+
+            if (!supportedFormats.includes(file.mimetype)) {
+                throw new Error(
+                    'File type not supported. Please upload JPG, JPEG or PNG image.'
+                );
+            }
+
+            const maxFileSize = 5 * 1024 * 1024;
+
+            if (file.size > maxFileSize) {
+                throw new Error('File should have up to 5 MB.');
+            }
+
+            return true;
+        })
 ];
 
 module.exports = {

@@ -38,7 +38,13 @@
                     @input="clearServerError('email')"
                 />
 
-                <v-file-input v-model="formData.avatar" label="Avatar" />
+                <v-file-input
+                    v-model="formData.avatar"
+                    label="Avatar"
+                    :error-messages="handleError('avatar')"
+                    @blur="onBlur('avatar')"
+                    @update:model-value="clearServerError('avatar')"
+                />
 
                 <p>Avatar preview:</p>
                 <img
@@ -173,12 +179,23 @@ export default {
             try {
                 this.loading = true;
 
+                const { firstName, lastName, dateOfBirth, email, avatar } =
+                    this.formData;
+
                 const multipartFormData = new FormData();
-                Object.entries(this.formData).forEach(([key, value]) => {
-                    if (value !== null && value !== undefined && value !== '') {
-                        multipartFormData.append(key, value);
-                    }
-                });
+                multipartFormData.append('firstName', firstName);
+                multipartFormData.append('lastName', lastName);
+                multipartFormData.append('dateOfBirth', dateOfBirth);
+                multipartFormData.append('email', email);
+
+                if (avatar instanceof File) {
+                    multipartFormData.append('avatar', avatar);
+                } else if (avatar?.id) {
+                    multipartFormData.append(
+                        'avatar',
+                        JSON.stringify({ title: 'Name' })
+                    );
+                }
 
                 console.log({
                     formData: this.formData,

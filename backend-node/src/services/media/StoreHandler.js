@@ -52,7 +52,8 @@ class StoreMediaHandler {
 
     #getType(mimetype) {
         const types = {
-            'image/jpeg': 'image'
+            'image/jpeg': 'image',
+            'image/png': 'image'
         };
 
         return types[mimetype];
