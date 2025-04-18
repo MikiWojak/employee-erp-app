@@ -40,6 +40,11 @@ module.exports = {
         'services.media.store': {
             class: 'services/media/StoreHandler',
             arguments: ['@repositories.media']
+        },
+
+        'services.media.delete': {
+            class: 'services/media/DeleteHandler',
+            arguments: ['@repositories.media']
         }
     }
 };

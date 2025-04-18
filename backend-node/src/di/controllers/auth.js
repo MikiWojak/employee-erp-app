@@ -40,7 +40,11 @@ module.exports = {
 
         'controllers.auth.updateProfile': {
             class: 'controllers/Auth/UpdateProfileController',
-            arguments: ['@repositories.user', '@services.media.store']
+            arguments: [
+                '@repositories.user',
+                '@services.media.store',
+                '@services.media.delete'
+            ]
         }
     }
 };

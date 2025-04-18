@@ -65,7 +65,12 @@ export const useAuthStore = defineStore('auth', {
         async updateProfile(multipartFormData) {
             const { data } = await axios.put(
                 '/auth/profile',
-                multipartFormData
+                multipartFormData,
+                {
+                    headers: {
+                        contentType: 'multipart/form-data'
+                    }
+                }
             );
 
             this.setLoggedUser(data);

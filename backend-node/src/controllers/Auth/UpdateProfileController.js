@@ -1,22 +1,18 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class UpdateProfileController {
-    constructor(userRepository, storeMediaHandler) {
+    constructor(userRepository, storeMediaHandler, deleteMediaHandler) {
         this.userRepository = userRepository;
         this.storeMediaHandler = storeMediaHandler;
+        this.deleteMediaHandler = deleteMediaHandler;
     }
 
     async invoke(req, res) {
         const {
             file,
             loggedUser: { id },
-            body: { firstName, lastName, dateOfBirth, email }
+            body: { firstName, lastName, dateOfBirth, email, avatarId }
         } = req;
-
-        console.dir(
-            { firstName, lastName, dateOfBirth, email, file },
-            { depth: null }
-        );
 
         const user = await this.userRepository.getById(id);
 
@@ -24,17 +20,34 @@ class UpdateProfileController {
             return res.sendStatus(HTTP.NOT_FOUND);
         }
 
-        const avatar = await this.storeMediaHandler.handle(file);
-
         const data = {
             firstName,
             lastName,
             dateOfBirth,
             email
         };
+        const oldAvatarId = user.avatar?.id || null;
 
         await user.update(data);
-        await user.setAvatar(avatar);
+
+        if (file) {
+            const newAvatar = await this.storeMediaHandler.handle(file);
+
+            await user.setAvatar(newAvatar);
+        }
+
+        await user.reload();
+
+        if (!file && !avatarId) {
+            await user.setAvatar(null);
+        }
+
+        // @TODO Check avatar after change and reload
+
+        // Remove file if existed already (including case when file does not exist - simply leave)
+        if (!avatarId || user.avatarId !== oldAvatarId) {
+            await this.deleteMediaHandler.handle(oldAvatarId);
+        }
 
         const updatedUser = await this.userRepository.getById(id);
 

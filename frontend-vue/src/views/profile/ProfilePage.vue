@@ -40,8 +40,21 @@
 
                 <v-file-input v-model="formData.avatar" label="Avatar" />
 
-                <v-btn type="submit" width="100%" :disabled="loading">
-                    <span>Login</span>
+                <p>Avatar preview:</p>
+                <img
+                    v-if="previewAvatar"
+                    :src="previewAvatar"
+                    alt="Preview Image"
+                    class="preview-avatar"
+                />
+
+                <v-btn
+                    type="submit"
+                    width="100%"
+                    :disabled="loading"
+                    class="mt-6"
+                >
+                    <span>Save</span>
                 </v-btn>
             </v-form>
         </v-col>
@@ -58,6 +71,7 @@ import { required, email } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
 import { StatusCodes as HTTP } from 'http-status-codes/build/cjs/status-codes';
+import getFullImagePath from '@/helpers/getFullImagePath';
 
 export default {
     name: 'ProfilePage',
@@ -111,11 +125,31 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser'])
+        ...mapState(useAuthStore, ['loggedUser']),
+
+        previewAvatar() {
+            if (this.formData?.avatar?.id) {
+                return getFullImagePath(this.formData.avatar);
+            }
+
+            if (this.formData?.avatar instanceof File) {
+                return URL.createObjectURL(this.formData.avatar);
+            }
+
+            return null;
+        }
+    },
+
+    watch: {
+        'formData.avatar'(val) {
+            if (!val) {
+                this.formData.avatarId = null;
+            }
+        }
     },
 
     created() {
-        this.formData = { ...this.loggedUser };
+        this.updateForm();
     },
 
     methods: {
@@ -140,23 +174,23 @@ export default {
                 this.loading = true;
 
                 const multipartFormData = new FormData();
-                multipartFormData.append('firstName', this.formData.firstName);
-                multipartFormData.append('lastName', this.formData.lastName);
-                multipartFormData.append(
-                    'dateOfBirth',
-                    this.formData.dateOfBirth
-                );
-                multipartFormData.append('email', this.formData.email);
-                multipartFormData.append('avatar', this.formData.avatar);
+                Object.entries(this.formData).forEach(([key, value]) => {
+                    if (value !== null && value !== undefined && value !== '') {
+                        multipartFormData.append(key, value);
+                    }
+                });
 
-                console.log({ formData: this.formData, multipartFormData });
+                console.log({
+                    formData: this.formData,
+                    multipartFormData
+                });
 
                 await this.updateProfile(multipartFormData);
 
+                this.updateForm();
+
                 this.$toast.success('Profile updated');
             } catch (error) {
-                this.formData.password = '';
-
                 const { response } = error;
 
                 if (
@@ -175,7 +209,19 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+
+        updateForm() {
+            this.formData = { ...this.loggedUser };
         }
     }
 };
 </script>
+<style scoped>
+.preview-avatar {
+    display: block;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+</style>

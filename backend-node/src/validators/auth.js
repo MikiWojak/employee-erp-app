@@ -86,9 +86,12 @@ const updateProfile = [
             if (user && user.id !== loggedUser.id) {
                 return Promise.reject('Email is already in use.');
             }
-        })
+        }),
 
-    // @TODO Validate 'avatar'
+    // @TODO Validate 'file' (new Avatar)
+
+    // @TODO Validate 'avatar' (existing)
+    body('avatarId').optional({ values: 'falsy' })
 ];
 
 module.exports = {
