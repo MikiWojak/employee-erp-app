@@ -7,7 +7,11 @@ class DeleteMediaHandler {
 
     async handle(mediaId) {
         try {
-            // @TODO Media is being used!
+            const isMediaUsed = await this.mediaRepository.checkIfUsed(mediaId);
+
+            if (isMediaUsed) {
+                return;
+            }
 
             const media = await this.mediaRepository.findById(mediaId);
 

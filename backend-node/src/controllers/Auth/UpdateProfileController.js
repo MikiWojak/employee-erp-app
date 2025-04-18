@@ -42,9 +42,6 @@ class UpdateProfileController {
             await user.setAvatar(null);
         }
 
-        // @TODO Check avatar after change and reload
-
-        // Remove file if existed already (including case when file does not exist - simply leave)
         if (!avatarId || user.avatarId !== oldAvatarId) {
             await this.deleteMediaHandler.handle(oldAvatarId);
         }
