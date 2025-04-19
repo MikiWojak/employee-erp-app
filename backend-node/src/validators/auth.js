@@ -126,7 +126,7 @@ const updateProfile = [
 
             if (!supportedFormats.includes(file.mimetype)) {
                 throw new Error(
-                    'File type not supported. Please upload JPG, JPEG or PNG image.'
+                    'File type not supported. Please upload JPG, JPEG or PNG.'
                 );
             }
 

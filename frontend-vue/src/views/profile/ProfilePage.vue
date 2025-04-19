@@ -41,18 +41,35 @@
                 <v-file-input
                     v-model="formData.avatar"
                     label="Avatar"
+                    prepend-icon="mdi-camera"
+                    :accept="acceptedAvatarFileTypes.join(',')"
                     :error-messages="handleError('avatar')"
                     @blur="onBlur('avatar')"
                     @update:model-value="clearServerError('avatar')"
                 />
 
+                <!-- // @TODO Preview image if no image -->
                 <p>Avatar preview:</p>
                 <img
                     v-if="previewAvatar"
                     :src="previewAvatar"
-                    alt="Preview Image"
+                    alt="Avatar preview image"
                     class="preview-avatar"
                 />
+                <img
+                    v-else
+                    src="/image-icon.png"
+                    alt="Avatar preview image placeholder"
+                    class="preview-avatar"
+                />
+
+                <!--                // @TODO Consider MDI instead of picture-->
+                <!--                <v-icon-->
+                <!--                    v-else-->
+                <!--                    icon="mdi-image-area"-->
+                <!--                    size="x-large"-->
+                <!--                    class="preview-avatar"-->
+                <!--                />-->
 
                 <v-btn
                     type="submit"
@@ -72,12 +89,14 @@ import dayjs from 'dayjs';
 import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { StatusCodes as HTTP } from 'http-status-codes';
+import { required, email, helpers } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
-import { StatusCodes as HTTP } from 'http-status-codes/build/cjs/status-codes';
 import getFullImagePath from '@/helpers/getFullImagePath';
+import fileSizeFileObj from '@/helpers/validators/fileSizeFileObj';
+import fileTypeFileObj from '@/helpers/validators/fileTypeFileObj';
 
 export default {
     name: 'ProfilePage',
@@ -105,7 +124,8 @@ export default {
         return {
             formData: { ...defaultForm },
             maxDate: dayjs().format('YYYY-MM-DD'),
-            loading: false
+            loading: false,
+            acceptedAvatarFileTypes: ['image/jpeg', 'image/png']
         };
     },
 
@@ -125,7 +145,16 @@ export default {
                     required,
                     email
                 },
-                avatar: {}
+                avatar: {
+                    fileType: helpers.withMessage(
+                        'File type not supported. Please upload JPG, JPEG or PNG.',
+                        fileTypeFileObj(this.acceptedAvatarFileTypes)
+                    ),
+                    fileSize: helpers.withMessage(
+                        'File should have up to 5 MB.',
+                        fileSizeFileObj(5)
+                    )
+                }
             }
         };
     },
@@ -162,15 +191,11 @@ export default {
         ...mapActions(useAuthStore, ['updateProfile']),
 
         async handleUpdateProfile() {
-            console.log('handleUpdateProfile');
-
             this.serverErrors = [];
 
             this.v$.formData.$touch();
 
             if (this.v$.formData.$invalid) {
-                console.log('Invalid form!');
-
                 return;
             }
 
@@ -191,16 +216,8 @@ export default {
                 if (avatar instanceof File) {
                     multipartFormData.append('avatar', avatar);
                 } else if (avatar?.id) {
-                    multipartFormData.append(
-                        'avatar',
-                        JSON.stringify({ title: 'Name' })
-                    );
+                    multipartFormData.append('avatar', JSON.stringify(avatar));
                 }
-
-                console.log({
-                    formData: this.formData,
-                    multipartFormData
-                });
 
                 await this.updateProfile(multipartFormData);
 
