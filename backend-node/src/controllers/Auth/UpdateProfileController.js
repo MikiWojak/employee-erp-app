@@ -14,11 +14,6 @@ class UpdateProfileController {
             body: { firstName, lastName, dateOfBirth, email, avatar }
         } = req;
 
-        console.dir(
-            { firstName, lastName, dateOfBirth, email, avatar, file },
-            { depth: null }
-        );
-
         const user = await this.userRepository.getById(id);
 
         if (!user) {
@@ -31,7 +26,6 @@ class UpdateProfileController {
             dateOfBirth,
             email
         };
-        const oldAvatarId = user.avatar?.id || null;
 
         await user.update(data);
 
@@ -46,6 +40,8 @@ class UpdateProfileController {
         if (!file && !avatar?.id) {
             await user.setAvatar(null);
         }
+
+        const oldAvatarId = user.avatar?.id || null;
 
         if (!avatar?.id || user.avatarId !== oldAvatarId) {
             await this.deleteMediaHandler.handle(oldAvatarId);

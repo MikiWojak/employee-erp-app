@@ -8,8 +8,6 @@ class StoreMediaHandler {
     }
 
     async handle(file) {
-        console.dir({ msg: 'StoreMediaHandler', file }, { depth: null });
-
         const {
             size,
             filename,
@@ -22,7 +20,6 @@ class StoreMediaHandler {
         const date = dayjs().format('YYYY-MM');
         const newPath = `public/uploads/${date}/${type}s/${filename}.${extension}`;
 
-        // @TODO Consider transactions, if necessary
         try {
             this.#createDirectoryIfNotExists(newPath);
 
@@ -56,7 +53,7 @@ class StoreMediaHandler {
             'image/png': 'image'
         };
 
-        return types[mimetype];
+        return types[mimetype] || 'other';
     }
 
     #createDirectoryIfNotExists(fullPath) {

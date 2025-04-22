@@ -40,7 +40,7 @@
 
                 <v-file-input
                     v-model="formData.avatar"
-                    label="Avatar"
+                    label="Avatar (optional)"
                     prepend-icon="mdi-camera"
                     :accept="acceptedAvatarFileTypes.join(',')"
                     :error-messages="handleError('avatar')"
@@ -48,28 +48,19 @@
                     @update:model-value="clearServerError('avatar')"
                 />
 
-                <!-- // @TODO Preview image if no image -->
-                <p>Avatar preview:</p>
                 <img
                     v-if="previewAvatar"
                     :src="previewAvatar"
                     alt="Avatar preview image"
-                    class="preview-avatar"
+                    class="preview-avatar image"
                 />
-                <img
-                    v-else
-                    src="/image-icon.png"
-                    alt="Avatar preview image placeholder"
-                    class="preview-avatar"
-                />
-
-                <!--                // @TODO Consider MDI instead of picture-->
-                <!--                <v-icon-->
-                <!--                    v-else-->
-                <!--                    icon="mdi-image-area"-->
-                <!--                    size="x-large"-->
-                <!--                    class="preview-avatar"-->
-                <!--                />-->
+                <div v-else class="preview-avatar empty">
+                    <v-icon icon="mdi-image-area" size="x-large" />
+                    <div class="text-center">
+                        Select avatar above<br />
+                        to see preview
+                    </div>
+                </div>
 
                 <v-btn
                     type="submit"
@@ -253,9 +244,22 @@ export default {
 </script>
 <style scoped>
 .preview-avatar {
-    display: block;
     width: 200px;
     height: 200px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.preview-avatar.image {
+    display: block;
     object-fit: cover;
+}
+
+.preview-avatar.empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 </style>
