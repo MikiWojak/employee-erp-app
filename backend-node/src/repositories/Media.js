@@ -11,7 +11,7 @@ class MediaRepository extends AbstractRepository {
                 {
                     association: 'users',
                     paranoid: false,
-                    attributes: [],
+                    attributes: ['id'],
                     required: true
                 }
             ]
