@@ -20,6 +20,8 @@ class UpdateProfileController {
             return res.sendStatus(HTTP.NOT_FOUND);
         }
 
+        const oldAvatarId = user.avatar?.id || null;
+
         const data = {
             firstName,
             lastName,
@@ -40,8 +42,6 @@ class UpdateProfileController {
         if (!file && !avatar?.id) {
             await user.setAvatar(null);
         }
-
-        const oldAvatarId = user.avatar?.id || null;
 
         if (!avatar?.id || user.avatarId !== oldAvatarId) {
             await this.deleteMediaHandler.handle(oldAvatarId);
