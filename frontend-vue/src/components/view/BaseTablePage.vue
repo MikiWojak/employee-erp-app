@@ -36,6 +36,17 @@
             </div>
         </template>
 
+        <template #[`item.icon`]="{ item }">
+            <v-avatar size="36px">
+                <v-img
+                    v-if="getIcon(item)"
+                    alt="Icon"
+                    :src="getFullImagePath(getIcon(item))"
+                />
+                <v-icon v-else icon="mdi-account-circle" size="36px" />
+            </v-avatar>
+        </template>
+
         <template
             v-for="(field, index) in customFields"
             :key="index"
@@ -85,6 +96,8 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+
+import getFullImagePath from '@/helpers/getFullImagePath';
 
 export default {
     name: 'BaseTablePage',
@@ -152,6 +165,8 @@ export default {
     },
 
     methods: {
+        getFullImagePath,
+
         // eslint-disable-next-line no-unused-vars
         areActionButtonsDisabled(item) {
             return false;
@@ -254,6 +269,11 @@ export default {
 
         closeDeleteDialog() {
             this.itemToDeleteId = null;
+        },
+
+        // eslint-disable-next-line no-unused-vars
+        getIcon(item) {
+            return null;
         }
     }
 };
