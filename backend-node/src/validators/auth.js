@@ -125,9 +125,7 @@ const updateProfile = [
             const supportedFormats = ['image/jpeg', 'image/png'];
 
             if (!supportedFormats.includes(file.mimetype)) {
-                throw new Error(
-                    'File type not supported. Please upload JPG, JPEG or PNG.'
-                );
+                throw new Error('File type not supported.');
             }
 
             const maxFileSize = 5 * 1024 * 1024;

@@ -138,7 +138,7 @@ export default {
                 },
                 avatar: {
                     fileType: helpers.withMessage(
-                        'File type not supported. Please upload JPG, JPEG or PNG.',
+                        'File type not supported.',
                         fileTypeFileObj(this.acceptedAvatarFileTypes)
                     ),
                     fileSize: helpers.withMessage(
