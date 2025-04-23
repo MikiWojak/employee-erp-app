@@ -35,6 +35,16 @@ module.exports = {
         'services.auth.getPasswordSetLink': {
             class: 'services/auth/GetPasswordSetLinkHandler',
             arguments: ['%frontendUrl%', '@repositories.passwordReset']
+        },
+
+        'services.media.store': {
+            class: 'services/media/StoreHandler',
+            arguments: ['@repositories.media']
+        },
+
+        'services.media.delete': {
+            class: 'services/media/DeleteHandler',
+            arguments: ['@repositories.media']
         }
     }
 };

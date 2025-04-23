@@ -34,6 +34,12 @@ export default [
         meta: { auth: true }
     },
     {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('@/views/profile/ProfilePage'),
+        meta: { auth: true }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/auth/LoginPage'),

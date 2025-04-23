@@ -20,6 +20,7 @@
         "dayjs": "1.11.13",
         "http-status-codes": "2.3.0",
         "pinia": "3.0.1",
+        "url-join": "5.0.0",
         "vue": "3.5.13",
         "vue-router": "4.5.0",
         "vue-toast-notification": "3.1.3"

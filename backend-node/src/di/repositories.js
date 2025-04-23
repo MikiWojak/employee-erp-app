@@ -23,6 +23,11 @@ module.exports = {
         'repositories.passwordReset': {
             class: 'repositories/PasswordReset',
             arguments: ['@sequelize']
+        },
+
+        'repositories.media': {
+            class: 'repositories/Media',
+            arguments: ['@sequelize']
         }
     }
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const upload = require('../middlewares/upload');
 const invoke = require('../middlewares/invoke');
 const validate = require('../middlewares/validate');
 const loggedOnly = require('../middlewares/loggedOnly');
@@ -11,6 +12,7 @@ module.exports = di => {
     const loginController = di.get('controllers.auth.login');
     const logoutController = di.get('controllers.auth.logout');
     const setPasswordController = di.get('controllers.auth.setPassword');
+    const updateProfileController = di.get('controllers.auth.updateProfile');
     const checkSetPasswordTokenController = di.get(
         'controllers.auth.checkSetPasswordToken'
     );
@@ -39,6 +41,13 @@ module.exports = di => {
         '/send-reset-password-link',
         [authValidator.sendResetPasswordLink, validate],
         invoke(sendResetPasswordLinkController)
+    );
+    router.put(
+        '/profile',
+        loggedOnly(),
+        upload.single('avatar'),
+        [authValidator.updateProfile, validate],
+        invoke(updateProfileController)
     );
 
     return router;

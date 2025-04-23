@@ -9,7 +9,7 @@ const {
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable(
-            'Users',
+            'Media',
             {
                 id: {
                     allowNull: false,
@@ -17,46 +17,33 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
-                firstName: {
+                filename: {
                     allowNull: false,
                     type: DataTypes.STRING
                 },
-                lastName: {
+                name: {
                     allowNull: false,
                     type: DataTypes.STRING
                 },
-                dateOfBirth: {
+                altName: {
                     allowNull: false,
-                    type: DataTypes.DATEONLY
-                },
-                email: {
-                    allowNull: false,
-                    unique: true,
                     type: DataTypes.STRING
                 },
-                password: {
-                    allowNull: true,
-                    defaultValue: null,
+                extension: {
+                    allowNull: false,
+                    type: DataTypes.ENUM('png', 'jpg', 'jpeg')
+                },
+                type: {
+                    allowNull: false,
+                    type: DataTypes.ENUM('image', 'other')
+                },
+                date: {
+                    allowNull: false,
                     type: DataTypes.STRING
                 },
-                vacationDaysSum: {
+                size: {
                     allowNull: false,
-                    type: DataTypes.INTEGER,
-                    defaultValue: 0
-                },
-                vacationDaysUsed: {
-                    allowNull: false,
-                    type: DataTypes.INTEGER,
-                    defaultValue: 0
-                },
-                avatarId: {
-                    allowNull: true,
-                    defaultValue: null,
-                    type: DataTypes.UUID,
-                    references: {
-                        model: 'Media',
-                        key: 'id'
-                    }
+                    type: DataTypes.INTEGER
                 },
                 createdAt: {
                     allowNull: false,
@@ -67,10 +54,6 @@ module.exports = {
                     allowNull: false,
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.fn('now')
-                },
-                deletedAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: null
                 }
             },
             {
@@ -80,6 +63,6 @@ module.exports = {
         );
     },
     down: async queryInterface => {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('Media');
     }
 };

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation }) {
+        static associate({ Role, Contract, Vacation, Media }) {
             this.belongsToMany(Role, {
                 as: 'roles',
                 through: 'Role2User',
@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(Vacation, {
                 as: 'vacations',
                 foreignKey: 'userId'
+            });
+            this.belongsTo(Media, {
+                as: 'avatar',
+                foreignKey: 'avatarId'
             });
         }
 
@@ -90,6 +94,15 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.INTEGER,
                 defaultValue: 0
+            },
+            avatarId: {
+                allowNull: true,
+                defaultValue: null,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Media',
+                    key: 'id'
+                }
             }
         },
         {

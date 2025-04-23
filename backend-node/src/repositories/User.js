@@ -29,6 +29,9 @@ class UserRepository extends AbstractRepository {
                             attributes: []
                         },
                         required: true
+                    },
+                    {
+                        association: 'avatar'
                     }
                 ]
             },

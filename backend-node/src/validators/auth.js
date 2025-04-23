@@ -42,4 +42,106 @@ const setPassword = [
         .withMessage('This field must be the same as field "password".')
 ];
 
-module.exports = { login, checkToken, setPassword, sendResetPasswordLink };
+const updateProfile = [
+    body('firstName')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.'),
+
+    body('lastName')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.'),
+
+    body('dateOfBirth')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isDate()
+        .withMessage('Wrong date format. Should be YYYY-MM-DD.')
+        .bail()
+        .toDate()
+        .isBefore()
+        .withMessage('Date must be no later than today.'),
+
+    body('email')
+        .trim()
+        .toLowerCase()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isEmail()
+        .withMessage('Wrong email format.')
+        .bail()
+        .custom(async (email, { req: { app, loggedUser } }) => {
+            const di = app.get('di');
+            const userRepository = di.get('repositories.user');
+            const user = await userRepository.findByEmail(email);
+
+            if (user && user.id !== loggedUser.id) {
+                return Promise.reject('Email is already in use.');
+            }
+        }),
+
+    body('avatar')
+        .custom(avatar => {
+            if (!avatar) {
+                return true;
+            }
+
+            let parsedAvatar;
+
+            try {
+                parsedAvatar = JSON.parse(avatar);
+            } catch (error) {
+                throw new Error('Invalid JSON.');
+            }
+
+            if (!parsedAvatar?.id) {
+                throw new Error('Existing avatar must have ID.');
+            }
+
+            return true;
+        })
+        .bail()
+        .customSanitizer(avatar => {
+            if (!avatar) {
+                return null;
+            }
+
+            return JSON.parse(avatar);
+        })
+        .bail()
+        .custom((avatar, { req: { file } }) => {
+            if (!file) {
+                return true;
+            }
+
+            const supportedFormats = ['image/jpeg', 'image/png'];
+
+            if (!supportedFormats.includes(file.mimetype)) {
+                throw new Error('File type not supported.');
+            }
+
+            const maxFileSize = 5 * 1024 * 1024;
+
+            if (file.size > maxFileSize) {
+                throw new Error('File should have up to 5 MB.');
+            }
+
+            return true;
+        })
+];
+
+module.exports = {
+    login,
+    checkToken,
+    setPassword,
+    updateProfile,
+    sendResetPasswordLink
+};
