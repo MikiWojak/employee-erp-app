@@ -54,6 +54,7 @@
                     alt="Avatar preview image"
                     class="preview-avatar image"
                 />
+
                 <div v-else class="preview-avatar empty">
                     <v-icon icon="mdi-image-area" size="x-large" />
                     <div class="text-center">
@@ -166,14 +167,6 @@ export default {
         }
     },
 
-    watch: {
-        'formData.avatar'(val) {
-            if (!val) {
-                this.formData.avatarId = null;
-            }
-        }
-    },
-
     created() {
         this.updateForm();
     },
@@ -222,15 +215,12 @@ export default {
                     response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
-                    this.formErrorMessage = 'Invalid credentials.';
                     this.serverErrors = response.data.errors;
 
                     return;
                 }
 
                 console.error(error);
-
-                this.formErrorMessage = 'Something went wrong...';
             } finally {
                 this.loading = false;
             }

@@ -7,6 +7,7 @@ class MediaRepository extends AbstractRepository {
 
     async checkIfUsed(id) {
         const mediaUsed = await this.findById(id, {
+            attributes: ['id'],
             include: [
                 {
                     association: 'users',
