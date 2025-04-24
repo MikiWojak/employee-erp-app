@@ -36,6 +36,17 @@
             </div>
         </template>
 
+        <template #[`item.icon`]="{ item }">
+            <v-avatar size="36px">
+                <v-img
+                    v-if="getIcon(item)"
+                    alt="Icon"
+                    :src="getFullImagePath(getIcon(item))"
+                />
+                <v-icon v-else icon="mdi-account-circle" size="36px" />
+            </v-avatar>
+        </template>
+
         <template
             v-for="(field, index) in customFields"
             :key="index"
@@ -77,6 +88,7 @@
     <confirmation-modal
         :is-opened="!!itemToDeleteId"
         :title="tableOptions.deleteConfirmationModalTitle"
+        :loading="confirmationModalLoading"
         @confirm="doDeleteItem"
         @discard="closeDeleteDialog"
     />
@@ -84,6 +96,8 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+
+import getFullImagePath from '@/helpers/getFullImagePath';
 
 export default {
     name: 'BaseTablePage',
@@ -108,6 +122,7 @@ export default {
             searchTimer: null,
             editedItem: null,
             itemToDeleteId: null,
+            confirmationModalLoading: false,
             isAddEditDialogOpened: false,
             tableOptions: {
                 title: 'Table',
@@ -150,6 +165,8 @@ export default {
     },
 
     methods: {
+        getFullImagePath,
+
         // eslint-disable-next-line no-unused-vars
         areActionButtonsDisabled(item) {
             return false;
@@ -217,17 +234,23 @@ export default {
             }
 
             try {
+                this.confirmationModalLoading = true;
+
                 await this.deleteItem(this.itemToDeleteId);
 
                 await this.doGetItems();
 
                 this.$toast.success('Item has been deleted');
 
+                this.confirmationModalLoading = false;
+
                 this.closeDeleteDialog();
             } catch (error) {
                 console.error(error);
 
                 this.$toast.error('Error while deleting the item!');
+            } finally {
+                this.confirmationModalLoading = false;
             }
         },
 
@@ -246,6 +269,11 @@ export default {
 
         closeDeleteDialog() {
             this.itemToDeleteId = null;
+        },
+
+        // eslint-disable-next-line no-unused-vars
+        getIcon(item) {
+            return null;
         }
     }
 };

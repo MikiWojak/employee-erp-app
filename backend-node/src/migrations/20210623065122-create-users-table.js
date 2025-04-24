@@ -35,7 +35,8 @@ module.exports = {
                     type: DataTypes.STRING
                 },
                 password: {
-                    allowNull: false,
+                    allowNull: true,
+                    defaultValue: null,
                     type: DataTypes.STRING
                 },
                 vacationDaysSum: {
@@ -47,6 +48,15 @@ module.exports = {
                     allowNull: false,
                     type: DataTypes.INTEGER,
                     defaultValue: 0
+                },
+                avatarId: {
+                    allowNull: true,
+                    defaultValue: null,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Media',
+                        key: 'id'
+                    }
                 },
                 createdAt: {
                     allowNull: false,

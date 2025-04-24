@@ -57,18 +57,7 @@ const update = [
         )
 ];
 
-const store = [
-    ...update,
-
-    body('password')
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage('This field is required.')
-        .bail()
-        .isLength(8)
-        .withMessage(`This field must have at least 8 letters.`)
-];
+const store = update;
 
 module.exports = {
     store,

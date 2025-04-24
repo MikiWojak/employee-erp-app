@@ -1,21 +1,21 @@
 module.exports = {
     services: {
-        'controllers.vacations.indexController': {
+        'controllers.vacations.index': {
             class: 'controllers/Vacations/IndexController',
             arguments: ['@repositories.vacation']
         },
 
-        'controllers.vacations.storeController': {
+        'controllers.vacations.store': {
             class: 'controllers/Vacations/StoreController',
             arguments: ['@repositories.vacation', '@repositories.user']
         },
 
-        'controllers.vacations.updateController': {
+        'controllers.vacations.update': {
             class: 'controllers/Vacations/UpdateController',
             arguments: ['@repositories.vacation', '@repositories.user']
         },
 
-        'controllers.vacations.destroyController': {
+        'controllers.vacations.destroy': {
             class: 'controllers/Vacations/DestroyController',
             arguments: ['@repositories.vacation']
         }

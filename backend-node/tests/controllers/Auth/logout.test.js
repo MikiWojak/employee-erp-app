@@ -26,7 +26,10 @@ describe('Auth', () => {
         await UserFactory.createAdmin(admin);
     });
 
-    afterAll(() => {
+    afterAll(async () => {
+        const queueConnection = await di.get('queues.connection');
+        await queueConnection.close();
+
         redisSessionClient.quit();
         sequelize.close();
         server.close();

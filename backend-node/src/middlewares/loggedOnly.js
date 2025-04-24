@@ -3,9 +3,7 @@ const { StatusCodes: HTTP } = require('http-status-codes');
 function loggedOnly(...permittedRoles) {
     return async (req, res, next) => {
         const di = req.app.get('di');
-        const getLoggedInUserHandler = di.get(
-            'services.getLoggedInUserHandler'
-        );
+        const getLoggedInUserHandler = di.get('services.getLoggedInUser');
         const loggedUser = await getLoggedInUserHandler.handle(req);
 
         if (!loggedUser) {
@@ -18,10 +16,12 @@ function loggedOnly(...permittedRoles) {
             permittedRoles = [permittedRoles];
         }
 
+        const rolesInfo = await loggedUser.rolesInfo();
+
         if (
             permittedRoles.length &&
             !permittedRoles.some(permittedRole =>
-                loggedUser.roles.some(role => role.name === permittedRole)
+                rolesInfo.includes(permittedRole)
             )
         ) {
             return res.sendStatus(HTTP.FORBIDDEN);

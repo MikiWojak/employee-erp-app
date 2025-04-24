@@ -2,13 +2,14 @@ const config = require('../../config');
 
 module.exports = {
     parameters: {
-        config
+        config,
+        frontendUrl: config.app.frontendUrl
     },
     services: {
         sequelize: {
             arguments: ['%sequelize', '%config%'],
             factory: {
-                class: 'di/services/SequelizeFactory',
+                class: 'services/factories/SequelizeFactory',
                 method: 'create'
             }
         },
@@ -16,14 +17,34 @@ module.exports = {
         redisSessionClient: {
             arguments: [],
             factory: {
-                class: 'di/services/RedisSessionClientFactory',
+                class: 'services/factories/RedisSessionClientFactory',
                 method: 'create'
             }
         },
 
-        'services.getLoggedInUserHandler': {
+        'services.getLoggedInUser': {
             class: 'services/GetLoggedInUserHandler',
             arguments: ['@repositories.user']
+        },
+
+        'services.sendEmail': {
+            class: 'services/SendEmailHandler',
+            arguments: ['@queues.producer.email', '@factories.email']
+        },
+
+        'services.auth.getPasswordSetLink': {
+            class: 'services/auth/GetPasswordSetLinkHandler',
+            arguments: ['%frontendUrl%', '@repositories.passwordReset']
+        },
+
+        'services.media.store': {
+            class: 'services/media/StoreHandler',
+            arguments: ['@repositories.media']
+        },
+
+        'services.media.delete': {
+            class: 'services/media/DeleteHandler',
+            arguments: ['@repositories.media']
         }
     }
 };

@@ -2,8 +2,9 @@ const dayjs = require('dayjs');
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class DestroyController {
-    constructor(userRepository) {
+    constructor(userRepository, sendEmailHandler) {
         this.userRepository = userRepository;
+        this.sendEmailHandler = sendEmailHandler;
     }
 
     async invoke(req, res) {
@@ -17,6 +18,7 @@ class DestroyController {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
 
+        const { firstName: userFirstName, email: userEmail } = user;
         const transaction = await this.userRepository.getDbTransaction();
 
         try {
@@ -27,13 +29,17 @@ class DestroyController {
             await user.destroy({ transaction });
 
             await transaction.commit();
-
-            return res.sendStatus(HTTP.NO_CONTENT);
         } catch (error) {
             await transaction.rollback();
 
             throw error;
         }
+
+        await this.sendEmailHandler.handle('UserDestroy', userEmail, {
+            firstName: userFirstName
+        });
+
+        return res.sendStatus(HTTP.NO_CONTENT);
     }
 }
 

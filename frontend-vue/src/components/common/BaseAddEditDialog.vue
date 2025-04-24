@@ -35,7 +35,8 @@ export default {
         return {
             defaultForm,
             formData: { ...defaultForm },
-            isDialogOpened: false
+            isDialogOpened: false,
+            loading: false
         };
     },
 
@@ -58,6 +59,10 @@ export default {
 
     methods: {
         close() {
+            if (this.loading) {
+                return;
+            }
+
             this.$emit('close');
             this.v$.formData.$reset();
             this.serverErrors = [];
@@ -70,6 +75,8 @@ export default {
 
         onSuccess() {
             this.$emit('success');
+
+            this.loading = false;
 
             this.close();
         },
@@ -92,6 +99,8 @@ export default {
             }
 
             try {
+                this.loading = true;
+
                 if (this.editedItem) {
                     await this.updateItem(this.formData);
                 } else {
@@ -117,6 +126,8 @@ export default {
                     : 'Error while adding the item!';
 
                 this.$toast.error(errorMessage);
+            } finally {
+                this.loading = false;
             }
         }
     }

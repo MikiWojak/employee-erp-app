@@ -16,7 +16,7 @@ class LoginController {
             attributes: ['email', 'password']
         });
 
-        if (!user) {
+        if (!user?.password) {
             return res.sendStatus(HTTP.UNAUTHORIZED);
         }
 

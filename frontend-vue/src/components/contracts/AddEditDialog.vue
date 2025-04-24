@@ -15,6 +15,7 @@
                     v-model="selectedUser"
                     :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
+                    @update:model-value="clearServerError('userId')"
                 />
 
                 <v-text-field
@@ -22,6 +23,7 @@
                     label="Position"
                     :error-messages="handleError('position')"
                     @blur="onBlur('position')"
+                    @input="clearServerError('position')"
                 />
 
                 <date-picker
@@ -30,6 +32,7 @@
                     :max="formData.endDate"
                     :error-messages="handleError('startDate')"
                     @blur="onBlur('startDate')"
+                    @update:model-value="clearServerError('startDate')"
                 />
 
                 <date-picker
@@ -38,6 +41,7 @@
                     :min="formData.startDate"
                     :error-messages="handleError('endDate')"
                     @blur="onBlur('endDate')"
+                    @update:model-value="clearServerError('endDate')"
                 />
 
                 <v-select
@@ -48,15 +52,18 @@
                     item-value="value"
                     :error-messages="handleError('vacationDaysPerYear')"
                     @blur="onBlur('vacationDaysPerYear')"
+                    @update:model-value="
+                        clearServerError('vacationDaysPerYear')
+                    "
                 />
             </v-card-text>
 
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text="Cancel" @click="close" />
+                <v-btn text="Cancel" :disabled="loading" @click="close" />
 
-                <v-btn text="Save" @click="save" />
+                <v-btn text="Save" :disabled="loading" @click="save" />
             </v-card-actions>
         </v-card>
     </v-dialog>

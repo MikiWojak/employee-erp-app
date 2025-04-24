@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation }) {
+        static associate({ Role, Contract, Vacation, Media }) {
             this.belongsToMany(Role, {
                 as: 'roles',
                 through: 'Role2User',
@@ -21,6 +21,16 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'vacations',
                 foreignKey: 'userId'
             });
+            this.belongsTo(Media, {
+                as: 'avatar',
+                foreignKey: 'avatarId'
+            });
+        }
+
+        async rolesInfo() {
+            const roles = await this.getRoles();
+
+            return roles.map(role => role.name);
         }
 
         async isAdmin() {
@@ -71,7 +81,8 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING
             },
             password: {
-                allowNull: false,
+                allowNull: true,
+                defaultValue: null,
                 type: DataTypes.STRING
             },
             vacationDaysSum: {
@@ -83,6 +94,15 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.INTEGER,
                 defaultValue: 0
+            },
+            avatarId: {
+                allowNull: true,
+                defaultValue: null,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Media',
+                    key: 'id'
+                }
             }
         },
         {
@@ -96,8 +116,14 @@ module.exports = (sequelize, DataTypes) => {
             },
 
             hooks: {
-                async beforeSave(user, options) {
-                    if (options.fields && options.fields.includes('password')) {
+                beforeCreate: async user => {
+                    if (user.password) {
+                        user.password = await bcrypt.hash(user.password, 10);
+                    }
+                },
+
+                beforeUpdate: async user => {
+                    if (user.password) {
                         user.password = await bcrypt.hash(user.password, 10);
                     }
                 }

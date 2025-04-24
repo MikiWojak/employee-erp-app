@@ -11,6 +11,7 @@
                         outlined
                         :error-messages="handleError('email')"
                         @blur="onBlur('email')"
+                        @input="clearServerError('email')"
                     />
                 </div>
 
@@ -22,18 +23,27 @@
                         outlined
                         :error-messages="handleError('password')"
                         @blur="onBlur('password')"
+                        @input="clearServerError('password')"
                     />
                 </div>
 
                 <div class="my-4">
-                    <v-btn type="submit" width="100%">
+                    <v-btn type="submit" width="100%" :disabled="loading">
                         <span>Login</span>
                     </v-btn>
                 </div>
 
-                <v-alert v-if="loginError" type="error" class="my-4">
-                    {{ loginError }}
+                <v-alert v-if="formErrorMessage" type="error" class="my-4">
+                    {{ formErrorMessage }}
                 </v-alert>
+
+                <div class="d-flex justify-center my-4">
+                    <v-btn
+                        :to="{ name: 'forgot-password' }"
+                        text="Forgot your password?"
+                        variant="plain"
+                    />
+                </div>
             </v-form>
         </v-col>
     </v-row>
@@ -63,7 +73,8 @@ export default {
                 email: '',
                 password: ''
             },
-            loginError: ''
+            formErrorMessage: '',
+            loading: false
         };
     },
 
@@ -88,11 +99,11 @@ export default {
         onBlur(param) {
             this.clearServerError(param);
             this.v$.formData[param].$touch();
-            this.loginError = '';
+            this.formErrorMessage = '';
         },
 
         async handleLogin() {
-            this.loginError = '';
+            this.formErrorMessage = '';
             this.serverErrors = [];
 
             this.v$.formData.$touch();
@@ -104,6 +115,8 @@ export default {
             this.v$.formData.$reset();
 
             try {
+                this.loading = true;
+
                 const { email, password } = this.formData;
 
                 await this.login({
@@ -119,32 +132,27 @@ export default {
 
                 const { response } = error;
 
-                if (!response) {
-                    console.error(error);
-                    this.loginError = 'Something went wrong...';
-
-                    return;
-                }
-
                 if (
-                    response.status === HTTP.BAD_REQUEST &&
+                    response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
                 ) {
-                    this.loginError = 'Invalid credentials.';
-                    this.serverErrors = error.response.data.errors;
+                    this.formErrorMessage = 'Invalid credentials.';
+                    this.serverErrors = response.data.errors;
 
                     return;
                 }
 
-                if (response.status === HTTP.UNAUTHORIZED) {
-                    this.loginError = 'Mismatching credentials.';
+                if (response?.status === HTTP.UNAUTHORIZED) {
+                    this.formErrorMessage = 'Mismatching credentials.';
 
                     return;
                 }
 
                 console.error(error);
 
-                this.loginError = 'Error unknown.';
+                this.formErrorMessage = 'Something went wrong...';
+            } finally {
+                this.loading = false;
             }
         }
     }

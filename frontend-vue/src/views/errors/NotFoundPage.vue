@@ -2,31 +2,20 @@
     <div class="d-flex flex-column align-center">
         <h1>Page not found!</h1>
 
-        <v-btn
-            :to="{ name: loggedIn ? 'dashboard' : 'login' }"
-            color="light-blue"
-        >
-            {{ btnTitle }}
-        </v-btn>
+        <back-home-button />
     </div>
 </template>
 
 <script>
-import { mapState } from 'pinia';
-
-import { useAuthStore } from '@/stores/auth';
+import { defineAsyncComponent } from 'vue';
 
 export default {
     name: 'NotFoundPage',
 
-    computed: {
-        ...mapState(useAuthStore, ['loggedIn']),
-
-        btnTitle() {
-            const page = this.loggedIn ? 'Dashboard' : 'Login';
-
-            return `Go to ${page} Page`;
-        }
+    components: {
+        BackHomeButton: defineAsyncComponent(
+            () => import('@/components/common/BackHomeButton')
+        )
     }
 };
 </script>

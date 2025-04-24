@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', {
 
     getters: {
         loggedIn: state => !!state.loggedUser,
+        rolesInfo: state => state.loggedUser.roles.map(role => role.name),
         isAdmin: state =>
             state.loggedUser?.roles?.some(role => role.name === Roles.ADMIN),
         vacationDaysLeft: state =>
@@ -41,6 +42,38 @@ export const useAuthStore = defineStore('auth', {
             } catch {
                 this.setLoggedUser(null);
             }
+        },
+
+        async checkSetPasswordToken({ token }) {
+            await axios.post('/auth/check-set-password-token', {
+                token
+            });
+        },
+
+        async setPassword({ token, password, passwordConfirmation }) {
+            await axios.post('/auth/set-password', {
+                token,
+                password,
+                passwordConfirmation
+            });
+        },
+
+        async sendResetPasswordLink({ email }) {
+            await axios.post('/auth/send-reset-password-link', { email });
+        },
+
+        async updateProfile(multipartFormData) {
+            const { data } = await axios.put(
+                '/auth/profile',
+                multipartFormData,
+                {
+                    headers: {
+                        contentType: 'multipart/form-data'
+                    }
+                }
+            );
+
+            this.setLoggedUser(data);
         },
 
         setLoggedUser(loggedUser) {

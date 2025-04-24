@@ -20,6 +20,9 @@ describe('Users', () => {
     let dataToSend;
 
     beforeAll(async () => {
+        const sendEmailHandlerMock = di.get('services.sendEmail');
+        jest.spyOn(sendEmailHandlerMock, 'handle').mockImplementation(() => {});
+
         await truncateDatabase();
 
         await roleRepository.create({ name: Role.ADMIN });
@@ -40,7 +43,10 @@ describe('Users', () => {
         await request.post('/api/auth/logout');
     });
 
-    afterAll(() => {
+    afterAll(async () => {
+        const queueConnection = await di.get('queues.connection');
+        await queueConnection.close();
+
         redisSessionClient.quit();
         sequelize.close();
         server.close();
@@ -87,10 +93,6 @@ describe('Users', () => {
                     expect.objectContaining({
                         param: 'email',
                         message: 'This field is required.'
-                    }),
-                    expect.objectContaining({
-                        param: 'password',
-                        message: 'This field is required.'
                     })
                 ])
             );
@@ -118,10 +120,6 @@ describe('Users', () => {
                     expect.objectContaining({
                         param: 'email',
                         message: 'Wrong email format.'
-                    }),
-                    expect.objectContaining({
-                        param: 'password',
-                        message: 'This field must have at least 8 letters.'
                     })
                 ])
             );

@@ -1,5 +1,12 @@
 import { Roles } from '@/enums/Roles';
 import { Layouts } from '@/enums/Layouts';
+import { useAuthStore } from '@/stores/auth';
+
+const layoutOnErrorEncountered = to => {
+    const authStore = useAuthStore();
+
+    to.meta.layout = authStore.loggedIn ? Layouts.APP : Layouts.BASE;
+};
 
 export default [
     {
@@ -27,14 +34,33 @@ export default [
         meta: { auth: true }
     },
     {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('@/views/profile/ProfilePage'),
+        meta: { auth: true }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/auth/LoginPage'),
         meta: { guest: true, layout: Layouts.BASE }
     },
     {
+        path: '/set-password',
+        name: 'set-password',
+        component: () => import('@/views/auth/SetPasswordPage'),
+        meta: { guest: true, layout: Layouts.BASE }
+    },
+    {
+        path: '/forgot-password',
+        name: 'forgot-password',
+        component: () => import('@/views/auth/ForgotPasswordPage'),
+        meta: { guest: true, layout: Layouts.BASE }
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
-        component: () => import('@/views/errors/NotFoundPage')
+        component: () => import('@/views/errors/NotFoundPage'),
+        beforeEnter: layoutOnErrorEncountered
     }
 ];

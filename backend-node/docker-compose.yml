@@ -24,6 +24,29 @@ services:
         volumes:
             - redis_session.data:/data
 
+    rabbitmq:
+        image: rabbitmq:4.0-management
+        container_name: ${COMPOSE_PROJECT_NAME}.rabbitmq.docker
+        restart: unless-stopped
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+            RABBITMQ_NODENAME: rabbit@${RABBITMQ_HOST}
+        ports:
+            - 127.0.0.1:${RABBITMQ_PORT}:5672
+            - 127.0.0.1:${RABBITMQ_MANAGEMENT_PORT}:15672
+        volumes:
+            - rabbitmq.data:/var/lib/rabbitmq
+
+    maildev:
+        image: soulteary/maildev
+        container_name: ${COMPOSE_PROJECT_NAME}.maildev.docker
+        restart: unless-stopped
+        ports:
+            - 127.0.0.1:1080:1080
+            - 127.0.0.1:${EMAIL_PORT}:1025
+
 volumes:
     db.data:
     redis_session.data:
+    rabbitmq.data:

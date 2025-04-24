@@ -13,9 +13,9 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text="No" @click="doDiscard" />
+                <v-btn text="No" :disabled="loading" @click="doDiscard" />
 
-                <v-btn text="Yes" @click="doConfirm" />
+                <v-btn text="Yes" :disabled="loading" @click="doConfirm" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -34,6 +34,11 @@ export default {
         title: {
             type: String,
             default: 'Are you sure you want to continue?'
+        },
+
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
 

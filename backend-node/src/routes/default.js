@@ -4,7 +4,7 @@ const router = express.Router();
 const invoke = require('../middlewares/invoke');
 
 module.exports = di => {
-    const welcomeController = di.get('controllers.welcomeController');
+    const welcomeController = di.get('controllers.welcome');
 
     router.get('/', invoke(welcomeController));
 

@@ -16,3 +16,8 @@ package-lock.json
 coverage
 
 .DS_Store
+
+tmp
+
+public/uploads/*
+!public/uploads/.gitkeep

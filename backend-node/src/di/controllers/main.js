@@ -1,6 +1,6 @@
 module.exports = {
     services: {
-        'controllers.welcomeController': {
+        'controllers.welcome': {
             class: 'controllers/WelcomeController',
             arguments: []
         }
