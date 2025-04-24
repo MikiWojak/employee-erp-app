@@ -40,6 +40,7 @@ export default {
 
         headers() {
             return [
+                { title: 'Avatar', value: 'icon' },
                 { title: 'First name', value: 'firstName' },
                 { title: 'Last name', value: 'lastName' },
                 { title: 'Date of birth', value: 'dateOfBirth' },
@@ -71,6 +72,10 @@ export default {
             }
 
             return 'red';
+        },
+
+        getIcon(item) {
+            return item.avatar;
         }
     }
 };

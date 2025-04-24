@@ -20,6 +20,9 @@ class IndexController {
                     },
                     required: true,
                     where: { name: Role.EMPLOYEE }
+                },
+                {
+                    association: 'avatar'
                 }
             ]
         };
