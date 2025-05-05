@@ -17,6 +17,15 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
+                managerId: {
+                    allowNull: true,
+                    defaultValue: null,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
                 firstName: {
                     allowNull: false,
                     type: DataTypes.STRING
