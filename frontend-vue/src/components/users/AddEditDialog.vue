@@ -27,6 +27,13 @@
                     @input="clearServerError('lastName')"
                 />
 
+                <department-select
+                    v-model="selectedDepartment"
+                    :error-messages="handleError('departmentId')"
+                    @blur="onBlur('departmentId')"
+                    @update:model-value="clearServerError('departmentId')"
+                />
+
                 <date-picker
                     v-model="formData.dateOfBirth"
                     label="Date of birth"
@@ -73,6 +80,9 @@ export default {
     components: {
         DatePicker: defineAsyncComponent(
             () => import('@/components/inputs/DatePicker')
+        ),
+        DepartmentSelect: defineAsyncComponent(
+            () => import('@/components/inputs/DepartmentSelect')
         )
     },
 
@@ -91,6 +101,7 @@ export default {
         };
 
         return {
+            selectedDepartment: null,
             defaultForm,
             formData: { ...defaultForm },
             maxDate: dayjs().format('YYYY-MM-DD')
@@ -104,6 +115,9 @@ export default {
                     required
                 },
                 lastName: {
+                    required
+                },
+                departmentId: {
                     required
                 },
                 dateOfBirth: {
@@ -123,11 +137,35 @@ export default {
         }
     },
 
+    watch: {
+        selectedDepartment: {
+            handler(newVal) {
+                this.formData.department = newVal;
+                this.formData.departmentId = newVal?.id || '';
+            }
+        },
+
+        editedItem: {
+            handler(val) {
+                this.formData = val ? { ...val } : { ...this.defaultForm };
+                this.selectedDepartment = val?.department
+                    ? { ...val.department }
+                    : null;
+            },
+            immediate: true
+        }
+    },
+
     methods: {
         ...mapActions(useUserStore, {
             createItem: 'store',
             updateItem: 'update'
-        })
+        }),
+
+        clearInputs() {
+            this.formData = { ...this.defaultForm };
+            this.selectedDepartment = null;
+        }
     }
 };
 </script>

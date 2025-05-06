@@ -17,6 +17,8 @@ class DestroyController {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
 
+        // @TODO Cannot delete department that has employees!
+
         const transaction = await this.departmentRepository.getDbTransaction();
 
         try {
