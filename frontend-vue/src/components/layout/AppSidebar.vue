@@ -18,6 +18,13 @@
 
         <v-list-item
             v-if="isAdmin"
+            prepend-icon="mdi-office-building"
+            title="Departments"
+            :to="{ name: 'departments' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin"
             prepend-icon="mdi-account-multiple"
             title="Employees"
             :to="{ name: 'users' }"

@@ -3,13 +3,9 @@ const { body } = require('express-validator');
 const update = [
     body('name')
         .trim()
-        .toLowerCase()
         .not()
         .isEmpty()
         .withMessage('This field is required.')
-        .bail()
-        .isEmail()
-        .withMessage('Wrong email format.')
         .bail()
         .custom(
             async (

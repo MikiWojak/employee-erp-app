@@ -10,18 +10,11 @@ class StoreController {
             body: { name }
         } = req;
 
-        const createdDepartment = await this.departmentRepository.create(
-            {
-                name
-            },
-            { transaction }
-        );
+        const department = await this.departmentRepository.create({
+            name
+        });
 
-        const deparment = await this.departmentRepository.findById(
-            createdDepartment.id
-        );
-
-        return res.status(HTTP.CREATED).send(deparment);
+        return res.status(HTTP.CREATED).send(department);
     }
 }
 
