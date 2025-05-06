@@ -5,6 +5,11 @@ module.exports = {
             arguments: ['@sequelize']
         },
 
+        'repositories.department': {
+            class: 'repositories/Department',
+            arguments: ['@sequelize']
+        },
+
         'repositories.user': {
             class: 'repositories/User',
             arguments: ['@sequelize']
