@@ -1,19 +1,19 @@
 'use strict';
 
-const di = require('../di');
 const faker = require('faker');
+
+const di = require('../di');
+
 const departmentRepository = di.get('repositories.department');
 
 module.exports = {
     up: async () => {
-        for (let i = 0; i < 3; i++) {
-            await departmentRepository.create({
-                name: faker.commerce.department()
-            });
-        }
+        await departmentRepository.bulkCreate([
+            { name: faker.commerce.department() },
+            { name: faker.commerce.department() },
+            { name: faker.commerce.department() }
+        ]);
     },
 
-    down: async queryInterface => {
-        return queryInterface.bulkDelete('Departments', null, {});
-    }
+    down: () => {}
 };

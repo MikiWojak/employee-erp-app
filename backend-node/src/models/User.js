@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation, Media }) {
+        static associate({ Role, Contract, Vacation, Media, Department }) {
             this.belongsToMany(Role, {
                 as: 'roles',
                 through: 'Role2User',
@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(Media, {
                 as: 'avatar',
                 foreignKey: 'avatarId'
+            });
+            this.belongsTo(Department, {
+                as: 'department',
+                foreignKey: 'departmentId'
             });
         }
 

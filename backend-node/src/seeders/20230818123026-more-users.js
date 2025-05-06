@@ -8,10 +8,14 @@ const { Role } = require('../models');
 const di = require('../di');
 const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
+const departmentRepository = di.get('repositories.department');
 
 module.exports = {
     up: async () => {
-        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
+        const [departments, roleEmployee] = await Promise.all([
+            departmentRepository.findAll(),
+            roleRepository.findByName(Role.EMPLOYEE)
+        ]);
 
         for (let i = 0; i < 20; i++) {
             const dateOfBirth = dayjs(
@@ -24,16 +28,17 @@ module.exports = {
             const employee = await userRepository.create({
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
-                dateOfBirth: dateOfBirth,
+                dateOfBirth,
                 email: faker.internet.email().toLowerCase(),
                 password: 'Qwerty123!'
             });
 
-            await employee.setRoles([roleEmployee]);
+            await Promise.all([
+                employee.setRoles([roleEmployee]),
+                employee.setDepartment(faker.random.arrayElement(departments))
+            ]);
         }
     },
 
-    down: async queryInterface => {
-        return queryInterface.bulkDelete('Users', null, {});
-    }
+    down: () => {}
 };

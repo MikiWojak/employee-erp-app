@@ -4,6 +4,13 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Department extends Model {
+        static associate({ User }) {
+            this.hasMany(User, {
+                as: 'users',
+                foreignKey: 'departmentId'
+            });
+        }
+
         static get SEARCHABLE_FIELDS() {
             return ['name'];
         }

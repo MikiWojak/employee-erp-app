@@ -1,41 +1,54 @@
 'use strict';
 
-const { Role } = require('../models');
+const faker = require('faker');
 
+const dayjs = require('dayjs');
+const { Role } = require('../models');
 const di = require('../di');
+
 const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
+const departmentRepository = di.get('repositories.department');
+
+const getDateOfBirth = () =>
+    dayjs(
+        faker.date.between(
+            dayjs().subtract(65, 'year').format('YYYY-MM-DD'),
+            dayjs().subtract(18, 'year').format('YYYY-MM-DD')
+        )
+    ).format('YYYY-MM-DD');
 
 module.exports = {
     up: async () => {
-        const roleAdmin = await roleRepository.findByName(Role.ADMIN);
+        const [departments, roleAdmin, roleEmployee] = await Promise.all([
+            departmentRepository.findAll(),
+            roleRepository.findByName(Role.ADMIN),
+            roleRepository.findByName(Role.EMPLOYEE)
+        ]);
 
-        const admin = await userRepository.create({
-            firstName: 'John',
-            lastName: 'Admin',
-            dateOfBirth: '1985-03-17',
+        const [admin, employee] = await Promise.all([
+            userRepository.create({
+                firstName: faker.name.firstName(),
+                lastName: 'Admin',
+                dateOfBirth: getDateOfBirth(),
+                email: 'admin@erp.test',
+                password: 'Qwerty123!'
+            }),
+            userRepository.create({
+                firstName: faker.name.firstName(),
+                lastName: 'Employee',
+                dateOfBirth: getDateOfBirth(),
+                email: 'employee@erp.test',
+                password: 'Qwerty123!'
+            })
+        ]);
 
-            email: 'admin@erp.test',
-            password: 'Qwerty123!'
-        });
-
-        await admin.setRoles([roleAdmin]);
-
-        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
-
-        const employee = await userRepository.create({
-            firstName: 'George',
-            lastName: 'Employee',
-            dateOfBirth: '1990-09-03',
-
-            email: 'employee@erp.test',
-            password: 'Qwerty123!'
-        });
-
-        await employee.setRoles([roleEmployee]);
+        await Promise.all([
+            admin.setRoles([roleAdmin]),
+            employee.setRoles([roleEmployee]),
+            employee.setDepartment(faker.random.arrayElement(departments))
+        ]);
     },
 
-    down: async queryInterface => {
-        return queryInterface.bulkDelete('Users', null, {});
-    }
+    down: () => {}
 };
