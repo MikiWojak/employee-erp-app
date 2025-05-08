@@ -18,11 +18,12 @@
         "db-drop": "./node_modules/.bin/sequelize db:drop",
         "db-create": "./node_modules/.bin/sequelize db:create",
         "db-setup": "npm run db-undo-migrate && npm run db-migrate && npm run db-seed",
-        "db-setup-fresh": "npm run db-drop && npm run db-create && npm run db-migrate && npm run db-seed",
+        "db-setup-fresh": "npm run redis-session-flush && npm run db-drop && npm run db-create && npm run db-migrate && npm run db-seed",
         "dev-db-seed": "./node_modules/.bin/sequelize db:seed:all",
-        "dev-db-setup-fresh": "npm run db-drop && npm run db-create && npm run db-migrate && npm run dev-db-seed",
+        "dev-db-setup-fresh": "npm run redis-session-flush && npm run db-drop && npm run db-create && npm run db-migrate && npm run dev-db-seed",
         "dev": "nodemon ./src/index.js",
-        "queues": "nodemon ./src/queues.js"
+        "queues": "nodemon ./src/queues.js",
+        "redis-session-flush": "docker compose exec redis_session redis-cli -a pass FLUSHALL"
     },
     "dependencies": {
         "amqplib": "0.10.5",
