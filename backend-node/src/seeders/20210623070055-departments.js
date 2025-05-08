@@ -8,11 +8,11 @@ const departmentRepository = di.get('repositories.department');
 
 module.exports = {
     up: async () => {
-        await departmentRepository.bulkCreate([
-            { name: faker.commerce.department() },
-            { name: faker.commerce.department() },
-            { name: faker.commerce.department() }
-        ]);
+        for (let i = 0; i < 5; i++) {
+            await departmentRepository.create({
+                name: faker.commerce.department()
+            });
+        }
     },
 
     down: () => {}

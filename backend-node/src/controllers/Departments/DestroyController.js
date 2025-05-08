@@ -11,13 +11,24 @@ class DestroyController {
             params: { id }
         } = req;
 
-        const department = await this.departmentRepository.findById(id);
+        const department = await this.departmentRepository.findById(id, {
+            include: [
+                {
+                    association: 'users',
+                    attributes: ['id']
+                }
+            ]
+        });
 
         if (!department) {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
 
-        // @TODO Cannot delete department that has employees!
+        if (department.users.length) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot delete department that has employees!');
+        }
 
         const transaction = await this.departmentRepository.getDbTransaction();
 

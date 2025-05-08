@@ -28,7 +28,10 @@ export default {
 
     computed: {
         headers() {
-            return [{ title: 'Name', value: 'name' }];
+            return [
+                { title: 'Name', value: 'name' },
+                { title: 'Employees', value: 'employeesCount' }
+            ];
         }
     },
 

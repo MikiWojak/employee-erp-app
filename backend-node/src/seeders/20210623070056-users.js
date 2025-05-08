@@ -1,10 +1,10 @@
 'use strict';
 
+const dayjs = require('dayjs');
 const faker = require('faker');
 
-const dayjs = require('dayjs');
-const { Role } = require('../models');
 const di = require('../di');
+const { Role } = require('../models');
 
 const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
