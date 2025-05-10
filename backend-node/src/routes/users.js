@@ -12,7 +12,7 @@ const paginationValidator = require('../validators/pagination');
 
 const {
     User,
-    Role: { ADMIN }
+    Role: { ADMIN, MANAGER }
 } = require('../models');
 
 module.exports = di => {
@@ -23,7 +23,7 @@ module.exports = di => {
 
     router.get(
         '/',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [
             paginationValidator.pagination,
             validate,

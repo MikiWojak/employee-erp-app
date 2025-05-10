@@ -1,23 +1,14 @@
 'use strict';
 
-const dayjs = require('dayjs');
 const faker = require('faker');
 
 const { Role } = require('../models');
+const getRandomDateOfBirth = require('../helpers/getRandomDateOfBirth');
 
 const di = require('../di');
 const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
 const departmentRepository = di.get('repositories.department');
-
-// @TODO Consider helper
-const getDateOfBirth = () =>
-    dayjs(
-        faker.date.between(
-            dayjs().subtract(65, 'year').format('YYYY-MM-DD'),
-            dayjs().subtract(18, 'year').format('YYYY-MM-DD')
-        )
-    ).format('YYYY-MM-DD');
 
 module.exports = {
     up: async () => {
@@ -35,7 +26,7 @@ module.exports = {
             const manager = await userRepository.create({
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
-                dateOfBirth: getDateOfBirth(),
+                dateOfBirth: getRandomDateOfBirth(),
                 email: faker.internet.email().toLowerCase(),
                 password: 'Qwerty123!'
             });
@@ -52,7 +43,7 @@ module.exports = {
                     managerId: manager.id,
                     firstName: faker.name.firstName(),
                     lastName: faker.name.lastName(),
-                    dateOfBirth: getDateOfBirth(),
+                    dateOfBirth: getRandomDateOfBirth(),
                     email: faker.internet.email().toLowerCase(),
                     password: 'Qwerty123!'
                 });

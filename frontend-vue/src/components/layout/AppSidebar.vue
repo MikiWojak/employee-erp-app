@@ -24,7 +24,7 @@
         />
 
         <v-list-item
-            v-if="isAdmin"
+            v-if="isAdmin || isManager"
             prepend-icon="mdi-account-multiple"
             title="Employees"
             :to="{ name: 'users' }"
@@ -75,7 +75,7 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
 
         fullName() {
             return this.loggedUser?.fullName || '';

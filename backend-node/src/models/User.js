@@ -38,9 +38,15 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         async isAdmin() {
-            const roles = await this.getRoles();
+            const roles = await this.rolesInfo();
 
-            return roles.some(role => role.name === Role.ADMIN);
+            return roles.some(role => role === Role.ADMIN);
+        }
+
+        async isManager() {
+            const roles = await this.rolesInfo();
+
+            return roles.some(role => role === Role.MANAGER);
         }
 
         static get ADMIN_SEARCHABLE_FIELDS() {

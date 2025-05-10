@@ -43,6 +43,7 @@ export default {
                 { title: 'Avatar', value: 'icon' },
                 { title: 'First name', value: 'firstName' },
                 { title: 'Last name', value: 'lastName' },
+                { title: 'Roles', value: 'roles' }, // @TODO Change way of show!
                 { title: 'Department', value: 'department.name' },
                 { title: 'Date of birth', value: 'dateOfBirth' },
                 { title: 'Email', value: 'email' },
