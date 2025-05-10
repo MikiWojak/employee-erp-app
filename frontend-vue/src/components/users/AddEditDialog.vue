@@ -96,6 +96,7 @@ export default {
         const defaultForm = {
             firstName: '',
             lastName: '',
+            departmentId: '',
             dateOfBirth: '',
             email: ''
         };

@@ -1,7 +1,7 @@
 'use strict';
 
-const { Role } = require('../models');
 const di = require('../di');
+const { Role } = require('../models');
 
 const roleRepository = di.get('repositories.role');
 
