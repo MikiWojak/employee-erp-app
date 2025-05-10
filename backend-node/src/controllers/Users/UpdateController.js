@@ -8,7 +8,7 @@ class UpdateController {
     async invoke(req, res) {
         const {
             params: { id },
-            body: { firstName, lastName, dateOfBirth, email }
+            body: { firstName, lastName, departmentId, dateOfBirth, email }
         } = req;
 
         const user = await this.userRepository.getById(id);
@@ -20,6 +20,7 @@ class UpdateController {
         await user.update({
             firstName,
             lastName,
+            departmentId,
             dateOfBirth,
             email
         });

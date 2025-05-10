@@ -23,8 +23,12 @@ class IndexController {
                 },
                 {
                     association: 'avatar'
+                },
+                {
+                    association: 'department'
                 }
-            ]
+            ],
+            subQuery: false
         };
 
         const users = await this.userRepository.findAndCountAll(options);

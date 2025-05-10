@@ -17,12 +17,12 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
-                managerId: {
+                departmentId: {
                     allowNull: true,
                     defaultValue: null,
                     type: DataTypes.UUID,
                     references: {
-                        model: 'Users',
+                        model: 'Departments',
                         key: 'id'
                     }
                 },

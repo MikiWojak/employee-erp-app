@@ -8,7 +8,9 @@ const { Role } = require('../models');
 const di = require('../di');
 const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
+const departmentRepository = di.get('repositories.department');
 
+// @TODO Consider helper
 const getDateOfBirth = () =>
     dayjs(
         faker.date.between(
@@ -19,7 +21,8 @@ const getDateOfBirth = () =>
 
 module.exports = {
     up: async () => {
-        const [roleManager, roleEmployee] = await Promise.all([
+        const [departments, roleManager, roleEmployee] = await Promise.all([
+            departmentRepository.findAll(),
             roleRepository.findByName(Role.MANAGER),
             roleRepository.findByName(Role.EMPLOYEE)
         ]);
@@ -27,6 +30,8 @@ module.exports = {
         const managersCount = Math.floor(Math.random() * 2) + 2;
 
         for (let i = 0; i < managersCount; i++) {
+            const department = faker.random.arrayElement(departments);
+
             const manager = await userRepository.create({
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
@@ -35,7 +40,10 @@ module.exports = {
                 password: 'Qwerty123!'
             });
 
-            await manager.setRoles([roleManager]);
+            await Promise.all([
+                manager.setRoles([roleManager]),
+                manager.setDepartment(department)
+            ]);
 
             const employeesPerManagerCount = Math.floor(Math.random() * 3) + 3;
 
@@ -49,12 +57,13 @@ module.exports = {
                     password: 'Qwerty123!'
                 });
 
-                await employee.setRoles([roleEmployee]);
+                await Promise.all([
+                    employee.setRoles([roleEmployee]),
+                    employee.setDepartment(department)
+                ]);
             }
         }
     },
 
-    down: async queryInterface => {
-        return queryInterface.bulkDelete('Users', null, {});
-    }
+    down: () => {}
 };
