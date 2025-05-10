@@ -1,5 +1,6 @@
-const AbstractRepository = require('./AbstractRepository');
 const deepmerge = require('deepmerge');
+
+const AbstractRepository = require('./AbstractRepository');
 
 class DepartmentRepository extends AbstractRepository {
     get model() {

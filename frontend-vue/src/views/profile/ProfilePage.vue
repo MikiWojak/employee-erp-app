@@ -5,6 +5,14 @@
 
             <v-form @submit.prevent="handleUpdateProfile">
                 <v-text-field
+                    v-model="departmentName"
+                    label="Department"
+                    disabled
+                />
+
+                <v-text-field v-model="roles" label="Roles" disabled />
+
+                <v-text-field
                     v-model="formData.firstName"
                     label="First name"
                     :error-messages="handleError('firstName')"
@@ -164,6 +172,20 @@ export default {
             }
 
             return null;
+        },
+
+        departmentName() {
+            return this.loggedUser?.department?.name || '';
+        },
+
+        roles() {
+            if (!this.loggedUser) {
+                return '';
+            }
+
+            const { roles } = this.loggedUser;
+
+            return roles.map(role => role.name).join(', ');
         }
     },
 
@@ -234,8 +256,8 @@ export default {
 </script>
 <style scoped>
 .preview-avatar {
-    width: 200px;
-    height: 200px;
+    width: 175px;
+    height: 175px;
     margin: 0 auto;
     border: 1px solid #ccc;
     border-radius: 8px;

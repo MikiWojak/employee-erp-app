@@ -247,13 +247,13 @@ export default {
 
                 this.closeDeleteDialog();
             } catch (error) {
-                console.error(error);
-
                 if (HTTP.UNPROCESSABLE_ENTITY) {
                     this.$toast.error(error.response.data);
 
                     return;
                 }
+
+                console.error(error);
 
                 this.$toast.error('Error while deleting the item!');
             } finally {

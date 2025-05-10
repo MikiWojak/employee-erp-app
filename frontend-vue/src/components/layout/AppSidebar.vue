@@ -4,7 +4,7 @@
             v-bind="userInfoAvatarProps"
             lines="two"
             :title="fullName"
-            :subtitle="roles"
+            :subtitle="departmentName"
             :to="{ name: 'profile' }"
         />
 
@@ -95,14 +95,8 @@ export default {
             };
         },
 
-        roles() {
-            if (!this.loggedUser) {
-                return '';
-            }
-
-            const { roles } = this.loggedUser;
-
-            return roles.map(role => role.name).join(', ');
+        departmentName() {
+            return this.loggedUser?.department?.name || '';
         }
     },
 
