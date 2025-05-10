@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation, Media }) {
+        static associate({ Role, Contract, Vacation, Media, Department }) {
             this.belongsToMany(Role, {
                 as: 'roles',
                 through: 'Role2User',
@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(Media, {
                 as: 'avatar',
                 foreignKey: 'avatarId'
+            });
+            this.belongsTo(Department, {
+                as: 'department',
+                foreignKey: 'departmentId'
             });
         }
 
@@ -44,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
                 'firstName',
                 'lastName',
                 'email',
+                'department.name',
                 Sequelize.literal("CONCAT(firstName, ' ', lastName)")
             ];
         }
@@ -56,6 +61,15 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
+            },
+            departmentId: {
+                allowNull: true,
+                defaultValue: null,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Departments',
+                    key: 'id'
+                }
             },
             firstName: {
                 allowNull: false,

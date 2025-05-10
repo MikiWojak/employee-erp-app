@@ -32,6 +32,9 @@ class UserRepository extends AbstractRepository {
                     },
                     {
                         association: 'avatar'
+                    },
+                    {
+                        association: 'department'
                     }
                 ]
             },

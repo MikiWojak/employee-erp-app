@@ -13,6 +13,26 @@ const update = [
         .isEmpty()
         .withMessage('This field is required.'),
 
+    body('departmentId')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .bail()
+        .isUUID(4)
+        .withMessage('Wrong UUID format.')
+        .bail()
+        .custom(async (departmentId, { req: { app } }) => {
+            const di = app.get('di');
+            const departmentRepository = di.get('repositories.department');
+            const department =
+                await departmentRepository.findById(departmentId);
+
+            if (!department) {
+                return Promise.reject('Department not found.');
+            }
+        }),
+
     body('dateOfBirth')
         .trim()
         .not()

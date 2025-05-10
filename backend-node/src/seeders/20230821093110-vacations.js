@@ -72,7 +72,5 @@ module.exports = {
         }
     },
 
-    down: async queryInterface => {
-        await queryInterface.bulkDelete('Vacations', null, {});
-    }
+    down: () => {}
 };

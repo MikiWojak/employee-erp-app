@@ -43,6 +43,7 @@ export default {
                 { title: 'Avatar', value: 'icon' },
                 { title: 'First name', value: 'firstName' },
                 { title: 'Last name', value: 'lastName' },
+                { title: 'Department', value: 'department.name' },
                 { title: 'Date of birth', value: 'dateOfBirth' },
                 { title: 'Email', value: 'email' },
                 { title: 'Days off left', value: 'vacationLeft' }

@@ -96,6 +96,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { StatusCodes as HTTP } from 'http-status-codes';
 
 import getFullImagePath from '@/helpers/getFullImagePath';
 
@@ -246,6 +247,12 @@ export default {
 
                 this.closeDeleteDialog();
             } catch (error) {
+                if (HTTP.UNPROCESSABLE_ENTITY) {
+                    this.$toast.error(error.response.data);
+
+                    return;
+                }
+
                 console.error(error);
 
                 this.$toast.error('Error while deleting the item!');

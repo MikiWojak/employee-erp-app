@@ -4,7 +4,7 @@
             v-bind="userInfoAvatarProps"
             lines="two"
             :title="fullName"
-            :subtitle="roles"
+            :subtitle="departmentName"
             :to="{ name: 'profile' }"
         />
 
@@ -14,6 +14,13 @@
             prepend-icon="mdi-home"
             title="Dashboard"
             :to="{ name: 'dashboard' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin"
+            prepend-icon="mdi-office-building"
+            title="Departments"
+            :to="{ name: 'departments' }"
         />
 
         <v-list-item
@@ -88,14 +95,8 @@ export default {
             };
         },
 
-        roles() {
-            if (!this.loggedUser) {
-                return '';
-            }
-
-            const { roles } = this.loggedUser;
-
-            return roles.map(role => role.name).join(', ');
+        departmentName() {
+            return this.loggedUser?.department?.name || '';
         }
     },
 
