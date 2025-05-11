@@ -30,6 +30,10 @@ export default {
         customFields() {
             return [
                 {
+                    name: 'roles',
+                    value: this.getRoleNames
+                },
+                {
                     component: 'v-chip',
                     name: 'vacationLeft',
                     value: this.getVacationLeft,
@@ -78,6 +82,14 @@ export default {
 
         getIcon(item) {
             return item.avatar;
+        },
+
+        getRoleNames(item) {
+            if (!item?.roles?.length) {
+                return '';
+            }
+
+            return item?.roles?.map(role => role.name).join(', ');
         }
     }
 };

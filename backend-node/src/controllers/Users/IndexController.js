@@ -48,9 +48,25 @@ class IndexController {
             subQuery: false
         };
 
-        const users = await this.userRepository.findAndCountAll(options);
+        const { count, rows: rowsRaw } =
+            await this.userRepository.findAndCountAll(options);
 
-        return res.send(users);
+        const rows = rowsRaw.map(user => {
+            if (
+                !isAdmin &&
+                isManager &&
+                user.id !== loggedUser.id &&
+                !user.roles.find(role => role.name === Role.EMPLOYEE)
+            ) {
+                user.dateOfBirth = '';
+
+                return user;
+            }
+
+            return user;
+        });
+
+        return res.send({ count, rows });
     }
 }
 
