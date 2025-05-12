@@ -53,7 +53,8 @@ class UpdateController {
             firstName,
             lastName,
             dateOfBirth,
-            email
+            email,
+            updatedById: loggedUser.id
         };
 
         if (isAdmin) {

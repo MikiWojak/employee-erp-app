@@ -7,7 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation, Media, Department }) {
+        static associate({
+            Role,
+            Contract,
+            Vacation,
+            Media,
+            Department,
+            User
+        }) {
             this.belongsToMany(Role, {
                 as: 'roles',
                 through: 'Role2User',
@@ -28,6 +35,14 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(Department, {
                 as: 'department',
                 foreignKey: 'departmentId'
+            });
+            this.belongsTo(User, {
+                as: 'createdBy',
+                foreignKey: 'createdById'
+            });
+            this.belongsTo(User, {
+                as: 'updatedBy',
+                foreignKey: 'updatedById'
             });
         }
 
@@ -121,6 +136,22 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 references: {
                     model: 'Media',
+                    key: 'id'
+                }
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
                     key: 'id'
                 }
             }

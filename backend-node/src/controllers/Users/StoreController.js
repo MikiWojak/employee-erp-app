@@ -34,7 +34,9 @@ class StoreController {
             firstName,
             lastName,
             dateOfBirth,
-            email
+            email,
+            createdById: loggedUser.id,
+            updatedById: loggedUser.id
         };
 
         if (isAdmin) {

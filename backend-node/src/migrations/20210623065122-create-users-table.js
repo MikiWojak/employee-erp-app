@@ -67,6 +67,22 @@ module.exports = {
                         key: 'id'
                     }
                 },
+                createdById: {
+                    allowNull: true,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
+                updatedById: {
+                    allowNull: true,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,

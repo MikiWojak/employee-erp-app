@@ -46,7 +46,10 @@ class DestroyController {
             const timestamp = dayjs().unix();
             const email = `${user.email}_${timestamp}`;
 
-            await user.update({ email }, { transaction });
+            await user.update(
+                { email, updatedById: loggedUser.id },
+                { transaction }
+            );
             await user.destroy({ transaction });
 
             await transaction.commit();
