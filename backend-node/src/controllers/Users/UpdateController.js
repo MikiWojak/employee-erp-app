@@ -10,6 +10,7 @@ class UpdateController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
             params: { id },
             body: {
                 firstName,
@@ -18,8 +19,7 @@ class UpdateController {
                 departmentId,
                 dateOfBirth,
                 email
-            },
-            loggedUser
+            }
         } = req;
 
         const isAdmin = await loggedUser.isAdmin();
