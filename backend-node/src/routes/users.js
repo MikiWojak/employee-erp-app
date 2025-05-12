@@ -35,17 +35,21 @@ module.exports = di => {
     );
     router.post(
         '/',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [userValidator.store, validate],
         invoke(storeController)
     );
     router.put(
         '/:id',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [userValidator.update, validate],
         invoke(updateController)
     );
-    router.delete('/:id', loggedOnly(ADMIN), invoke(destroyController));
+    router.delete(
+        '/:id',
+        loggedOnly(ADMIN, MANAGER),
+        invoke(destroyController)
+    );
 
     return router;
 };

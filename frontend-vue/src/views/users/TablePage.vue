@@ -1,9 +1,10 @@
 <script>
-import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
 import { useUserStore } from '@/stores/user';
 import BaseTablePage from '@/components/view/BaseTablePage';
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'TablePage',
@@ -19,7 +20,7 @@ export default {
     data() {
         return {
             tableOptions: {
-                title: 'Employees',
+                title: 'Users',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this user?'
             }
@@ -27,6 +28,8 @@ export default {
     },
 
     computed: {
+        ...mapState(useAuthStore, ['isAdmin']),
+
         customFields() {
             return [
                 {
@@ -47,8 +50,10 @@ export default {
                 { title: 'Avatar', value: 'icon' },
                 { title: 'First name', value: 'firstName' },
                 { title: 'Last name', value: 'lastName' },
-                { title: 'Roles', value: 'roles' }, // @TODO Change way of show!
-                { title: 'Department', value: 'department.name' },
+                { title: 'Roles', value: 'roles' },
+                ...(this.isAdmin
+                    ? [{ title: 'Department', value: 'department.name' }]
+                    : []),
                 { title: 'Date of birth', value: 'dateOfBirth' },
                 { title: 'Email', value: 'email' },
                 { title: 'Days off left', value: 'vacationLeft' }

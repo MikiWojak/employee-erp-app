@@ -26,7 +26,7 @@
         <v-list-item
             v-if="isAdmin || isManager"
             prepend-icon="mdi-account-multiple"
-            title="Employees"
+            title="Users"
             :to="{ name: 'users' }"
         />
 

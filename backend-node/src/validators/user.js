@@ -1,5 +1,9 @@
 const { body } = require('express-validator');
 
+const {
+    Role: { ADMIN, MANAGER, EMPLOYEE }
+} = require('../models');
+
 const update = [
     body('firstName')
         .trim()
@@ -13,7 +17,37 @@ const update = [
         .isEmpty()
         .withMessage('This field is required.'),
 
+    body('role')
+        .if(async (value, { req }) => {
+            const { loggedUser } = req;
+
+            const isAdmin = await loggedUser.isAdmin();
+
+            if (!isAdmin) {
+                return Promise.reject();
+            }
+        })
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('This field is required.')
+        .isIn([ADMIN, MANAGER, EMPLOYEE])
+        .withMessage('This role does not exist.'),
+
     body('departmentId')
+        .if(async (value, { req: { body } }) => {
+            const { loggedUser } = req;
+
+            const isAdmin = await loggedUser.isAdmin();
+
+            if (!isAdmin) {
+                return Promise.reject();
+            }
+
+            if (body.role === ADMIN) {
+                return Promise.reject();
+            }
+        })
         .trim()
         .not()
         .isEmpty()

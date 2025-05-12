@@ -14,6 +14,7 @@
                 <v-text-field
                     v-model="formData.firstName"
                     label="First name"
+                    prepend-icon="mdi-account-circle"
                     :error-messages="handleError('firstName')"
                     @blur="onBlur('firstName')"
                     @input="clearServerError('firstName')"
@@ -22,12 +23,22 @@
                 <v-text-field
                     v-model="formData.lastName"
                     label="Last name"
+                    prepend-icon="mdi-account-circle"
                     :error-messages="handleError('lastName')"
                     @blur="onBlur('lastName')"
                     @input="clearServerError('lastName')"
                 />
 
+                <role-select
+                    v-if="isAdmin"
+                    v-model="formData.role"
+                    :error-messages="handleError('role')"
+                    @blur="onBlur('role')"
+                    @update:model-value="clearServerError('role')"
+                />
+
                 <department-select
+                    v-if="isAdmin && !isAdminRoleSelected"
                     v-model="selectedDepartment"
                     :error-messages="handleError('departmentId')"
                     @blur="onBlur('departmentId')"
@@ -47,6 +58,7 @@
                     v-model="formData.email"
                     type="email"
                     label="Email"
+                    prepend-icon="mdi-email"
                     :error-messages="handleError('email')"
                     @blur="onBlur('email')"
                     @input="clearServerError('email')"
@@ -66,11 +78,13 @@
 
 <script>
 import dayjs from 'dayjs';
-import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { email, required, requiredIf } from '@vuelidate/validators';
 
+import { Roles } from '@/enums/Roles';
+import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/user';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
@@ -80,6 +94,9 @@ export default {
     components: {
         DatePicker: defineAsyncComponent(
             () => import('@/components/inputs/DatePicker')
+        ),
+        RoleSelect: defineAsyncComponent(
+            () => import('@/components/inputs/RoleSelect')
         ),
         DepartmentSelect: defineAsyncComponent(
             () => import('@/components/inputs/DepartmentSelect')
@@ -96,12 +113,14 @@ export default {
         const defaultForm = {
             firstName: '',
             lastName: '',
+            role: null,
             departmentId: '',
             dateOfBirth: '',
             email: ''
         };
 
         return {
+            selectedRole: null,
             selectedDepartment: null,
             defaultForm,
             formData: { ...defaultForm },
@@ -118,8 +137,15 @@ export default {
                 lastName: {
                     required
                 },
+                role: {
+                    required: requiredIf(function () {
+                        return this.isAdmin;
+                    })
+                },
                 departmentId: {
-                    required
+                    required: requiredIf(function () {
+                        return this.isAdmin && !this.isAdminRoleSelected;
+                    })
                 },
                 dateOfBirth: {
                     required
@@ -133,8 +159,14 @@ export default {
     },
 
     computed: {
+        ...mapState(useAuthStore, ['isAdmin']),
+
         formTitle() {
-            return this.editedItem ? 'Edit employee' : 'New employee';
+            return this.editedItem ? 'Edit user' : 'New user';
+        },
+
+        isAdminRoleSelected() {
+            return this.formData.role === Roles.ADMIN;
         }
     },
 
@@ -152,6 +184,7 @@ export default {
                 this.selectedDepartment = val?.department
                     ? { ...val.department }
                     : null;
+                this.selectedRole = val?.roles?.length ? val.roles[0] : null;
             },
             immediate: true
         }

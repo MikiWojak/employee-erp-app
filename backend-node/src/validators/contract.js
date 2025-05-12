@@ -44,7 +44,7 @@ const update = [
             const user = await userRepository.findById(userId);
 
             if (!user) {
-                return Promise.reject('Employee not found.');
+                return Promise.reject('User not found.');
             }
         }),
 
