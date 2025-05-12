@@ -38,7 +38,7 @@
                 />
 
                 <department-select
-                    v-if="isAdmin && !isAdminRoleSelected"
+                    v-if="isAdmin && isRoleForDepartmentSelected"
                     v-model="selectedDepartment"
                     :error-messages="handleError('departmentId')"
                     @blur="onBlur('departmentId')"
@@ -120,7 +120,6 @@ export default {
         };
 
         return {
-            selectedRole: null,
             selectedDepartment: null,
             defaultForm,
             formData: { ...defaultForm },
@@ -144,7 +143,7 @@ export default {
                 },
                 departmentId: {
                     required: requiredIf(function () {
-                        return this.isAdmin && !this.isAdminRoleSelected;
+                        return this.isAdmin && this.isRoleForDepartmentSelected;
                     })
                 },
                 dateOfBirth: {
@@ -165,8 +164,8 @@ export default {
             return this.editedItem ? 'Edit user' : 'New user';
         },
 
-        isAdminRoleSelected() {
-            return this.formData.role === Roles.ADMIN;
+        isRoleForDepartmentSelected() {
+            return [Roles.MANAGER, Roles.EMPLOYEE].includes(this.formData.role);
         }
     },
 
@@ -181,10 +180,12 @@ export default {
         editedItem: {
             handler(val) {
                 this.formData = val ? { ...val } : { ...this.defaultForm };
+                this.formData.role = val?.roles?.length
+                    ? val.roles[0].name
+                    : '';
                 this.selectedDepartment = val?.department
                     ? { ...val.department }
                     : null;
-                this.selectedRole = val?.roles?.length ? val.roles[0] : null;
             },
             immediate: true
         }
