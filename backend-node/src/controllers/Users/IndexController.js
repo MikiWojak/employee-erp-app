@@ -56,7 +56,7 @@ class IndexController {
                 !isAdmin &&
                 isManager &&
                 user.id !== loggedUser.id &&
-                !user.roles.find(role => role.name === Role.EMPLOYEE)
+                user.roles.find(role => role.name === Role.MANAGER)
             ) {
                 user.dateOfBirth = '';
 
