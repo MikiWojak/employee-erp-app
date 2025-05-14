@@ -25,8 +25,6 @@ class IndexController {
             roleNames.push(Role.ADMIN);
         }
 
-        // @TODO Delete createdBy and updatedBy
-        // @TODO Before, firstName is ambiguous!
         const options = {
             where,
             ...sorting,
@@ -45,14 +43,6 @@ class IndexController {
                 },
                 {
                     association: 'department'
-                },
-                {
-                    association: 'createdBy',
-                    attributes: ['id', 'firstName', 'lastName']
-                },
-                {
-                    association: 'updatedBy',
-                    attributes: ['id', 'firstName', 'lastName']
                 }
             ],
             subQuery: false

@@ -116,7 +116,7 @@ export default {
 
                 this.onSuccess();
             } catch (error) {
-                if (HTTP.UNPROCESSABLE_ENTITY) {
+                if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
                     this.$toast.error(error.response.data);
 
                     return;

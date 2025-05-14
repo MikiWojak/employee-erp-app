@@ -69,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
                 'firstName',
                 'lastName',
                 'email',
-                'department.name',
-                Sequelize.literal("CONCAT(firstName, ' ', lastName)")
+                '$department.name$',
+                Sequelize.literal("CONCAT(User.firstName, ' ', User.lastName)")
             ];
         }
     }

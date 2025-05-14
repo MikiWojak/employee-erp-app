@@ -2,9 +2,10 @@
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
+import { Roles } from '@/enums/Roles';
+import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/user';
 import BaseTablePage from '@/components/view/BaseTablePage';
-import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'TablePage',
@@ -28,7 +29,7 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['isAdmin']),
+        ...mapState(useAuthStore, ['isAdmin', 'isManager', 'loggedUser']),
 
         customFields() {
             return [
@@ -95,6 +96,22 @@ export default {
             }
 
             return item?.roles?.map(role => role.name).join(', ');
+        },
+
+        areActionButtonsDisabled(item) {
+            if (this.loggedUser?.id === item.id) {
+                return true;
+            }
+
+            const isUserManager = item.roles.find(
+                role => role.name === Roles.MANAGER
+            );
+
+            if (this.isManager && isUserManager) {
+                return true;
+            }
+
+            return false;
         }
     }
 };
