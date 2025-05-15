@@ -3,6 +3,7 @@
 const { Model } = require('sequelize');
 
 const ADMIN = 'admin';
+const MANAGER = 'manager';
 const EMPLOYEE = 'employee';
 
 module.exports = (sequelize, DataTypes) => {
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     Role.ADMIN = ADMIN;
+    Role.MANAGER = MANAGER;
     Role.EMPLOYEE = EMPLOYEE;
 
     return Role;

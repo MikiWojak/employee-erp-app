@@ -1,4 +1,5 @@
 const { Role } = require('../../models');
+const deepmerge = require('deepmerge');
 
 class IndexController {
     constructor(userRepository) {
@@ -6,10 +7,26 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const { search, sorting, pagination } = req;
+        const { search, sorting, pagination, loggedUser } = req;
+
+        const isAdmin = await loggedUser.isAdmin();
+        const isManager = await loggedUser.isManager();
+
+        let where = search;
+        const roleNames = [Role.EMPLOYEE, Role.MANAGER];
+
+        if (isManager) {
+            where = deepmerge(where, {
+                departmentId: loggedUser.departmentId
+            });
+        }
+
+        if (isAdmin) {
+            roleNames.push(Role.ADMIN);
+        }
 
         const options = {
-            where: search,
+            where,
             ...sorting,
             ...pagination,
             include: [
@@ -19,7 +36,7 @@ class IndexController {
                         attributes: []
                     },
                     required: true,
-                    where: { name: Role.EMPLOYEE }
+                    where: { name: roleNames }
                 },
                 {
                     association: 'avatar'
@@ -31,9 +48,25 @@ class IndexController {
             subQuery: false
         };
 
-        const users = await this.userRepository.findAndCountAll(options);
+        const { count, rows: rowsRaw } =
+            await this.userRepository.findAndCountAll(options);
 
-        return res.send(users);
+        const rows = rowsRaw.map(user => {
+            if (
+                !isAdmin &&
+                isManager &&
+                user.id !== loggedUser.id &&
+                user.roles.find(role => role.name === Role.MANAGER)
+            ) {
+                user.dateOfBirth = '';
+
+                return user;
+            }
+
+            return user;
+        });
+
+        return res.send({ count, rows });
     }
 }
 

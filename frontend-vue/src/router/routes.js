@@ -25,7 +25,7 @@ export default [
         path: '/users',
         name: 'users',
         component: () => import('@/views/users/TablePage'),
-        meta: { auth: [Roles.ADMIN] }
+        meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
     },
     {
         path: '/contracts',

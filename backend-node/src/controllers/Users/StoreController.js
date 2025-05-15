@@ -17,30 +17,46 @@ class StoreController {
 
     async invoke(req, res) {
         const {
-            body: { firstName, lastName, departmentId, dateOfBirth, email }
+            body: {
+                firstName,
+                lastName,
+                role,
+                departmentId,
+                dateOfBirth,
+                email
+            },
+            loggedUser
         } = req;
 
-        const roleEmployee = await this.roleRepository.findByName(
-            Role.EMPLOYEE
-        );
+        const isAdmin = await loggedUser.isAdmin();
+
+        const data = {
+            firstName,
+            lastName,
+            dateOfBirth,
+            email,
+            createdById: loggedUser.id,
+            updatedById: loggedUser.id
+        };
+
+        if (isAdmin) {
+            data.departmentId = role === Role.ADMIN ? null : departmentId;
+        } else {
+            data.departmentId = loggedUser.departmentId;
+        }
+
+        let createdUser = null;
+        const roleName = isAdmin ? role : Role.EMPLOYEE;
+        const roleObject = await this.roleRepository.findByName(roleName);
 
         const transaction = await this.userRepository.getDbTransaction();
 
-        let createdUser = null;
-
         try {
-            createdUser = await this.userRepository.create(
-                {
-                    firstName,
-                    lastName,
-                    departmentId,
-                    dateOfBirth,
-                    email
-                },
-                { transaction }
-            );
+            createdUser = await this.userRepository.create(data, {
+                transaction
+            });
 
-            await createdUser.setRoles([roleEmployee], { transaction });
+            await createdUser.setRoles([roleObject], { transaction });
 
             await transaction.commit();
         } catch (error) {

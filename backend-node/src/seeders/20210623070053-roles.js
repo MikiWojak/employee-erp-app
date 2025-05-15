@@ -9,6 +9,7 @@ module.exports = {
     up: async () => {
         await roleRepository.bulkCreate([
             { name: Role.ADMIN },
+            { name: Role.MANAGER },
             { name: Role.EMPLOYEE }
         ]);
     },

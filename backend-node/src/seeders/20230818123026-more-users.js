@@ -1,9 +1,9 @@
 'use strict';
 
-const dayjs = require('dayjs');
 const faker = require('faker');
 
 const { Role } = require('../models');
+const getRandomDateOfBirth = require('../helpers/getRandomDateOfBirth');
 
 const di = require('../di');
 const roleRepository = di.get('repositories.role');
@@ -12,31 +12,46 @@ const departmentRepository = di.get('repositories.department');
 
 module.exports = {
     up: async () => {
-        const [departments, roleEmployee] = await Promise.all([
+        const [departments, roleManager, roleEmployee] = await Promise.all([
             departmentRepository.findAll(),
+            roleRepository.findByName(Role.MANAGER),
             roleRepository.findByName(Role.EMPLOYEE)
         ]);
 
-        for (let i = 0; i < 20; i++) {
-            const dateOfBirth = dayjs(
-                faker.date.between(
-                    dayjs().subtract(65, 'year').format('YYYY-MM-DD'),
-                    dayjs().subtract(18, 'year').format('YYYY-MM-DD')
-                )
-            ).format('YYYY-MM-DD');
+        const managersCount = Math.floor(Math.random() * 2) + 2;
 
-            const employee = await userRepository.create({
+        for (let i = 0; i < managersCount; i++) {
+            const department = faker.random.arrayElement(departments);
+
+            const manager = await userRepository.create({
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
-                dateOfBirth,
+                dateOfBirth: getRandomDateOfBirth(),
                 email: faker.internet.email().toLowerCase(),
                 password: 'Qwerty123!'
             });
 
             await Promise.all([
-                employee.setRoles([roleEmployee]),
-                employee.setDepartment(faker.random.arrayElement(departments))
+                manager.setRoles([roleManager]),
+                manager.setDepartment(department)
             ]);
+
+            const employeesPerManagerCount = Math.floor(Math.random() * 3) + 3;
+
+            for (let j = 0; j < employeesPerManagerCount; j++) {
+                const employee = await userRepository.create({
+                    firstName: faker.name.firstName(),
+                    lastName: faker.name.lastName(),
+                    dateOfBirth: getRandomDateOfBirth(),
+                    email: faker.internet.email().toLowerCase(),
+                    password: 'Qwerty123!'
+                });
+
+                await Promise.all([
+                    employee.setRoles([roleEmployee]),
+                    employee.setDepartment(department)
+                ]);
+            }
         }
     },
 

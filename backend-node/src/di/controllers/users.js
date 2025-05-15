@@ -17,7 +17,7 @@ module.exports = {
 
         'controllers.users.update': {
             class: 'controllers/Users/UpdateController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@repositories.role']
         },
 
         'controllers.users.destroy': {

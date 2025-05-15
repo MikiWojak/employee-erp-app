@@ -27,7 +27,7 @@ class DestroyController {
         if (department.users.length) {
             return res
                 .status(HTTP.UNPROCESSABLE_ENTITY)
-                .send('You cannot delete department that has employees!');
+                .send('You cannot delete department that has assigned people!');
         }
 
         const transaction = await this.departmentRepository.getDbTransaction();

@@ -17,10 +17,11 @@ module.exports = (fields = [], isForAdmin = false, adminFields = []) => {
             };
 
             where[Op.or] = fieldsToProcess.map(field =>
-                Sequelize.where(
-                    typeof field === 'string' ? Sequelize.col(field) : field,
-                    fieldIncludesQueryString
-                )
+                typeof field === 'object'
+                    ? Sequelize.where(field, fieldIncludesQueryString)
+                    : {
+                          [field]: fieldIncludesQueryString
+                      }
             );
         }
 

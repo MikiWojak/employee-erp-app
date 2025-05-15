@@ -7,7 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation, Media, Department }) {
+        static associate({
+            Role,
+            Contract,
+            Vacation,
+            Media,
+            Department,
+            User
+        }) {
             this.belongsToMany(Role, {
                 as: 'roles',
                 through: 'Role2User',
@@ -29,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'department',
                 foreignKey: 'departmentId'
             });
+            this.belongsTo(User, {
+                as: 'createdBy',
+                foreignKey: 'createdById'
+            });
+            this.belongsTo(User, {
+                as: 'updatedBy',
+                foreignKey: 'updatedById'
+            });
         }
 
         async rolesInfo() {
@@ -38,9 +53,15 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         async isAdmin() {
-            const roles = await this.getRoles();
+            const roles = await this.rolesInfo();
 
-            return roles.some(role => role.name === Role.ADMIN);
+            return roles.some(role => role === Role.ADMIN);
+        }
+
+        async isManager() {
+            const roles = await this.rolesInfo();
+
+            return roles.some(role => role === Role.MANAGER);
         }
 
         static get ADMIN_SEARCHABLE_FIELDS() {
@@ -48,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
                 'firstName',
                 'lastName',
                 'email',
-                'department.name',
-                Sequelize.literal("CONCAT(firstName, ' ', lastName)")
+                '$department.name$',
+                Sequelize.literal("CONCAT(User.firstName, ' ', User.lastName)")
             ];
         }
     }
@@ -115,6 +136,22 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 references: {
                     model: 'Media',
+                    key: 'id'
+                }
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
                     key: 'id'
                 }
             }
