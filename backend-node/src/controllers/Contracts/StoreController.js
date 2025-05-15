@@ -8,6 +8,7 @@ class StoreController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
             body: { userId, position, startDate, endDate, vacationDaysPerYear }
         } = req;
 
@@ -22,7 +23,9 @@ class StoreController {
                     position,
                     startDate,
                     endDate,
-                    vacationDaysPerYear
+                    vacationDaysPerYear,
+                    createdById: loggedUser.id,
+                    updatedById: loggedUser.id
                 },
                 { transaction }
             );

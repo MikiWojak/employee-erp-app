@@ -8,6 +8,7 @@ class UpdateController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
             params: { id },
             body: { userId, position, startDate, endDate, vacationDaysPerYear }
         } = req;
@@ -29,7 +30,8 @@ class UpdateController {
                     position,
                     startDate,
                     endDate,
-                    vacationDaysPerYear
+                    vacationDaysPerYear,
+                    updatedById: loggedUser.id
                 },
                 {
                     transaction

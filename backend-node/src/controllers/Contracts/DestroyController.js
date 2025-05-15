@@ -7,6 +7,7 @@ class DestroyController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
             params: { id }
         } = req;
 
@@ -21,6 +22,12 @@ class DestroyController {
         try {
             const { userId, user } = contract;
 
+            await contract.update(
+                { updatedById: loggedUser.id },
+                {
+                    transaction
+                }
+            );
             await contract.destroy({
                 transaction
             });

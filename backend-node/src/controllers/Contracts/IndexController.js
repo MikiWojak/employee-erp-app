@@ -21,6 +21,14 @@ class IndexController {
                       {
                           association: 'user',
                           required: true
+                      },
+                      {
+                          association: 'createdBy',
+                          attributes: ['id', 'firstName', 'lastName', 'email']
+                      },
+                      {
+                          association: 'updatedBy',
+                          attributes: ['id', 'firstName', 'lastName', 'email']
                       }
                   ]
               }

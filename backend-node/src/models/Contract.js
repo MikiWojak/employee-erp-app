@@ -10,6 +10,14 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'user',
                 foreignKey: 'userId'
             });
+            this.belongsTo(User, {
+                as: 'createdBy',
+                foreignKey: 'createdById'
+            });
+            this.belongsTo(User, {
+                as: 'updatedBy',
+                foreignKey: 'updatedById'
+            });
         }
 
         static get SEARCHABLE_FIELDS() {
@@ -60,6 +68,22 @@ module.exports = (sequelize, DataTypes) => {
             },
             vacationDays: {
                 type: DataTypes.INTEGER
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             }
         },
         {
@@ -76,7 +100,7 @@ module.exports = (sequelize, DataTypes) => {
                     const duration = endDate.diff(startDate, 'day') + 1;
                     const multiplier = duration / 365;
 
-                    const vacationDays = Math.round(
+                    const vacationDays = Math.ceil(
                         contract.vacationDaysPerYear * multiplier
                     );
 
