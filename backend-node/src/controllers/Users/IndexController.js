@@ -1,5 +1,6 @@
-const { Role } = require('../../models');
 const deepmerge = require('deepmerge');
+
+const { Role } = require('../../models');
 
 class IndexController {
     constructor(userRepository) {

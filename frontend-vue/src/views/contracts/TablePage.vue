@@ -28,7 +28,7 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['isAdmin']),
+        ...mapState(useAuthStore, ['isAdmin', 'isManager']),
 
         computedTableOptions() {
             return {
@@ -58,6 +58,30 @@ export default {
             }
 
             return employeeHeaders;
+        },
+
+        tabs() {
+            if (this.isManager) {
+                return [
+                    { label: "Employee's contracts", value: 'employees' },
+                    { label: 'My contracts', value: 'mine' }
+                ];
+            }
+
+            return [];
+        },
+
+        additionalIndexParams() {
+            return {
+                ...(this.selectedTab === 'mine' && { mineOnly: true })
+            };
+        }
+    },
+
+    watch: {
+        async selectedTab() {
+            this.page = 1;
+            await this.doGetItems();
         }
     },
 
