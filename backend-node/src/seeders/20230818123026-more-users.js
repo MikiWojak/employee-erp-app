@@ -40,7 +40,6 @@ module.exports = {
 
             for (let j = 0; j < employeesPerManagerCount; j++) {
                 const employee = await userRepository.create({
-                    managerId: manager.id,
                     firstName: faker.name.firstName(),
                     lastName: faker.name.lastName(),
                     dateOfBirth: getRandomDateOfBirth(),

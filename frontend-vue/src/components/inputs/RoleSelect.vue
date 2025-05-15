@@ -12,10 +12,7 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
-
 import { Roles } from '@/enums/Roles';
-import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'RoleSelect',
@@ -37,13 +34,8 @@ export default {
     data() {
         return {
             roleOptions: Object.values(Roles),
-            role: null,
-            timer: null
+            role: null
         };
-    },
-
-    computed: {
-        ...mapState(useAuthStore, ['isAdmin'])
     },
 
     watch: {

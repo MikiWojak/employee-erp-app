@@ -63,6 +63,7 @@ class UpdateController {
 
         const roleName = isAdmin ? role : Role.EMPLOYEE;
         const roleObject = await this.roleRepository.findByName(roleName);
+
         const transaction = await this.userRepository.getDbTransaction();
 
         try {

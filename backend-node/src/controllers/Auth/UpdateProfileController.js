@@ -26,7 +26,8 @@ class UpdateProfileController {
             firstName,
             lastName,
             dateOfBirth,
-            email
+            email,
+            updatedById: id
         };
 
         await user.update(data);
