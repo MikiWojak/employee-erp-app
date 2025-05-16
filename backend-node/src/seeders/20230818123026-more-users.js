@@ -36,7 +36,7 @@ module.exports = {
                 manager.setDepartment(department)
             ]);
 
-            const employeesPerManagerCount = Math.floor(Math.random() * 3) + 3;
+            const employeesPerManagerCount = Math.floor(Math.random() * 5) + 3;
 
             for (let j = 0; j < employeesPerManagerCount; j++) {
                 const employee = await userRepository.create({

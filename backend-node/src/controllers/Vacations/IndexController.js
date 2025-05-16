@@ -14,22 +14,25 @@ class IndexController {
             ...pagination
         };
 
+        const include = [
+            {
+                association: 'user',
+                required: true
+            }
+        ];
+
         const options = isAdmin
             ? {
                   ...baseOptions,
-                  include: [
-                      {
-                          association: 'user',
-                          required: true
-                      }
-                  ]
+                  include
               }
             : {
                   ...baseOptions,
                   where: {
                       ...search,
                       userId: loggedUser.id
-                  }
+                  },
+                  include
               };
 
         const vacations =

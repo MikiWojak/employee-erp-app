@@ -21,14 +21,12 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['position', 'vacationDaysPerYear', 'vacationDays'];
-        }
-
-        static get ADMIN_SEARCHABLE_FIELDS() {
             return [
-                ...this.SEARCHABLE_FIELDS,
-                'user.firstName',
-                'user.lastName',
+                'position',
+                'vacationDaysPerYear',
+                'vacationDays',
+                '$user.firstName$',
+                '$user.lastName$',
                 Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")
             ];
         }

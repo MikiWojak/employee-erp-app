@@ -49,7 +49,10 @@ export default {
                 { title: 'Days off', value: 'vacationDays' }
             ];
 
-            if (this.isAdmin) {
+            if (
+                this.isAdmin ||
+                (this.isManager && this.selectedTab !== 'mine')
+            ) {
                 return [
                     { title: 'First name', value: 'user.firstName' },
                     { title: 'Last name', value: 'user.lastName' },

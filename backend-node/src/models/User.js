@@ -64,6 +64,12 @@ module.exports = (sequelize, DataTypes) => {
             return roles.some(role => role === Role.MANAGER);
         }
 
+        async isEmployee() {
+            const roles = await this.rolesInfo();
+
+            return roles.some(role => role === Role.EMPLOYEE);
+        }
+
         static get ADMIN_SEARCHABLE_FIELDS() {
             return [
                 'firstName',
