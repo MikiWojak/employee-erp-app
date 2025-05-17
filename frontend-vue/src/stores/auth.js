@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', {
         roleName: state => state.loggedUser?.role?.name,
         isAdmin: state => state.roleName === Roles.ADMIN,
         isManager: state => state.roleName === Roles.MANAGER,
+        isEmployee: state => state.roleName === Roles.EMPLOYEE,
         vacationDaysLeft: state =>
             state.loggedUser?.vacationDaysSum -
                 state.loggedUser?.vacationDaysUsed || 0

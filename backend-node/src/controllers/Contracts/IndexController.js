@@ -14,7 +14,7 @@ class IndexController {
             pagination,
             loggedUser,
             query: { mineOnly },
-            rolesInfo: { isManager, isEmployee }
+            rolesInfo: { isAdmin, isManager, isEmployee }
         } = req;
 
         const mineOnlyVal = mineOnly === 'true';
@@ -22,44 +22,45 @@ class IndexController {
         const managerEmployeesFlag = isManager && !mineOnlyVal;
         const mineOnlyFlag = isEmployee || mineOnlyVal;
 
-        const where = {
-            ...search,
-            ...(managerEmployeesFlag && {
-                userId: {
-                    [Op.not]: loggedUser.id
-                }
-            }),
-            ...(mineOnlyFlag && { userId: loggedUser.id })
-        };
+        const roleNames =
+            isAdmin || mineOnlyFlag
+                ? [Role.MANAGER, Role.EMPLOYEE]
+                : Role.EMPLOYEE;
 
-        const includeUserRoleItem = {
-            association: 'role',
-            required: true,
-            where: { name: [Role.MANAGER, Role.EMPLOYEE] }
-        };
-
-        const includeUserItem = {
-            association: 'user',
-            required: true,
-            ...(managerEmployeesFlag && {
-                where: {
-                    departmentId: loggedUser.departmentId
-                }
-            })
-        };
-
-        const contracts = await this.contractRepository.findAndCountAll({
-            where,
+        const options = {
+            where: {
+                ...search,
+                ...(managerEmployeesFlag && {
+                    userId: {
+                        [Op.not]: loggedUser.id
+                    }
+                }),
+                ...(mineOnlyFlag && { userId: loggedUser.id })
+            },
             ...sorting,
             ...pagination,
             include: [
                 {
-                    ...includeUserItem,
-                    include: [includeUserRoleItem]
+                    association: 'user',
+                    required: true,
+                    ...(managerEmployeesFlag && {
+                        where: {
+                            departmentId: loggedUser.departmentId
+                        }
+                    }),
+                    include: [
+                        {
+                            association: 'role',
+                            required: true,
+                            where: { name: roleNames }
+                        }
+                    ]
                 }
-            ],
-            subQuery: false
-        });
+            ]
+        };
+
+        const contracts =
+            await this.contractRepository.findAndCountAll(options);
 
         return res.send(contracts);
     }

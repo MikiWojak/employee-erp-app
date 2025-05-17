@@ -23,7 +23,8 @@ export default {
                 title: 'Contracts',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this contract?'
-            }
+            },
+            selectedTab: 'employees'
         };
     },
 
