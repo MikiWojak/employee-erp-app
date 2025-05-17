@@ -28,13 +28,19 @@ class DestroyController {
 
         if (isManager) {
             if (user.departmentId !== loggedUser.departmentId) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can delete user from the same department only.'
+                    );
             }
 
             const userRolesInfo = await user.rolesInfo();
 
-            if (userRolesInfo.isManager) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+            if (!userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can delete employee only.');
             }
         }
 

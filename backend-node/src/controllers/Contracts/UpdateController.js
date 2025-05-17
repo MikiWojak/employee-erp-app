@@ -23,7 +23,7 @@ class UpdateController {
         const oldUser = await this.userRepository.findById(contract.userId);
         const user = await this.userRepository.findById(userId);
 
-        if (!(user && oldUser)) {
+        if (!(oldUser && user)) {
             return res
                 .status(HTTP.UNPROCESSABLE_ENTITY)
                 .send('Selected user not found!');
@@ -34,14 +34,20 @@ class UpdateController {
                 oldUser.departmentId !== loggedUser.departmentId ||
                 user.departmentId !== loggedUser.departmentId
             ) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can edit contract of user in the same department only.'
+                    );
             }
 
             const oldUserRolesInfo = await oldUser.rolesInfo();
             const userRolesInfo = await user.rolesInfo();
 
-            if (!(oldUserRolesInfo.isManager && userRolesInfo.isManager)) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+            if (!oldUserRolesInfo.isEmployee || !userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can edit contract of employee only.');
             }
         }
 

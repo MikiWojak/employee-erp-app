@@ -59,7 +59,7 @@ class IndexController {
                 user.id !== loggedUser.id &&
                 user.role.name === Role.MANAGER
             ) {
-                user.dateOfBirth = '';
+                delete user.dateOfBirth;
 
                 return user;
             }

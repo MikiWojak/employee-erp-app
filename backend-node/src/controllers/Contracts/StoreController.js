@@ -23,13 +23,19 @@ class StoreController {
 
         if (isManager) {
             if (user.departmentId !== loggedUser.departmentId) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can add contract for user in the same department only.'
+                    );
             }
 
             const userRolesInfo = await user.rolesInfo();
 
-            if (userRolesInfo.isManager) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+            if (!userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can add contract for employee only.');
             }
         }
 
