@@ -29,23 +29,27 @@ class UserFactory {
     }
 
     static async createAdmin(props = {}) {
-        const roleAdmin = await roleRepository.findByName(Role.ADMIN);
+        const role = await roleRepository.findByName(Role.ADMIN);
 
-        const user = await userRepository.create(this.generate(props));
-
-        await user.setRole(roleAdmin);
+        return userRepository.create(
+            this.generate({
+                ...props,
+                roleId: role.id
+            })
+        );
 
         return user;
     }
 
     static async createEmployee(props = {}) {
-        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
+        const role = await roleRepository.findByName(Role.EMPLOYEE);
 
-        const user = await userRepository.create(this.generate(props));
-
-        await user.setRole(roleEmployee);
-
-        return user;
+        return userRepository.create(
+            this.generate({
+                ...props,
+                roleId: role.id
+            })
+        );
     }
 }
 

@@ -47,7 +47,11 @@ class UpdateController {
             }
         }
 
+        const roleName = isAdmin ? role : Role.EMPLOYEE;
+        const roleObject = await this.roleRepository.findByName(roleName);
+
         const data = {
+            roleId: roleObject.id,
             firstName,
             lastName,
             dateOfBirth,
@@ -59,24 +63,7 @@ class UpdateController {
             data.departmentId = role === Role.ADMIN ? null : departmentId;
         }
 
-        const roleName = isAdmin ? role : Role.EMPLOYEE;
-        const roleObject = await this.roleRepository.findByName(roleName);
-
-        const transaction = await this.userRepository.getDbTransaction();
-
-        try {
-            await user.update(data, {
-                transaction
-            });
-
-            await user.setRole(roleObject, { transaction });
-
-            await transaction.commit();
-        } catch (error) {
-            await transaction.rollback();
-
-            throw error;
-        }
+        await user.update(data);
 
         const updatedUser = await this.userRepository.getById(id);
 
