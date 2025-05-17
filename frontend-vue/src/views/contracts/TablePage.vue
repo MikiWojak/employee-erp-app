@@ -2,6 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
+import { Tabs } from '@/enums/Tabs';
 import { useAuthStore } from '@/stores/auth';
 import { useContractStore } from '@/stores/contract';
 import BaseTablePage from '@/components/view/BaseTablePage';
@@ -24,7 +25,7 @@ export default {
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this contract?'
             },
-            selectedTab: 'employees'
+            selectedTab: Tabs.EMPLOYEES
         };
     },
 
@@ -34,7 +35,9 @@ export default {
         computedTableOptions() {
             return {
                 isAddButtonIncluded: this.isAdmin || this.isManager,
-                areActionButtonsIncluded: this.isAdmin
+                areActionButtonsIncluded:
+                    this.isAdmin ||
+                    (this.isManager && this.selectedTab === Tabs.EMPLOYEES)
             };
         },
 
@@ -52,7 +55,7 @@ export default {
 
             if (
                 this.isAdmin ||
-                (this.isManager && this.selectedTab !== 'mine')
+                (this.isManager && this.selectedTab !== Tabs.MINE)
             ) {
                 return [
                     { title: 'First name', value: 'user.firstName' },
@@ -67,8 +70,8 @@ export default {
         tabs() {
             if (this.isManager) {
                 return [
-                    { label: "Employee's contracts", value: 'employees' },
-                    { label: 'My contracts', value: 'mine' }
+                    { label: "Employee's contracts", value: Tabs.EMPLOYEES },
+                    { label: 'My contracts', value: Tabs.MINE }
                 ];
             }
 
@@ -77,7 +80,7 @@ export default {
 
         additionalIndexParams() {
             return {
-                ...(this.selectedTab === 'mine' && { mineOnly: true })
+                ...(this.selectedTab === Tabs.MINE && { mineOnly: true })
             };
         }
     },

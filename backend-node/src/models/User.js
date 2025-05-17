@@ -53,13 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return [
-                'firstName',
-                'lastName',
-                'email',
-                '$department.name$',
-                Sequelize.literal("CONCAT(User.firstName, ' ', User.lastName)")
-            ];
+            return ['firstName', 'lastName', 'email', '$department.name$'];
         }
     }
 

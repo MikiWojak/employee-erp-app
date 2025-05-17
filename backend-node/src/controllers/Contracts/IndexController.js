@@ -56,7 +56,8 @@ class IndexController {
                         }
                     ]
                 }
-            ]
+            ],
+            subQuery: false
         };
 
         const contracts =

@@ -25,9 +25,8 @@ module.exports = (sequelize, DataTypes) => {
                 'position',
                 'vacationDaysPerYear',
                 'vacationDays',
-                'user.firstName',
-                'user.lastName',
-                Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")
+                '$user.firstName$',
+                '$user.lastName$'
             ];
         }
     }
