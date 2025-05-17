@@ -10,8 +10,6 @@ class UpdateController {
 
     async invoke(req, res) {
         const {
-            loggedUser,
-            params: { id },
             body: {
                 firstName,
                 lastName,
@@ -19,11 +17,11 @@ class UpdateController {
                 departmentId,
                 dateOfBirth,
                 email
-            }
+            },
+            loggedUser,
+            params: { id },
+            rolesInfo: { isAdmin, isManager }
         } = req;
-
-        const isAdmin = await loggedUser.isAdmin();
-        const isManager = await loggedUser.isManager();
 
         const user = await this.userRepository.getById(id);
 
@@ -42,9 +40,9 @@ class UpdateController {
                 return res.sendStatus(HTTP.FORBIDDEN);
             }
 
-            const userIsManager = await user.isManager();
+            const userRolesInfo = await user.rolesInfo();
 
-            if (userIsManager) {
+            if (userRolesInfo.isManager) {
                 return res.sendStatus(HTTP.FORBIDDEN);
             }
         }
@@ -71,7 +69,7 @@ class UpdateController {
                 transaction
             });
 
-            await user.setRoles([roleObject], { transaction });
+            await user.setRole(roleObject, { transaction });
 
             await transaction.commit();
         } catch (error) {

@@ -29,10 +29,7 @@ class LoginController {
         const loggedUser = await this.userRepository.findByEmail(email, {
             include: [
                 {
-                    association: 'roles',
-                    through: {
-                        attributes: []
-                    },
+                    association: 'role',
                     required: true
                 }
             ]

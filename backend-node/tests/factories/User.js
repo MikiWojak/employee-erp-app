@@ -17,6 +17,7 @@ class UserFactory {
         ).format('YYYY-MM-DD');
 
         const defaultProps = {
+            roleId: faker.datatype.uuid(),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
             dateOfBirth,
@@ -32,7 +33,7 @@ class UserFactory {
 
         const user = await userRepository.create(this.generate(props));
 
-        await user.setRoles([roleAdmin]);
+        await user.setRole(roleAdmin);
 
         return user;
     }
@@ -42,7 +43,7 @@ class UserFactory {
 
         const user = await userRepository.create(this.generate(props));
 
-        await user.setRoles([roleEmployee]);
+        await user.setRole(roleEmployee);
 
         return user;
     }

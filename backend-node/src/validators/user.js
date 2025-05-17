@@ -19,11 +19,9 @@ const update = [
 
     body('role')
         .if(async (value, { req }) => {
-            const { loggedUser } = req;
+            const { rolesInfo } = req;
 
-            const isAdmin = await loggedUser.isAdmin();
-
-            if (!isAdmin) {
+            if (!rolesInfo.isAdmin) {
                 return Promise.reject();
             }
         })
@@ -36,11 +34,9 @@ const update = [
 
     body('departmentId')
         .if(async (value, { req: { body } }) => {
-            const { loggedUser } = req;
+            const { rolesInfo } = req;
 
-            const isAdmin = await loggedUser.isAdmin();
-
-            if (!isAdmin) {
+            if (!rolesInfo.isAdmin) {
                 return Promise.reject();
             }
 

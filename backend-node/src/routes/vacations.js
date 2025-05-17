@@ -24,11 +24,7 @@ module.exports = di => {
         [
             paginationValidator.pagination,
             validate,
-            searchable(
-                Vacation.SEARCHABLE_FIELDS,
-                true,
-                Vacation.ADMIN_SEARCHABLE_FIELDS
-            ),
+            searchable(Vacation.SEARCHABLE_FIELDS),
             pagination,
             sorting()
         ],

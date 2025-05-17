@@ -7,10 +7,13 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const { search, sorting, pagination, loggedUser } = req;
-
-        const isAdmin = await loggedUser.isAdmin();
-        const isManager = await loggedUser.isManager();
+        const {
+            search,
+            sorting,
+            pagination,
+            loggedUser,
+            rolesInfo: { isAdmin, isManager }
+        } = req;
 
         let where = search;
         const roleNames = [Role.EMPLOYEE, Role.MANAGER];
@@ -31,10 +34,7 @@ class IndexController {
             ...pagination,
             include: [
                 {
-                    association: 'roles',
-                    through: {
-                        attributes: []
-                    },
+                    association: 'role',
                     required: true,
                     where: { name: roleNames }
                 },
@@ -56,7 +56,7 @@ class IndexController {
                 !isAdmin &&
                 isManager &&
                 user.id !== loggedUser.id &&
-                user.roles.find(role => role.name === Role.MANAGER)
+                user.role.name === Role.MANAGER
             ) {
                 user.dateOfBirth = '';
 

@@ -8,7 +8,8 @@ class DestroyController {
     async invoke(req, res) {
         const {
             loggedUser,
-            params: { id }
+            params: { id },
+            rolesInfo: { isAdmin }
         } = req;
 
         const vacation = await this.vacationRepository.getById(id);
@@ -16,8 +17,6 @@ class DestroyController {
         if (!vacation) {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
-
-        const isAdmin = await loggedUser.isAdmin();
 
         const { userId, approved, user: assignedUser } = vacation;
 

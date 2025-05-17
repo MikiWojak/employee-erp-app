@@ -5,12 +5,13 @@
 
             <v-form @submit.prevent="handleUpdateProfile">
                 <v-text-field
+                    v-if="!isAdmin"
                     v-model="departmentName"
                     label="Department"
                     disabled
                 />
 
-                <v-text-field v-model="roles" label="Roles" disabled />
+                <v-text-field v-model="roleName" label="Role" disabled />
 
                 <v-text-field
                     v-model="formData.firstName"
@@ -160,7 +161,7 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         previewAvatar() {
             if (this.formData?.avatar?.id) {
@@ -178,14 +179,8 @@ export default {
             return this.loggedUser?.department?.name || '';
         },
 
-        roles() {
-            if (!this.loggedUser) {
-                return '';
-            }
-
-            const { roles } = this.loggedUser;
-
-            return roles.map(role => role.name).join(', ');
+        roleName() {
+            return this.loggedUser?.role?.name || '';
         }
     },
 
