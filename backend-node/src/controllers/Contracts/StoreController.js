@@ -9,8 +9,29 @@ class StoreController {
     async invoke(req, res) {
         const {
             loggedUser,
+            rolesInfo: { isManager },
             body: { userId, position, startDate, endDate, vacationDaysPerYear }
         } = req;
+
+        const user = await this.userRepository.findById(userId);
+
+        if (!user) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('Selected user not found!');
+        }
+
+        if (isManager) {
+            if (user.departmentId !== loggedUser.departmentId) {
+                return res.sendStatus(HTTP.FORBIDDEN);
+            }
+
+            const userRolesInfo = await user.rolesInfo();
+
+            if (userRolesInfo.isManager) {
+                return res.sendStatus(HTTP.FORBIDDEN);
+            }
+        }
 
         const transaction = await this.contractRepository.getDbTransaction();
 
@@ -37,10 +58,6 @@ class StoreController {
                     transaction
                 }
             );
-
-            const user = await this.userRepository.findById(userId, {
-                transaction
-            });
 
             await user.update({ vacationDaysSum }, { transaction });
 

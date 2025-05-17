@@ -10,6 +10,7 @@ class UpdateController {
         const {
             loggedUser,
             params: { id },
+            rolesInfo: { isManager },
             body: { userId, position, startDate, endDate, vacationDaysPerYear }
         } = req;
 
@@ -17,6 +18,31 @@ class UpdateController {
 
         if (!contract) {
             return res.sendStatus(HTTP.NOT_FOUND);
+        }
+
+        const oldUser = await this.userRepository.findById(contract.userId);
+        const user = await this.userRepository.findById(userId);
+
+        if (!(user && oldUser)) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('Selected user not found!');
+        }
+
+        if (isManager) {
+            if (
+                oldUser.departmentId !== loggedUser.departmentId ||
+                user.departmentId !== loggedUser.departmentId
+            ) {
+                return res.sendStatus(HTTP.FORBIDDEN);
+            }
+
+            const oldUserRolesInfo = await oldUser.rolesInfo();
+            const userRolesInfo = await user.rolesInfo();
+
+            if (!(oldUserRolesInfo.isManager && userRolesInfo.isManager)) {
+                return res.sendStatus(HTTP.FORBIDDEN);
+            }
         }
 
         const transaction = await this.contractRepository.getDbTransaction();
@@ -45,10 +71,6 @@ class UpdateController {
                         transaction
                     });
 
-                const oldUser = await this.userRepository.findById(oldUserId, {
-                    transaction
-                });
-
                 await oldUser.update(
                     { vacationDaysSum: oldUserVacationDaysSum },
                     { transaction }
@@ -63,22 +85,18 @@ class UpdateController {
                 }
             );
 
-            const user = await this.userRepository.findById(userId, {
-                transaction
-            });
-
             await user.update({ vacationDaysSum }, { transaction });
 
             await transaction.commit();
-
-            const updatedContract = await this.contractRepository.getById(id);
-
-            return res.send(updatedContract);
         } catch (error) {
             await transaction.rollback();
 
             throw error;
         }
+
+        const updatedContract = await this.contractRepository.getById(id);
+
+        return res.send(updatedContract);
     }
 }
 

@@ -21,6 +21,7 @@
                 <v-text-field
                     v-model="formData.position"
                     label="Position"
+                    prepend-icon="mdi-briefcase-variant"
                     :error-messages="handleError('position')"
                     @blur="onBlur('position')"
                     @input="clearServerError('position')"
@@ -50,6 +51,7 @@
                     :items="vacationDaysPerYearItems"
                     item-title="text"
                     item-value="value"
+                    prepend-icon="mdi-bed"
                     :error-messages="handleError('vacationDaysPerYear')"
                     @blur="onBlur('vacationDaysPerYear')"
                     @update:model-value="
@@ -70,6 +72,7 @@
 </template>
 
 <script>
+// @TODO Manager - employees only
 import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';

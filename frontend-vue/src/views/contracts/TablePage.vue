@@ -33,7 +33,7 @@ export default {
 
         computedTableOptions() {
             return {
-                isAddButtonIncluded: this.isAdmin,
+                isAddButtonIncluded: this.isAdmin || this.isManager,
                 areActionButtonsIncluded: this.isAdmin
             };
         },
