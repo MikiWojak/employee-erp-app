@@ -24,6 +24,7 @@ module.exports = {
             const department = faker.random.arrayElement(departments);
 
             const manager = await userRepository.create({
+                roleId: roleManager.id,
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
                 dateOfBirth: getRandomDateOfBirth(),
@@ -31,15 +32,13 @@ module.exports = {
                 password: 'Qwerty123!'
             });
 
-            await Promise.all([
-                manager.setRoles([roleManager]),
-                manager.setDepartment(department)
-            ]);
+            await manager.setDepartment(department);
 
             const employeesPerManagerCount = Math.floor(Math.random() * 3) + 3;
 
             for (let j = 0; j < employeesPerManagerCount; j++) {
                 const employee = await userRepository.create({
+                    roleId: roleEmployee.id,
                     firstName: faker.name.firstName(),
                     lastName: faker.name.lastName(),
                     dateOfBirth: getRandomDateOfBirth(),
@@ -47,10 +46,7 @@ module.exports = {
                     password: 'Qwerty123!'
                 });
 
-                await Promise.all([
-                    employee.setRoles([roleEmployee]),
-                    employee.setDepartment(department)
-                ]);
+                await employee.setDepartment(department);
             }
         }
     },

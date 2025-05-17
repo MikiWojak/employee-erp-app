@@ -24,10 +24,7 @@ class UserRepository extends AbstractRepository {
             {
                 include: [
                     {
-                        association: 'roles',
-                        through: {
-                            attributes: []
-                        },
+                        association: 'role',
                         required: true
                     },
                     {

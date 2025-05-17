@@ -9,10 +9,9 @@ class StoreController {
     async invoke(req, res) {
         const {
             loggedUser,
+            rolesInfo: { isAdmin },
             body: { userId, startDate, endDate, approved }
         } = req;
-
-        const isAdmin = await loggedUser.isAdmin();
 
         let vacation;
 

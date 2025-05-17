@@ -34,8 +34,8 @@ export default {
         customFields() {
             return [
                 {
-                    name: 'roles',
-                    value: this.getRoleNames
+                    name: 'role',
+                    value: this.getRoleName
                 },
                 {
                     component: 'v-chip',
@@ -51,7 +51,7 @@ export default {
                 { title: 'Avatar', value: 'icon' },
                 { title: 'First name', value: 'firstName' },
                 { title: 'Last name', value: 'lastName' },
-                { title: 'Roles', value: 'roles' },
+                { title: 'Role', value: 'role' },
                 ...(this.isAdmin
                     ? [{ title: 'Department', value: 'department.name' }]
                     : []),
@@ -90,12 +90,8 @@ export default {
             return item.avatar;
         },
 
-        getRoleNames(item) {
-            if (!item?.roles?.length) {
-                return '';
-            }
-
-            return item?.roles?.map(role => role.name).join(', ');
+        getRoleName(item) {
+            return item?.role?.name || '';
         },
 
         areActionButtonsDisabled(item) {
@@ -103,9 +99,7 @@ export default {
                 return true;
             }
 
-            const isUserManager = item.roles.find(
-                role => role.name === Roles.MANAGER
-            );
+            const isUserManager = item.role.name === Roles.MANAGER;
 
             if (this.isManager && isUserManager) {
                 return true;

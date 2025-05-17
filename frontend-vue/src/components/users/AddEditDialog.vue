@@ -180,9 +180,7 @@ export default {
         editedItem: {
             handler(val) {
                 this.formData = val ? { ...val } : { ...this.defaultForm };
-                this.formData.role = val?.roles?.length
-                    ? val.roles[0].name
-                    : null;
+                this.formData.role = val?.role?.name;
                 this.selectedDepartment = val?.department
                     ? { ...val.department }
                     : null;

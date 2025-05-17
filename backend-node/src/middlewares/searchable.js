@@ -1,22 +1,19 @@
 const { Op, Sequelize } = require('sequelize');
 
-module.exports = (fields = [], isForAdmin = false, adminFields = []) => {
+module.exports = (fields = []) => {
     return async (request, response, next) => {
         const {
-            loggedUser,
             query: { q = '' }
         } = request;
-        const isAdmin = await loggedUser.isAdmin();
 
         const where = {};
-        const fieldsToProcess = isForAdmin && isAdmin ? adminFields : fields;
 
         if (q) {
             const fieldIncludesQueryString = {
                 [Op.like]: `%${q}%`
             };
 
-            where[Op.or] = fieldsToProcess.map(field =>
+            where[Op.or] = fields.map(field =>
                 typeof field === 'object'
                     ? Sequelize.where(field, fieldIncludesQueryString)
                     : {

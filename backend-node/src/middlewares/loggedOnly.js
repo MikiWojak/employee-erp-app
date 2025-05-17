@@ -10,19 +10,18 @@ function loggedOnly(...permittedRoles) {
             return res.sendStatus(HTTP.UNAUTHORIZED);
         }
 
+        const rolesInfo = await loggedUser.rolesInfo();
+
         req.loggedUser = loggedUser;
+        req.rolesInfo = rolesInfo;
 
         if (!Array.isArray(permittedRoles)) {
             permittedRoles = [permittedRoles];
         }
 
-        const rolesInfo = await loggedUser.rolesInfo();
-
         if (
             permittedRoles.length &&
-            !permittedRoles.some(permittedRole =>
-                rolesInfo.includes(permittedRole)
-            )
+            !permittedRoles.includes(loggedUser.role.name)
         ) {
             return res.sendStatus(HTTP.FORBIDDEN);
         }

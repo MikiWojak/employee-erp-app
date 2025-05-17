@@ -17,6 +17,7 @@ class UserFactory {
         ).format('YYYY-MM-DD');
 
         const defaultProps = {
+            roleId: faker.datatype.uuid(),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
             dateOfBirth,
@@ -28,23 +29,27 @@ class UserFactory {
     }
 
     static async createAdmin(props = {}) {
-        const roleAdmin = await roleRepository.findByName(Role.ADMIN);
+        const role = await roleRepository.findByName(Role.ADMIN);
 
-        const user = await userRepository.create(this.generate(props));
-
-        await user.setRoles([roleAdmin]);
+        return userRepository.create(
+            this.generate({
+                ...props,
+                roleId: role.id
+            })
+        );
 
         return user;
     }
 
     static async createEmployee(props = {}) {
-        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
+        const role = await roleRepository.findByName(Role.EMPLOYEE);
 
-        const user = await userRepository.create(this.generate(props));
-
-        await user.setRoles([roleEmployee]);
-
-        return user;
+        return userRepository.create(
+            this.generate({
+                ...props,
+                roleId: role.id
+            })
+        );
     }
 }
 

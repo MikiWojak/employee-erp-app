@@ -13,12 +13,8 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['duration'];
-        }
-
-        static get ADMIN_SEARCHABLE_FIELDS() {
             return [
-                ...this.SEARCHABLE_FIELDS,
+                'duration',
                 'user.firstName',
                 'user.lastName',
                 Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")

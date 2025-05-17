@@ -4,9 +4,13 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const { search, sorting, pagination, loggedUser } = req;
-
-        const isAdmin = await loggedUser.isAdmin();
+        const {
+            search,
+            sorting,
+            pagination,
+            loggedUser,
+            rolesInfo: { isAdmin }
+        } = req;
 
         const baseOptions = {
             where: search,
