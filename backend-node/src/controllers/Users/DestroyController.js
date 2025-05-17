@@ -10,10 +10,9 @@ class DestroyController {
     async invoke(req, res) {
         const {
             loggedUser,
-            params: { id }
+            params: { id },
+            rolesInfo: { isManager }
         } = req;
-
-        const isManager = await loggedUser.isManager();
 
         const user = await this.userRepository.findById(id);
 
@@ -32,9 +31,9 @@ class DestroyController {
                 return res.sendStatus(HTTP.FORBIDDEN);
             }
 
-            const userIsManager = await user.isManager();
+            const userRolesInfo = await user.rolesInfo();
 
-            if (userIsManager) {
+            if (userRolesInfo.isManager) {
                 return res.sendStatus(HTTP.FORBIDDEN);
             }
         }

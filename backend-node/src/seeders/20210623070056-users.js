@@ -22,6 +22,7 @@ module.exports = {
 
         const [admin, manager, employee] = await Promise.all([
             userRepository.create({
+                roleId: roleAdmin.id,
                 firstName: faker.name.firstName(),
                 lastName: 'Admin',
                 dateOfBirth: getRandomDateOfBirth(),
@@ -29,6 +30,7 @@ module.exports = {
                 password: 'Qwerty123!'
             }),
             userRepository.create({
+                roleId: roleManager.id,
                 firstName: faker.name.firstName(),
                 lastName: 'Manager',
                 dateOfBirth: getRandomDateOfBirth(),
@@ -36,6 +38,7 @@ module.exports = {
                 password: 'Qwerty123!'
             }),
             userRepository.create({
+                roleId: roleEmployee.id,
                 firstName: faker.name.firstName(),
                 lastName: 'Employee',
                 dateOfBirth: getRandomDateOfBirth(),
@@ -46,12 +49,7 @@ module.exports = {
 
         const department = faker.random.arrayElement(departments);
 
-        await Promise.all([
-            admin.setRoles([roleAdmin]),
-            manager.setRoles([roleManager]),
-            employee.setRoles([roleEmployee]),
-            department.setUsers([manager, employee])
-        ]);
+        await department.setUsers([manager, employee]);
     },
 
     down: () => {}

@@ -16,10 +16,7 @@ module.exports = {
         const users = await userRepository.findAll({
             include: [
                 {
-                    association: 'roles',
-                    through: {
-                        attributes: []
-                    },
+                    association: 'role',
                     required: true,
                     where: { name: [EMPLOYEE, MANAGER] }
                 }

@@ -10,6 +10,7 @@ class UpdateController {
         const {
             loggedUser,
             params: { id },
+            rolesInfo: { isAdmin },
             body: { userId, startDate, endDate, approved }
         } = req;
 
@@ -18,8 +19,6 @@ class UpdateController {
         if (!vacation) {
             return res.sendStatus(HTTP.NOT_FOUND);
         }
-
-        const isAdmin = await loggedUser.isAdmin();
 
         let updatedVacation;
 

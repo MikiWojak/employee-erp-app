@@ -37,11 +37,9 @@ const isWeekend = value => {
 const update = [
     body('userId')
         .if(async (value, { req }) => {
-            const { loggedUser } = req;
+            const { rolesInfo } = req;
 
-            const isAdmin = await loggedUser.isAdmin();
-
-            if (!isAdmin) {
+            if (!rolesInfo.isAdmin) {
                 return Promise.reject();
             }
         })
@@ -109,6 +107,7 @@ const update = [
                         app,
                         body,
                         loggedUser,
+                        rolesInfo: { isAdmin },
                         params: { id: vacationId }
                     }
                 }
@@ -116,7 +115,6 @@ const update = [
                 const di = app.get('di');
                 const vacationRepository = di.get('repositories.vacation');
 
-                const isAdmin = await loggedUser.isAdmin();
                 const uid = isAdmin ? body.userId : loggedUser.id;
 
                 const doVacationsOverlap = await checkIfVacationsOverlap(
@@ -135,11 +133,9 @@ const update = [
 
     body('approved')
         .if(async (value, { req }) => {
-            const { loggedUser } = req;
+            const { rolesInfo } = req;
 
-            const isAdmin = await loggedUser.isAdmin();
-
-            if (!isAdmin) {
+            if (!rolesInfo.isAdmin) {
                 return Promise.reject();
             }
         })

@@ -26,7 +26,7 @@ router.beforeEach(async (to, from, next) => {
 
         if (
             Array.isArray(auth) &&
-            !auth.some(role => authStore.rolesInfo.includes(role))
+            !auth.includes(authStore.loggedUser.role.name)
         ) {
             return next({ name: 'dashboard' });
         }

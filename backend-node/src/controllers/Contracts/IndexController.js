@@ -1,6 +1,6 @@
-const { Role } = require('../../models');
-
 const { Op } = require('sequelize');
+
+const { Role } = require('../../models');
 
 class IndexController {
     constructor(contractRepository) {
@@ -9,39 +9,31 @@ class IndexController {
 
     async invoke(req, res) {
         const {
+            search,
             sorting,
             pagination,
             loggedUser,
-            search,
-            query: { mineOnly }
+            query: { mineOnly },
+            rolesInfo: { isManager, isEmployee }
         } = req;
 
         const mineOnlyVal = mineOnly === 'true';
 
-        const isAdmin = await loggedUser.isAdmin();
-        const isManager = await loggedUser.isManager();
-        const isEmployee = await loggedUser.isEmployee();
-
         const managerEmployeesFlag = isManager && !mineOnlyVal;
         const mineOnlyFlag = isEmployee || mineOnlyVal;
 
-        const roleNames = [Role.EMPLOYEE];
-
         const where = {
             ...search,
-            // ...(managerEmployeesFlag && {
-            //     userId: {
-            //         [Op.not]: loggedUser.id
-            //     }
-            // }),
+            ...(managerEmployeesFlag && {
+                userId: {
+                    [Op.not]: loggedUser.id
+                }
+            }),
             ...(mineOnlyFlag && { userId: loggedUser.id })
         };
 
         const includeUserRoleItem = {
-            association: 'roles',
-            through: {
-                attributes: []
-            },
+            association: 'role',
             required: true,
             where: { name: [Role.MANAGER, Role.EMPLOYEE] }
         };
@@ -56,40 +48,20 @@ class IndexController {
             })
         };
 
-        // @TODO Get IDs first
+        const contracts = await this.contractRepository.findAndCountAll({
+            where,
+            ...sorting,
+            ...pagination,
+            include: [
+                {
+                    ...includeUserItem,
+                    include: [includeUserRoleItem]
+                }
+            ],
+            subQuery: false
+        });
 
-        const [count, rows] = await Promise.all([
-            this.contractRepository.count({
-                where,
-                include: [
-                    {
-                        ...includeUserItem,
-                        attributes: [],
-                        include: [
-                            {
-                                ...includeUserRoleItem,
-                                attributes: []
-                            }
-                        ]
-                    }
-                ],
-                distinct: true
-            }),
-            this.contractRepository.findAll({
-                where,
-                ...sorting,
-                ...pagination,
-                include: [
-                    {
-                        ...includeUserItem,
-                        include: [includeUserRoleItem]
-                    }
-                ],
-                subQuery: false
-            })
-        ]);
-
-        return res.send({ count, rows });
+        return res.send(contracts);
     }
 }
 

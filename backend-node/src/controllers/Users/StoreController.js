@@ -25,12 +25,15 @@ class StoreController {
                 dateOfBirth,
                 email
             },
-            loggedUser
+            loggedUser,
+            rolesInfo: { isAdmin }
         } = req;
 
-        const isAdmin = await loggedUser.isAdmin();
+        const roleName = isAdmin ? role : Role.EMPLOYEE;
+        const roleObject = await this.roleRepository.findByName(roleName);
 
         const data = {
+            roleId: roleObject.id,
             firstName,
             lastName,
             dateOfBirth,
@@ -45,29 +48,7 @@ class StoreController {
             data.departmentId = loggedUser.departmentId;
         }
 
-        let createdUser = null;
-        const roleName = isAdmin ? role : Role.EMPLOYEE;
-        const roleObject = await this.roleRepository.findByName(roleName);
-
-        const transaction = await this.userRepository.getDbTransaction();
-
-        try {
-            createdUser = await this.userRepository.create(data, {
-                transaction
-            });
-
-            await createdUser.setRoles([roleObject], { transaction });
-
-            await transaction.commit();
-        } catch (error) {
-            await transaction.rollback();
-
-            throw error;
-        }
-
-        if (!createdUser) {
-            return res.sendStatus(HTTP.INTERNAL_SERVER_ERROR);
-        }
+        const createdUser = await this.userRepository.create(data);
 
         const user = await this.userRepository.getById(createdUser.id);
 

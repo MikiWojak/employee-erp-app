@@ -10,13 +10,9 @@ export const useAuthStore = defineStore('auth', {
 
     getters: {
         loggedIn: state => !!state.loggedUser,
-        rolesInfo: state =>
-            state.loggedUser?.roles
-                ? state.loggedUser.roles.map(role => role.name)
-                : [],
-        isAdmin: state => state.rolesInfo.some(role => role === Roles.ADMIN),
-        isManager: state =>
-            state.rolesInfo.some(role => role === Roles.MANAGER),
+        roleName: state => state.loggedUser?.role?.name,
+        isAdmin: state => state.roleName === Roles.ADMIN,
+        isManager: state => state.roleName === Roles.MANAGER,
         vacationDaysLeft: state =>
             state.loggedUser?.vacationDaysSum -
                 state.loggedUser?.vacationDaysUsed || 0

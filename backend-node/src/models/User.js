@@ -9,17 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     class User extends Model {
         static associate({
             Role,
+            User,
+            Media,
             Contract,
             Vacation,
-            Media,
-            Department,
-            User
+            Department
         }) {
-            this.belongsToMany(Role, {
-                as: 'roles',
-                through: 'Role2User',
-                foreignKey: 'userId'
-            });
+            this.belongsTo(Role, { as: 'role', foreignKey: 'roleId' });
             this.hasMany(Contract, {
                 as: 'contracts',
                 foreignKey: 'userId'
@@ -47,30 +43,16 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         async rolesInfo() {
-            const roles = await this.getRoles();
+            const role = await this.getRole();
 
-            return roles.map(role => role.name);
+            return {
+                isAdmin: role.name === Role.ADMIN,
+                isManager: role.name === Role.MANAGER,
+                isEmployee: role.name === Role.EMPLOYEE
+            };
         }
 
-        async isAdmin() {
-            const roles = await this.rolesInfo();
-
-            return roles.some(role => role === Role.ADMIN);
-        }
-
-        async isManager() {
-            const roles = await this.rolesInfo();
-
-            return roles.some(role => role === Role.MANAGER);
-        }
-
-        async isEmployee() {
-            const roles = await this.rolesInfo();
-
-            return roles.some(role => role === Role.EMPLOYEE);
-        }
-
-        static get ADMIN_SEARCHABLE_FIELDS() {
+        static get SEARCHABLE_FIELDS() {
             return [
                 'firstName',
                 'lastName',
@@ -88,6 +70,14 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
+            },
+            roleId: {
+                allowNull: false,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Roles',
+                    key: 'id'
+                }
             },
             departmentId: {
                 allowNull: true,

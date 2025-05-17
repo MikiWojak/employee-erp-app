@@ -25,8 +25,8 @@ module.exports = (sequelize, DataTypes) => {
                 'position',
                 'vacationDaysPerYear',
                 'vacationDays',
-                '$user.firstName$',
-                '$user.lastName$',
+                'user.firstName',
+                'user.lastName',
                 Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")
             ];
         }
@@ -66,22 +66,6 @@ module.exports = (sequelize, DataTypes) => {
             },
             vacationDays: {
                 type: DataTypes.INTEGER
-            },
-            createdById: {
-                allowNull: true,
-                type: DataTypes.UUID,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                }
-            },
-            updatedById: {
-                allowNull: true,
-                type: DataTypes.UUID,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                }
             }
         },
         {
@@ -98,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
                     const duration = endDate.diff(startDate, 'day') + 1;
                     const multiplier = duration / 365;
 
-                    const vacationDays = Math.ceil(
+                    const vacationDays = Math.round(
                         contract.vacationDaysPerYear * multiplier
                     );
 
