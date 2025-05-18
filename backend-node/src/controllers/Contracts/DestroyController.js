@@ -18,12 +18,6 @@ class DestroyController {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
 
-        if (!contract.user) {
-            return res
-                .status(HTTP.UNPROCESSABLE_ENTITY)
-                .send('Selected user not found!');
-        }
-
         if (isManager) {
             if (contract.user.id === loggedUser.id) {
                 return res
@@ -44,7 +38,7 @@ class DestroyController {
             if (!userRolesInfo.isEmployee) {
                 return res
                     .status(HTTP.UNPROCESSABLE_ENTITY)
-                    .send('Manager can add contract of employee only.');
+                    .send('Manager can delete contract of employee only.');
             }
         }
 

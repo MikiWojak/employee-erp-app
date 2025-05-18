@@ -30,12 +30,13 @@ class IndexController {
         const options = {
             where: {
                 ...search,
-                ...(managerEmployeesFlag && {
-                    userId: {
-                        [Op.not]: loggedUser.id
-                    }
-                }),
-                ...(mineOnlyFlag && { userId: loggedUser.id })
+                ...(mineOnlyFlag
+                    ? { userId: loggedUser.id }
+                    : {
+                          userId: {
+                              [Op.not]: loggedUser.id
+                          }
+                      })
             },
             ...sorting,
             ...pagination,
