@@ -25,6 +25,12 @@ class DestroyController {
         }
 
         if (isManager) {
+            if (contract.user.id === loggedUser.id) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager cannot delete his/her own contract.');
+            }
+
             if (contract.user.departmentId !== loggedUser.departmentId) {
                 return res
                     .status(HTTP.UNPROCESSABLE_ENTITY)

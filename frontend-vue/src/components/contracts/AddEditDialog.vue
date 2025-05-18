@@ -72,7 +72,6 @@
 </template>
 
 <script>
-// @TODO Manager - employees only
 import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';

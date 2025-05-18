@@ -30,6 +30,12 @@ class StoreController {
         }
 
         if (isManager) {
+            if (user.id === loggedUser.id) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager cannot add contract to himself/herself.');
+            }
+
             if (user.departmentId !== loggedUser.departmentId) {
                 return res
                     .status(HTTP.UNPROCESSABLE_ENTITY)

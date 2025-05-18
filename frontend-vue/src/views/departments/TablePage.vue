@@ -30,7 +30,8 @@ export default {
         headers() {
             return [
                 { title: 'Name', value: 'name' },
-                { title: 'Employees', value: 'employeesCount' }
+                { title: 'Employees', value: 'employeesCount' },
+                { title: 'Managers', value: 'managersCount' }
             ];
         }
     },

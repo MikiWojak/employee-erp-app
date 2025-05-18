@@ -30,6 +30,12 @@ class UpdateController {
         }
 
         if (isManager) {
+            if (user.id === loggedUser.id || oldUser.id === loggedUser.id) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager cannot edit his/her own contract.');
+            }
+
             if (
                 oldUser.departmentId !== loggedUser.departmentId ||
                 user.departmentId !== loggedUser.departmentId
