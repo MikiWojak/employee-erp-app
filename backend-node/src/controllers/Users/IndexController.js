@@ -13,11 +13,17 @@ class IndexController {
             sorting,
             pagination,
             loggedUser,
+            query: { allRoles },
             rolesInfo: { isAdmin, isManager }
         } = req;
 
+        const allRolesFlag = allRoles === 'true';
+
         let where = search;
-        const roleNames = [Role.EMPLOYEE, Role.MANAGER];
+        const roleNames = [
+            Role.EMPLOYEE,
+            ...(allRolesFlag ? [Role.MANAGER] : [])
+        ];
 
         if (isManager) {
             where = deepmerge(where, {
@@ -26,7 +32,7 @@ class IndexController {
         }
 
         if (isAdmin) {
-            roleNames.push(Role.ADMIN);
+            roleNames.push(allRolesFlag ? Role.ADMIN : Role.MANAGER);
         }
 
         const options = {
@@ -59,7 +65,7 @@ class IndexController {
                 user.id !== loggedUser.id &&
                 user.role.name === Role.MANAGER
             ) {
-                delete user.dateOfBirth;
+                user.dateOfBirth = null;
 
                 return user;
             }
