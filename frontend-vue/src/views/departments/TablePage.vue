@@ -27,11 +27,21 @@ export default {
     },
 
     computed: {
+        customFields() {
+            return [
+                {
+                    name: 'allWorkersCount',
+                    value: this.getAllWorkersCount
+                }
+            ];
+        },
+
         headers() {
             return [
                 { title: 'Name', value: 'name' },
                 { title: 'Employees', value: 'employeesCount' },
-                { title: 'Managers', value: 'managersCount' }
+                { title: 'Managers', value: 'managersCount' },
+                { title: 'All workers', value: 'allWorkersCount' }
             ];
         }
     },
@@ -40,7 +50,11 @@ export default {
         ...mapActions(useDepartmentStore, {
             getItems: 'index',
             deleteItem: 'destroy'
-        })
+        }),
+
+        getAllWorkersCount(item) {
+            return item.employeesCount + item.managersCount;
+        }
     }
 };
 </script>
