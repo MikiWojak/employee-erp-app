@@ -2,9 +2,9 @@
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 
-import { Tabs } from '@/enums/Tabs';
 import { useAuthStore } from '@/stores/auth';
 import { useContractStore } from '@/stores/contract';
+import { BelongingTabs } from '@/enums/BelongingTabs';
 import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
@@ -25,7 +25,7 @@ export default {
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this contract?'
             },
-            selectedTab: Tabs.EMPLOYEES
+            selectedTab: BelongingTabs.EMPLOYEES
         };
     },
 
@@ -37,7 +37,8 @@ export default {
                 isAddButtonIncluded: this.isAdmin || this.isManager,
                 areActionButtonsIncluded:
                     this.isAdmin ||
-                    (this.isManager && this.selectedTab === Tabs.EMPLOYEES)
+                    (this.isManager &&
+                        this.selectedTab === BelongingTabs.EMPLOYEES)
             };
         },
 
@@ -55,7 +56,7 @@ export default {
 
             if (
                 this.isAdmin ||
-                (this.isManager && this.selectedTab !== Tabs.MINE)
+                (this.isManager && this.selectedTab !== BelongingTabs.MINE)
             ) {
                 return [
                     { title: 'First name', value: 'user.firstName' },
@@ -70,8 +71,11 @@ export default {
         tabs() {
             if (this.isManager) {
                 return [
-                    { label: "Employee's contracts", value: Tabs.EMPLOYEES },
-                    { label: 'My contracts', value: Tabs.MINE }
+                    {
+                        label: "Employee's contracts",
+                        value: BelongingTabs.EMPLOYEES
+                    },
+                    { label: 'My contracts', value: BelongingTabs.MINE }
                 ];
             }
 
@@ -80,7 +84,9 @@ export default {
 
         additionalIndexParams() {
             return {
-                ...(this.selectedTab === Tabs.MINE && { mineOnly: true })
+                ...(this.selectedTab === BelongingTabs.MINE && {
+                    mineOnly: true
+                })
             };
         }
     },
@@ -88,6 +94,7 @@ export default {
     watch: {
         async selectedTab() {
             this.page = 1;
+
             await this.doGetItems();
         }
     },

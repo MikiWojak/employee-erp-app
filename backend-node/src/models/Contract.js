@@ -65,6 +65,22 @@ module.exports = (sequelize, DataTypes) => {
             },
             vacationDays: {
                 type: DataTypes.INTEGER
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             }
         },
         {

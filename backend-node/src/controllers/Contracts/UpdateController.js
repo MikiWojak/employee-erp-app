@@ -26,7 +26,7 @@ class UpdateController {
         if (!oldUser || !user) {
             return res
                 .status(HTTP.UNPROCESSABLE_ENTITY)
-                .send('Selected user not found!');
+                .send('Selected user not found.');
         }
 
         if (isManager) {
