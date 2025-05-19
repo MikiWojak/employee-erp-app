@@ -1,7 +1,5 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
-const { Role } = require('../../models');
-
 class StoreController {
     constructor(
         userRepository,
@@ -28,8 +26,9 @@ class StoreController {
             loggedUser,
             rolesInfo: { isAdmin }
         } = req;
+        const { ADMIN, EMPLOYEE } = this.roleRepository.model;
 
-        const roleName = isAdmin ? role : Role.EMPLOYEE;
+        const roleName = isAdmin ? role : EMPLOYEE;
         const roleObject = await this.roleRepository.findByName(roleName);
 
         const data = {
@@ -43,7 +42,7 @@ class StoreController {
         };
 
         if (isAdmin) {
-            data.departmentId = role === Role.ADMIN ? null : departmentId;
+            data.departmentId = role === ADMIN ? null : departmentId;
         } else {
             data.departmentId = loggedUser.departmentId;
         }

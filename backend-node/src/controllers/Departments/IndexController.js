@@ -1,7 +1,5 @@
 const { literal } = require('sequelize');
 
-const { Role } = require('../../models');
-
 class IndexController {
     constructor(departmentRepository, roleRepository) {
         this.roleRepository = roleRepository;
@@ -10,10 +8,11 @@ class IndexController {
 
     async invoke(req, res) {
         const { search: where, sorting, pagination } = req;
+        const { MANAGER, EMPLOYEE } = this.roleRepository.model;
 
         const [roleManager, roleEmployee] = await Promise.all([
-            this.roleRepository.findByName(Role.MANAGER),
-            this.roleRepository.findByName(Role.EMPLOYEE)
+            this.roleRepository.findByName(MANAGER),
+            this.roleRepository.findByName(EMPLOYEE)
         ]);
 
         const options = {

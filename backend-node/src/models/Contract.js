@@ -1,7 +1,7 @@
 'use strict';
 
 const dayjs = require('dayjs');
-const { Model, Sequelize } = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Contract extends Model {

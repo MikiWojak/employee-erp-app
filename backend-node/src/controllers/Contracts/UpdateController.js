@@ -23,14 +23,14 @@ class UpdateController {
         const oldUser = await this.userRepository.findById(contract.userId);
         const user = await this.userRepository.findById(userId);
 
-        if (!(oldUser && user)) {
+        if (!oldUser || !user) {
             return res
                 .status(HTTP.UNPROCESSABLE_ENTITY)
                 .send('Selected user not found!');
         }
 
         if (isManager) {
-            if (user.id === loggedUser.id || oldUser.id === loggedUser.id) {
+            if (oldUser.id === loggedUser.id || user.id === loggedUser.id) {
                 return res
                     .status(HTTP.UNPROCESSABLE_ENTITY)
                     .send('Manager cannot edit his/her own contract.');
