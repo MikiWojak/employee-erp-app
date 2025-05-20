@@ -4,6 +4,7 @@ import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useContractStore } from '@/stores/contract';
+import { BelongingTabs } from '@/enums/BelongingTabs';
 import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
@@ -23,17 +24,21 @@ export default {
                 title: 'Contracts',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this contract?'
-            }
+            },
+            selectedTab: BelongingTabs.EMPLOYEES
         };
     },
 
     computed: {
-        ...mapState(useAuthStore, ['isAdmin']),
+        ...mapState(useAuthStore, ['isAdmin', 'isManager']),
 
         computedTableOptions() {
             return {
-                isAddButtonIncluded: this.isAdmin,
-                areActionButtonsIncluded: this.isAdmin
+                isAddButtonIncluded: this.isAdmin || this.isManager,
+                areActionButtonsIncluded:
+                    this.isAdmin ||
+                    (this.isManager &&
+                        this.selectedTab === BelongingTabs.EMPLOYEES)
             };
         },
 
@@ -49,7 +54,10 @@ export default {
                 { title: 'Days off', value: 'vacationDays' }
             ];
 
-            if (this.isAdmin) {
+            if (
+                this.isAdmin ||
+                (this.isManager && this.selectedTab !== BelongingTabs.MINE)
+            ) {
                 return [
                     { title: 'First name', value: 'user.firstName' },
                     { title: 'Last name', value: 'user.lastName' },
@@ -58,6 +66,36 @@ export default {
             }
 
             return employeeHeaders;
+        },
+
+        tabs() {
+            if (this.isManager) {
+                return [
+                    {
+                        label: "Employee's contracts",
+                        value: BelongingTabs.EMPLOYEES
+                    },
+                    { label: 'My contracts', value: BelongingTabs.MINE }
+                ];
+            }
+
+            return [];
+        },
+
+        additionalIndexParams() {
+            return {
+                ...(this.selectedTab === BelongingTabs.MINE && {
+                    mineOnly: true
+                })
+            };
+        }
+    },
+
+    watch: {
+        async selectedTab() {
+            this.page = 1;
+
+            await this.doGetItems();
         }
     },
 

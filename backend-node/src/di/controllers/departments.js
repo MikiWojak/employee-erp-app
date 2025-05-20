@@ -2,7 +2,7 @@ module.exports = {
     services: {
         'controllers.departments.index': {
             class: 'controllers/Departments/IndexController',
-            arguments: ['@repositories.department']
+            arguments: ['@repositories.department', '@repositories.role']
         },
 
         'controllers.departments.store': {

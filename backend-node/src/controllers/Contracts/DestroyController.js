@@ -7,7 +7,9 @@ class DestroyController {
 
     async invoke(req, res) {
         const {
-            params: { id }
+            loggedUser,
+            params: { id },
+            rolesInfo: { isManager }
         } = req;
 
         const contract = await this.contractRepository.getById(id);
@@ -16,11 +18,41 @@ class DestroyController {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
 
+        if (isManager) {
+            if (contract.user.id === loggedUser.id) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager cannot delete his/her own contract.');
+            }
+
+            if (contract.user.departmentId !== loggedUser.departmentId) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can delete contract of user in the same department only.'
+                    );
+            }
+
+            const userRolesInfo = await contract.user.rolesInfo();
+
+            if (!userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can delete contract of employee only.');
+            }
+        }
+
         const transaction = await this.contractRepository.getDbTransaction();
 
         try {
             const { userId, user } = contract;
 
+            await contract.update(
+                { updatedById: loggedUser.id },
+                {
+                    transaction
+                }
+            );
             await contract.destroy({
                 transaction
             });

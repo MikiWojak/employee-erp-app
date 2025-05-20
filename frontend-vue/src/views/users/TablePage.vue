@@ -59,6 +59,10 @@ export default {
                 { title: 'Email', value: 'email' },
                 { title: 'Days off left', value: 'vacationLeft' }
             ];
+        },
+
+        additionalIndexParams() {
+            return { allRoles: true };
         }
     },
 

@@ -2,14 +2,22 @@
 
 const { Model } = require('sequelize');
 
-const ADMIN = 'admin';
-const MANAGER = 'manager';
-const EMPLOYEE = 'employee';
-
 module.exports = (sequelize, DataTypes) => {
     class Role extends Model {
         static associate({ User }) {
             this.hasMany(User, { foreignKey: 'roleId' });
+        }
+
+        static get ADMIN() {
+            return 'admin';
+        }
+
+        static get MANAGER() {
+            return 'manager';
+        }
+
+        static get EMPLOYEE() {
+            return 'employee';
         }
     }
 
@@ -33,10 +41,6 @@ module.exports = (sequelize, DataTypes) => {
             paranoid: true
         }
     );
-
-    Role.ADMIN = ADMIN;
-    Role.MANAGER = MANAGER;
-    Role.EMPLOYEE = EMPLOYEE;
 
     return Role;
 };

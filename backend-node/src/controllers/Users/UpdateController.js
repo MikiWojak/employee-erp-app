@@ -1,7 +1,5 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
-const { Role } = require('../../models');
-
 class UpdateController {
     constructor(userRepository, roleRepository) {
         this.userRepository = userRepository;
@@ -22,6 +20,7 @@ class UpdateController {
             params: { id },
             rolesInfo: { isAdmin, isManager }
         } = req;
+        const { ADMIN, EMPLOYEE } = this.roleRepository.model;
 
         const user = await this.userRepository.getById(id);
 
@@ -37,17 +36,23 @@ class UpdateController {
 
         if (isManager) {
             if (user.departmentId !== loggedUser.departmentId) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can edit user from the same department only.'
+                    );
             }
 
             const userRolesInfo = await user.rolesInfo();
 
-            if (userRolesInfo.isManager) {
-                return res.sendStatus(HTTP.FORBIDDEN);
+            if (!userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can edit employee only.');
             }
         }
 
-        const roleName = isAdmin ? role : Role.EMPLOYEE;
+        const roleName = isAdmin ? role : EMPLOYEE;
         const roleObject = await this.roleRepository.findByName(roleName);
 
         const data = {
@@ -60,7 +65,7 @@ class UpdateController {
         };
 
         if (isAdmin) {
-            data.departmentId = role === Role.ADMIN ? null : departmentId;
+            data.departmentId = role === ADMIN ? null : departmentId;
         }
 
         await user.update(data);
