@@ -5,10 +5,18 @@ const { Model, Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Vacation extends Model {
-        static associate(models) {
-            this.belongsTo(models.User, {
+        static associate({ User }) {
+            this.belongsTo(User, {
                 as: 'user',
                 foreignKey: 'userId'
+            });
+            this.belongsTo(User, {
+                as: 'createdBy',
+                foreignKey: 'createdById'
+            });
+            this.belongsTo(User, {
+                as: 'updatedBy',
+                foreignKey: 'updatedById'
             });
         }
 
@@ -52,6 +60,22 @@ module.exports = (sequelize, DataTypes) => {
             approved: {
                 allowNull: false,
                 type: DataTypes.BOOLEAN
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             }
         },
         {
