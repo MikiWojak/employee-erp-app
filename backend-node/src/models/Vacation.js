@@ -1,7 +1,7 @@
 'use strict';
 
 const dayjs = require('dayjs');
-const { Model, Sequelize } = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Vacation extends Model {
@@ -21,12 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return [
-                'duration',
-                'user.firstName',
-                'user.lastName',
-                Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")
-            ];
+            return ['duration', '$user.firstName$', '$user.lastName$'];
         }
     }
 
