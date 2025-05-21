@@ -107,13 +107,27 @@ const update = [
                         app,
                         body,
                         loggedUser,
-                        rolesInfo: { isEmployee },
-                        params: { id: vacationId }
+                        params: { id: vacationId },
+                        rolesInfo: { isManager, isEmployee }
                     }
                 }
             ) => {
                 const di = app.get('di');
+                const userRepository = di.get('repositories.user');
                 const vacationRepository = di.get('repositories.vacation');
+
+                if (isManager) {
+                    const user = await userRepository.findEmployee(body.userId);
+
+                    if (
+                        !user ||
+                        user.departmentId !== loggedUser.departmentId
+                    ) {
+                        return Promise.reject(
+                            'Unable to verify if contract overlaps other one.'
+                        );
+                    }
+                }
 
                 const uid = isEmployee ? loggedUser.id : body.userId;
 

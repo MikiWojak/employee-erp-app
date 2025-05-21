@@ -1,6 +1,9 @@
 const deepmerge = require('deepmerge');
 const { isPlainObject } = require('is-plain-object');
 
+const {
+    Role: { EMPLOYEE }
+} = require('../models');
 const AbstractRepository = require('./AbstractRepository');
 
 class UserRepository extends AbstractRepository {
@@ -33,6 +36,28 @@ class UserRepository extends AbstractRepository {
                     {
                         association: 'department'
                     }
+                ]
+            },
+            deepmergeOptions
+        );
+
+        return this.findById(id, args);
+    }
+
+    findEmployee(id, options = {}) {
+        const deepmergeOptions = {
+            isMergeableObject: isPlainObject
+        };
+
+        const args = deepmerge(
+            options,
+            {
+                include: [
+                    {
+                        association: 'role',
+                        required: true,
+                        where: { name: EMPLOYEE }
+                    },
                 ]
             },
             deepmergeOptions
