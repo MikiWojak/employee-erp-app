@@ -39,7 +39,7 @@ const update = [
         .if(async (value, { req }) => {
             const { rolesInfo } = req;
 
-            if (!rolesInfo.isAdmin) {
+            if (rolesInfo.isEmployee) {
                 return Promise.reject();
             }
         })
@@ -57,7 +57,7 @@ const update = [
             const user = await userRepository.findById(userId);
 
             if (!user) {
-                return Promise.reject('Employee not found.');
+                return Promise.reject('User not found.');
             }
         }),
 
@@ -107,7 +107,7 @@ const update = [
                         app,
                         body,
                         loggedUser,
-                        rolesInfo: { isAdmin },
+                        rolesInfo: { isEmployee },
                         params: { id: vacationId }
                     }
                 }
@@ -115,7 +115,7 @@ const update = [
                 const di = app.get('di');
                 const vacationRepository = di.get('repositories.vacation');
 
-                const uid = isAdmin ? body.userId : loggedUser.id;
+                const uid = isEmployee ? loggedUser.id : body.userId;
 
                 const doVacationsOverlap = await checkIfVacationsOverlap(
                     body.startDate,
@@ -132,13 +132,25 @@ const update = [
         ),
 
     body('approved')
-        .if(async (value, { req }) => {
-            const { rolesInfo } = req;
-
-            if (!rolesInfo.isAdmin) {
-                return Promise.reject();
+        .if(
+            async (
+                value,
+                {
+                    req: {
+                        body,
+                        loggedUser,
+                        rolesInfo: { isEmployee, isManager }
+                    }
+                }
+            ) => {
+                if (
+                    isEmployee ||
+                    (isManager && body.userId === loggedUser.id)
+                ) {
+                    return Promise.reject();
+                }
             }
-        })
+        )
         .trim()
         .not()
         .isEmpty()

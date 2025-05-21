@@ -9,7 +9,7 @@ class DestroyController {
         const {
             loggedUser,
             params: { id },
-            rolesInfo: { isAdmin }
+            rolesInfo: { isAdmin, isManager }
         } = req;
 
         const vacation = await this.vacationRepository.getById(id);
@@ -20,11 +20,34 @@ class DestroyController {
 
         const { userId, approved, user: assignedUser } = vacation;
 
-        if (isAdmin) {
+        if (isAdmin || (isManager && userId !== loggedUser.id)) {
+            if (isManager) {
+                if (assignedUser.departmentId !== loggedUser.departmentId) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send(
+                            'Manager can delete vacation for user in the same department only.'
+                        );
+                }
+
+                const userRolesInfo = await assignedUser.rolesInfo();
+
+                if (!userRolesInfo.isEmployee) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send('Manager can delete vacation for employee only.');
+                }
+            }
+
             const transaction =
                 await this.vacationRepository.getDbTransaction();
 
             try {
+                await vacation.update(
+                    { updatedById: loggedUser.id },
+                    { transaction }
+                );
+
                 await vacation.destroy({ transaction });
 
                 if (approved) {
@@ -49,8 +72,14 @@ class DestroyController {
                 throw error;
             }
         } else {
-            if (loggedUser.id !== userId || approved) {
+            if (loggedUser.id !== userId) {
                 return res.sendStatus(HTTP.FORBIDDEN);
+            }
+
+            if (approved) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('You cannot delete your approved vacation.');
             }
 
             await vacation.destroy();
