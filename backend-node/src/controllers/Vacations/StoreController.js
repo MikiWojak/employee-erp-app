@@ -16,15 +16,17 @@ class StoreController {
         let vacationId;
 
         if (isAdmin || (isManager && userId !== loggedUser.id)) {
+            const user = await this.userRepository.findById(userId);
+
+            const assignedUserRolesInfo = await user.rolesInfo();
+
+            if (assignedUserRolesInfo.isAdmin) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('You cannot add vacation for admin.');
+            }
+
             if (isManager) {
-                const user = await this.userRepository.findById(userId);
-
-                if (!user) {
-                    return res
-                        .status(HTTP.UNPROCESSABLE_ENTITY)
-                        .send('Selected user not found!');
-                }
-
                 if (user.departmentId !== loggedUser.departmentId) {
                     return res
                         .status(HTTP.UNPROCESSABLE_ENTITY)
@@ -33,9 +35,7 @@ class StoreController {
                         );
                 }
 
-                const userRolesInfo = await user.rolesInfo();
-
-                if (!userRolesInfo.isEmployee) {
+                if (!assignedUserRolesInfo.isEmployee) {
                     return res
                         .status(HTTP.UNPROCESSABLE_ENTITY)
                         .send('Manager can add vacation for employee only.');

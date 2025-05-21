@@ -10,7 +10,7 @@ class UpdateController {
         const {
             loggedUser,
             params: { id },
-            rolesInfo: { isAdmin },
+            rolesInfo: { isAdmin, isManager },
             body: { userId, startDate, endDate, approved }
         } = req;
 
@@ -20,13 +20,42 @@ class UpdateController {
             return res.sendStatus(HTTP.NOT_FOUND);
         }
 
-        let updatedVacation;
+        if (isAdmin || (isManager && userId !== loggedUser.id)) {
+            const { userId: oldUserId } = vacation;
 
-        if (isAdmin) {
+            const oldUser = await this.userRepository.findById(oldUserId);
+            const user = await this.userRepository.findById(userId);
+
+            const oldUserRolesInfo = await oldUser.rolesInfo();
+            const userRolesInfo = await user.rolesInfo();
+
+            if (userRolesInfo.isAdmin) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('You cannot assign vacation to admin.');
+            }
+
+            if (isManager) {
+                if (
+                    oldUser.departmentId !== loggedUser.departmentId ||
+                    user.departmentId !== loggedUser.departmentId
+                ) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send(
+                            'Manager can edit vacation of user in the same department only.'
+                        );
+                }
+
+                if (!oldUserRolesInfo.isEmployee || !userRolesInfo.isEmployee) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send('Manager can edit vacation of employee only.');
+                }
+            }
+
             const transaction =
                 await this.vacationRepository.getDbTransaction();
-
-            const { userId: oldUserId } = vacation;
 
             try {
                 await vacation.update(
@@ -46,13 +75,6 @@ class UpdateController {
                             transaction
                         });
 
-                    const oldUser = await this.userRepository.findById(
-                        oldUserId,
-                        {
-                            transaction
-                        }
-                    );
-
                     await oldUser.update(
                         { vacationDaysUsed: oldVacationDaysUsed },
                         { transaction }
@@ -67,15 +89,9 @@ class UpdateController {
                     }
                 );
 
-                const user = await this.userRepository.findById(userId, {
-                    transaction
-                });
-
                 await user.update({ vacationDaysUsed }, { transaction });
 
                 await transaction.commit();
-
-                updatedVacation = await this.vacationRepository.getById(id);
             } catch (error) {
                 await transaction.rollback();
 
@@ -84,17 +100,23 @@ class UpdateController {
         } else {
             const { userId, approved } = vacation;
 
-            if (loggedUser.id !== userId || approved) {
+            if (loggedUser.id !== userId) {
                 return res.sendStatus(HTTP.FORBIDDEN);
+            }
+
+            if (approved) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('You cannot edit your approved vacation.');
             }
 
             await vacation.update({
                 startDate,
                 endDate
             });
-
-            updatedVacation = await this.vacationRepository.findById(id);
         }
+
+        const updatedVacation = await this.vacationRepository.getById(id);
 
         return res.send(updatedVacation);
     }
