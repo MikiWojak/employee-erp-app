@@ -116,7 +116,7 @@ const update = [
                 const userRepository = di.get('repositories.user');
                 const vacationRepository = di.get('repositories.vacation');
 
-                if (isManager) {
+                if (isManager && body.userId !== loggedUser.id) {
                     const user = await userRepository.findEmployee(body.userId);
 
                     if (

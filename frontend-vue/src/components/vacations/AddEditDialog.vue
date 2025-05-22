@@ -11,8 +11,14 @@
             </v-card-title>
 
             <v-card-text>
+                <v-switch
+                    v-if="isManager && !editedItem"
+                    v-model="isMyRequest"
+                    label="Add for myself"
+                />
+
                 <user-select
-                    v-if="isAdmin"
+                    v-if="fullFormMode"
                     v-model="selectedUser"
                     :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
@@ -46,7 +52,7 @@
                 </v-row>
 
                 <v-checkbox
-                    v-if="isAdmin"
+                    v-if="fullFormMode"
                     v-model="formData.approved"
                     label="Approved"
                     :error-messages="handleError('approved')"
@@ -106,7 +112,8 @@ export default {
             users: [],
             selectedUser: null,
             defaultForm,
-            formData: { ...defaultForm }
+            formData: { ...defaultForm },
+            isMyRequest: false
         };
     },
 
@@ -115,7 +122,7 @@ export default {
             formData: {
                 userId: {
                     required: requiredIf(function () {
-                        return this.isAdmin;
+                        return this.isAdmin || this.isManager;
                     })
                 },
                 startDate: {
@@ -126,7 +133,7 @@ export default {
                 },
                 approved: {
                     required: requiredIf(function () {
-                        return this.isAdmin;
+                        return this.fullFormMode;
                     })
                 }
             }
@@ -134,10 +141,14 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
 
         formTitle() {
             return this.editedItem ? 'Edit vacation' : 'New vacation';
+        },
+
+        fullFormMode() {
+            return this.isAdmin || (this.isManager && !this.isMyRequest);
         }
     },
 
@@ -153,8 +164,21 @@ export default {
             handler(val) {
                 this.formData = val ? { ...val } : { ...this.defaultForm };
                 this.selectedUser = val?.user ? { ...val.user } : null;
+
+                if (val) {
+                    this.isMyRequest =
+                        this.editedItem.userId === this.loggedUser.id;
+                }
             },
             immediate: true
+        },
+
+        isMyRequest: {
+            handler(val) {
+                if (!this.editedItem) {
+                    this.selectedUser = val ? this.loggedUser : null;
+                }
+            }
         }
     },
 

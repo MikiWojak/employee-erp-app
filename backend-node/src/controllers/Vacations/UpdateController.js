@@ -63,7 +63,8 @@ class UpdateController {
                         userId,
                         startDate,
                         endDate,
-                        approved
+                        approved,
+                        updatedById: loggedUser.id
                     },
                     { transaction }
                 );
@@ -112,7 +113,8 @@ class UpdateController {
 
             await vacation.update({
                 startDate,
-                endDate
+                endDate,
+                updatedById: loggedUser.id
             });
         }
 

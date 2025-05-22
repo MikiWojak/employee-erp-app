@@ -82,7 +82,23 @@ class DestroyController {
                     .send('You cannot delete your approved vacation.');
             }
 
-            await vacation.destroy();
+            const transaction =
+                await this.vacationRepository.getDbTransaction();
+
+            try {
+                await vacation.update(
+                    { updatedById: loggedUser.id },
+                    { transaction }
+                );
+
+                await vacation.destroy({ transaction });
+
+                await transaction.commit();
+            } catch (error) {
+                await transaction.rollback();
+
+                throw error;
+            }
         }
 
         return res.sendStatus(HTTP.NO_CONTENT);
