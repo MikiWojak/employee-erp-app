@@ -124,7 +124,7 @@ const update = [
                         user.departmentId !== loggedUser.departmentId
                     ) {
                         return Promise.reject(
-                            'Unable to verify if contract overlaps other one.'
+                            'Unable to verify if vacation overlaps other one.'
                         );
                     }
                 }

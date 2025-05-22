@@ -69,10 +69,10 @@ export default {
             if (this.isManager) {
                 return [
                     {
-                        label: "Employee's contracts",
+                        label: "Employee's vacations",
                         value: BelongingTabs.EMPLOYEES
                     },
-                    { label: 'My contracts', value: BelongingTabs.MINE }
+                    { label: 'My vacations', value: BelongingTabs.MINE }
                 ];
             }
 
