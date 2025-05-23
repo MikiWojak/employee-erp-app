@@ -172,7 +172,14 @@ export default {
             return [
                 ...this.headers,
                 ...(this.computedTableOptions.areActionButtonsIncluded
-                    ? [{ title: 'Actions', value: 'actions', sortable: false }]
+                    ? [
+                          {
+                              title: 'Actions',
+                              value: 'actions',
+                              sortable: false,
+                              minWidth: '150px'
+                          }
+                      ]
                     : [])
             ];
         },

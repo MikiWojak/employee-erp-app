@@ -21,7 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['duration', '$user.firstName$', '$user.lastName$'];
+            return [
+                'duration',
+                '$user.firstName$',
+                '$user.lastName$',
+                '$createdBy.firstName$',
+                '$createdBy.lastName$',
+                '$updatedBy.firstName$',
+                '$updatedBy.lastName$'
+            ];
         }
     }
 

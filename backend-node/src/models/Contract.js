@@ -26,7 +26,11 @@ module.exports = (sequelize, DataTypes) => {
                 'vacationDaysPerYear',
                 'vacationDays',
                 '$user.firstName$',
-                '$user.lastName$'
+                '$user.lastName$',
+                '$createdBy.firstName$',
+                '$createdBy.lastName$',
+                '$updatedBy.firstName$',
+                '$updatedBy.lastName$'
             ];
         }
     }

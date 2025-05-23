@@ -249,6 +249,7 @@ export default {
     }
 };
 </script>
+
 <style scoped>
 .preview-avatar {
     width: 175px;
