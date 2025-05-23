@@ -21,9 +21,9 @@ class StoreController {
                 .send('Selected user not found!');
         }
 
-        const { isAdmin: isAssignedUserAdmin } = await user.rolesInfo();
+        const assignedUserRolesInfo = await user.rolesInfo();
 
-        if (isAssignedUserAdmin) {
+        if (assignedUserRolesInfo.isAdmin) {
             return res
                 .status(HTTP.UNPROCESSABLE_ENTITY)
                 .send('You cannot add contract for admin.');
@@ -44,9 +44,7 @@ class StoreController {
                     );
             }
 
-            const userRolesInfo = await user.rolesInfo();
-
-            if (!userRolesInfo.isEmployee) {
+            if (!assignedUserRolesInfo.isEmployee) {
                 return res
                     .status(HTTP.UNPROCESSABLE_ENTITY)
                     .send('Manager can add contract for employee only.');

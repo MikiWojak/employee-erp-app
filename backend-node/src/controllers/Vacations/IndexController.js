@@ -1,3 +1,7 @@
+const { Op } = require('sequelize');
+
+const { Role } = require('../../models');
+
 class IndexController {
     constructor(vacationRepository) {
         this.vacationRepository = vacationRepository;
@@ -9,35 +13,53 @@ class IndexController {
             sorting,
             pagination,
             loggedUser,
-            rolesInfo: { isAdmin }
+            query: { mineOnly },
+            rolesInfo: { isAdmin, isManager, isEmployee }
         } = req;
 
-        const baseOptions = {
-            where: search,
+        const mineOnlyVal = mineOnly === 'true';
+
+        const managerEmployeesFlag = isManager && !mineOnlyVal;
+        const mineOnlyFlag = isEmployee || mineOnlyVal;
+
+        const roleNames =
+            isAdmin || mineOnlyFlag
+                ? [Role.MANAGER, Role.EMPLOYEE]
+                : Role.EMPLOYEE;
+
+        const options = {
+            where: {
+                ...search,
+                ...(mineOnlyFlag
+                    ? { userId: loggedUser.id }
+                    : {
+                          userId: {
+                              [Op.not]: loggedUser.id
+                          }
+                      })
+            },
             ...sorting,
-            ...pagination
+            ...pagination,
+            include: [
+                {
+                    association: 'user',
+                    required: true,
+                    ...(managerEmployeesFlag && {
+                        where: {
+                            departmentId: loggedUser.departmentId
+                        }
+                    }),
+                    include: [
+                        {
+                            association: 'role',
+                            required: true,
+                            where: { name: roleNames }
+                        }
+                    ]
+                }
+            ],
+            subQuery: false
         };
-
-        const include = [
-            {
-                association: 'user',
-                required: true
-            }
-        ];
-
-        const options = isAdmin
-            ? {
-                  ...baseOptions,
-                  include
-              }
-            : {
-                  ...baseOptions,
-                  where: {
-                      ...search,
-                      userId: loggedUser.id
-                  },
-                  include
-              };
 
         const vacations =
             await this.vacationRepository.findAndCountAll(options);

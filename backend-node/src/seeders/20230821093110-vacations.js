@@ -2,7 +2,9 @@
 
 const dayjs = require('dayjs');
 
-const { Role } = require('../models');
+const {
+    Role: { EMPLOYEE, MANAGER }
+} = require('../models');
 
 const di = require('../di');
 const userRepository = di.get('repositories.user');
@@ -15,7 +17,7 @@ module.exports = {
                 {
                     association: 'role',
                     required: true,
-                    where: { name: Role.EMPLOYEE }
+                    where: { name: [EMPLOYEE, MANAGER] }
                 },
                 {
                     association: 'contracts'
@@ -23,7 +25,7 @@ module.exports = {
             ]
         });
 
-        for (let user of users) {
+        for (const user of users) {
             const { id: userId, contracts, vacationDaysSum } = user;
 
             if (!contracts.length) {

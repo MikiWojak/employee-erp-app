@@ -29,6 +29,15 @@ class UpdateController {
                 .send('Selected user not found.');
         }
 
+        const oldUserRolesInfo = await oldUser.rolesInfo();
+        const userRolesInfo = await user.rolesInfo();
+
+        if (userRolesInfo.isAdmin) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot assign contract to admin.');
+        }
+
         if (isManager) {
             if (oldUser.id === loggedUser.id || user.id === loggedUser.id) {
                 return res
@@ -46,9 +55,6 @@ class UpdateController {
                         'Manager can edit contract of user in the same department only.'
                     );
             }
-
-            const oldUserRolesInfo = await oldUser.rolesInfo();
-            const userRolesInfo = await user.rolesInfo();
 
             if (!oldUserRolesInfo.isEmployee || !userRolesInfo.isEmployee) {
                 return res

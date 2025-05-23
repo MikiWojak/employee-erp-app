@@ -4,6 +4,7 @@ import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useVacationStore } from '@/stores/vacation';
+import { BelongingTabs } from '@/enums/BelongingTabs';
 import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
@@ -23,12 +24,13 @@ export default {
                 title: 'Vacations',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this vacation?'
-            }
+            },
+            selectedTab: BelongingTabs.EMPLOYEES
         };
     },
 
     computed: {
-        ...mapState(useAuthStore, ['isAdmin']),
+        ...mapState(useAuthStore, ['isAdmin', 'isManager']),
 
         customFields() {
             return [
@@ -49,7 +51,10 @@ export default {
                 { title: 'Status', value: 'approved' }
             ];
 
-            if (this.isAdmin) {
+            if (
+                this.isAdmin ||
+                (this.isManager && this.selectedTab !== BelongingTabs.MINE)
+            ) {
                 return [
                     { title: 'First name', value: 'user.firstName' },
                     { title: 'Last name', value: 'user.lastName' },
@@ -58,6 +63,36 @@ export default {
             }
 
             return employeeHeaders;
+        },
+
+        tabs() {
+            if (this.isManager) {
+                return [
+                    {
+                        label: 'Employees vacations',
+                        value: BelongingTabs.EMPLOYEES
+                    },
+                    { label: 'My vacations', value: BelongingTabs.MINE }
+                ];
+            }
+
+            return [];
+        },
+
+        additionalIndexParams() {
+            return {
+                ...(this.selectedTab === BelongingTabs.MINE && {
+                    mineOnly: true
+                })
+            };
+        }
+    },
+
+    watch: {
+        async selectedTab() {
+            this.page = 1;
+
+            await this.doGetItems();
         }
     },
 
@@ -68,7 +103,14 @@ export default {
         }),
 
         areActionButtonsDisabled(item) {
-            return !this.isAdmin && item.approved;
+            if (
+                this.isAdmin ||
+                (this.isManager && this.selectedTab === BelongingTabs.EMPLOYEES)
+            ) {
+                return false;
+            }
+
+            return item.approved;
         },
 
         getStatus(item) {

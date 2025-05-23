@@ -91,14 +91,30 @@ const update = [
                 endDate,
                 {
                     req: {
-                        params: { id: contractId },
                         app,
+                        loggedUser,
+                        rolesInfo: { isManager },
+                        params: { id: contractId },
                         body: { userId, startDate }
                     }
                 }
             ) => {
                 const di = app.get('di');
+                const userRepository = di.get('repositories.user');
                 const contractRepository = di.get('repositories.contract');
+
+                if (isManager) {
+                    const user = await userRepository.findEmployee(userId);
+
+                    if (
+                        !user ||
+                        user.departmentId !== loggedUser.departmentId
+                    ) {
+                        return Promise.reject(
+                            'Unable to verify if contract overlaps other one.'
+                        );
+                    }
+                }
 
                 const doContractsOverlap = await checkIfContractsOverlap(
                     startDate,
