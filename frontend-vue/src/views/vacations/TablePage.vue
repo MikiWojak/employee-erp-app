@@ -69,7 +69,7 @@ export default {
             if (this.isManager) {
                 return [
                     {
-                        label: "Employee's vacations",
+                        label: 'Employees vacations',
                         value: BelongingTabs.EMPLOYEES
                     },
                     { label: 'My vacations', value: BelongingTabs.MINE }

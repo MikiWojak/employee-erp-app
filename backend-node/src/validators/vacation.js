@@ -105,9 +105,9 @@ const update = [
                 {
                     req: {
                         app,
-                        body,
                         loggedUser,
                         params: { id: vacationId },
+                        body: { userId, startDate },
                         rolesInfo: { isManager, isEmployee }
                     }
                 }
@@ -116,8 +116,8 @@ const update = [
                 const userRepository = di.get('repositories.user');
                 const vacationRepository = di.get('repositories.vacation');
 
-                if (isManager && body.userId !== loggedUser.id) {
-                    const user = await userRepository.findEmployee(body.userId);
+                if (isManager && userId !== loggedUser.id) {
+                    const user = await userRepository.findEmployee(userId);
 
                     if (
                         !user ||
@@ -129,10 +129,10 @@ const update = [
                     }
                 }
 
-                const uid = isEmployee ? loggedUser.id : body.userId;
+                const uid = isEmployee ? loggedUser.id : userId;
 
                 const doVacationsOverlap = await checkIfVacationsOverlap(
-                    body.startDate,
+                    startDate,
                     endDate,
                     vacationRepository,
                     uid,

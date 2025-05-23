@@ -10,8 +10,7 @@ module.exports = {
     up: async () => {
         const departmentNames = new Set();
 
-        // @TODO TMP changed
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 5; i++) {
             departmentNames.add(faker.lorem.words());
         }
 
