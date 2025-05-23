@@ -8,6 +8,7 @@
         :loading="loading"
         item-value="id"
         :items-per-page-options="perPageOptions"
+        mobile-breakpoint="md"
         @update:options="doGetItems"
     >
         <template #top>
@@ -16,8 +17,10 @@
                     <h1>{{ tableOptions.title }}</h1>
                 </div>
 
-                <div class="d-flex justify-space-between align-center">
-                    <div class="d-flex align-center w-50">
+                <div
+                    class="d-flex flex-column-reverse flex-md-row justify-space-between align-start align-md-center ga-4"
+                >
+                    <div class="d-flex align-center w-100 w-md-50">
                         <v-text-field
                             v-model="search"
                             prepend-icon="mdi-magnify"
@@ -314,3 +317,9 @@ export default {
     }
 };
 </script>
+
+<style>
+.v-data-table-headers--mobile {
+    display: none;
+}
+</style>

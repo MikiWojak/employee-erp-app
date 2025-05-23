@@ -25,31 +25,25 @@
                     @update:model-value="clearServerError('userId')"
                 />
 
-                <v-row>
-                    <v-col cols="6">
-                        <date-picker
-                            v-model="formData.startDate"
-                            label="Start date"
-                            :allowed-dates="allowBusinessDays"
-                            :max="formData.endDate"
-                            :error-messages="handleError('startDate')"
-                            @blur="onBlur('startDate')"
-                            @update:model-value="clearServerError('startDate')"
-                        />
-                    </v-col>
+                <date-picker
+                    v-model="formData.startDate"
+                    label="Start date"
+                    :allowed-dates="allowBusinessDays"
+                    :max="formData.endDate"
+                    :error-messages="handleError('startDate')"
+                    @blur="onBlur('startDate')"
+                    @update:model-value="clearServerError('startDate')"
+                />
 
-                    <v-col cols="6">
-                        <date-picker
-                            v-model="formData.endDate"
-                            label="End date"
-                            :allowed-dates="allowBusinessDays"
-                            :min="formData.startDate"
-                            :error-messages="handleError('endDate')"
-                            @blur="onBlur('endDate')"
-                            @update:model-value="clearServerError('endDate')"
-                        />
-                    </v-col>
-                </v-row>
+                <date-picker
+                    v-model="formData.endDate"
+                    label="End date"
+                    :allowed-dates="allowBusinessDays"
+                    :min="formData.startDate"
+                    :error-messages="handleError('endDate')"
+                    @blur="onBlur('endDate')"
+                    @update:model-value="clearServerError('endDate')"
+                />
 
                 <v-checkbox
                     v-if="fullFormMode"
