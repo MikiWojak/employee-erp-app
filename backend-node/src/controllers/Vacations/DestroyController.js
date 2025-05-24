@@ -8,7 +8,8 @@ class DestroyController {
     async invoke(req, res) {
         const {
             loggedUser,
-            params: { id }
+            params: { id },
+            rolesInfo: { isAdmin, isManager }
         } = req;
 
         const vacation = await this.vacationRepository.getById(id);
@@ -17,15 +18,36 @@ class DestroyController {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
 
-        const isAdmin = await loggedUser.isAdmin();
-
         const { userId, approved, user: assignedUser } = vacation;
 
-        if (isAdmin) {
+        if (isAdmin || (isManager && userId !== loggedUser.id)) {
+            if (isManager) {
+                if (assignedUser.departmentId !== loggedUser.departmentId) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send(
+                            'Manager can delete vacation for user in the same department only.'
+                        );
+                }
+
+                const userRolesInfo = await assignedUser.rolesInfo();
+
+                if (!userRolesInfo.isEmployee) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send('Manager can delete vacation for employee only.');
+                }
+            }
+
             const transaction =
                 await this.vacationRepository.getDbTransaction();
 
             try {
+                await vacation.update(
+                    { updatedById: loggedUser.id },
+                    { transaction }
+                );
+
                 await vacation.destroy({ transaction });
 
                 if (approved) {
@@ -50,11 +72,33 @@ class DestroyController {
                 throw error;
             }
         } else {
-            if (loggedUser.id !== userId || approved) {
+            if (loggedUser.id !== userId) {
                 return res.sendStatus(HTTP.FORBIDDEN);
             }
 
-            await vacation.destroy();
+            if (approved) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('You cannot delete your approved vacation.');
+            }
+
+            const transaction =
+                await this.vacationRepository.getDbTransaction();
+
+            try {
+                await vacation.update(
+                    { updatedById: loggedUser.id },
+                    { transaction }
+                );
+
+                await vacation.destroy({ transaction });
+
+                await transaction.commit();
+            } catch (error) {
+                await transaction.rollback();
+
+                throw error;
+            }
         }
 
         return res.sendStatus(HTTP.NO_CONTENT);

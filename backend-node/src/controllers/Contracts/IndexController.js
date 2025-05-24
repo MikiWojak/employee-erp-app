@@ -1,36 +1,73 @@
+const { Op } = require('sequelize');
+
+const { Role } = require('../../models');
+
 class IndexController {
     constructor(contractRepository) {
         this.contractRepository = contractRepository;
     }
 
     async invoke(req, res) {
-        const { search, sorting, pagination, loggedUser } = req;
+        const {
+            search,
+            sorting,
+            pagination,
+            loggedUser,
+            query: { mineOnly },
+            rolesInfo: { isAdmin, isManager, isEmployee }
+        } = req;
 
-        const isAdmin = await loggedUser.isAdmin();
+        const mineOnlyVal = mineOnly === 'true';
 
-        const baseOptions = {
-            where: search,
+        const managerEmployeesFlag = isManager && !mineOnlyVal;
+        const mineOnlyFlag = isEmployee || mineOnlyVal;
+
+        const roleNames =
+            isAdmin || mineOnlyFlag
+                ? [Role.MANAGER, Role.EMPLOYEE]
+                : Role.EMPLOYEE;
+
+        const options = {
+            where: {
+                ...search,
+                ...(mineOnlyFlag
+                    ? { userId: loggedUser.id }
+                    : {
+                          userId: {
+                              [Op.not]: loggedUser.id
+                          }
+                      })
+            },
             ...sorting,
-            ...pagination
+            ...pagination,
+            include: [
+                {
+                    association: 'user',
+                    required: true,
+                    ...(managerEmployeesFlag && {
+                        where: {
+                            departmentId: loggedUser.departmentId
+                        }
+                    }),
+                    include: [
+                        {
+                            association: 'role',
+                            required: true,
+                            where: { name: roleNames }
+                        }
+                    ]
+                },
+                {
+                    association: 'createdBy',
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    association: 'updatedBy',
+                    attributes: ['id', 'firstName', 'lastName']
+                }
+            ],
+            subQuery: false
         };
-
-        const options = isAdmin
-            ? {
-                  ...baseOptions,
-                  include: [
-                      {
-                          association: 'user',
-                          required: true
-                      }
-                  ]
-              }
-            : {
-                  ...baseOptions,
-                  where: {
-                      ...search,
-                      userId: loggedUser.id
-                  }
-              };
 
         const contracts =
             await this.contractRepository.findAndCountAll(options);

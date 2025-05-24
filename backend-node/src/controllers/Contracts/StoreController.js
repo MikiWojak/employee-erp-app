@@ -8,8 +8,48 @@ class StoreController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
+            rolesInfo: { isManager },
             body: { userId, position, startDate, endDate, vacationDaysPerYear }
         } = req;
+
+        const user = await this.userRepository.findById(userId);
+
+        if (!user) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('Selected user not found!');
+        }
+
+        const assignedUserRolesInfo = await user.rolesInfo();
+
+        if (assignedUserRolesInfo.isAdmin) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot add contract for admin.');
+        }
+
+        if (isManager) {
+            if (user.id === loggedUser.id) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager cannot add contract to himself/herself.');
+            }
+
+            if (user.departmentId !== loggedUser.departmentId) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can add contract for user in the same department only.'
+                    );
+            }
+
+            if (!assignedUserRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can add contract for employee only.');
+            }
+        }
 
         const transaction = await this.contractRepository.getDbTransaction();
 
@@ -22,7 +62,9 @@ class StoreController {
                     position,
                     startDate,
                     endDate,
-                    vacationDaysPerYear
+                    vacationDaysPerYear,
+                    createdById: loggedUser.id,
+                    updatedById: loggedUser.id
                 },
                 { transaction }
             );
@@ -34,10 +76,6 @@ class StoreController {
                     transaction
                 }
             );
-
-            const user = await this.userRepository.findById(userId, {
-                transaction
-            });
 
             await user.update({ vacationDaysSum }, { transaction });
 

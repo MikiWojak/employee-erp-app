@@ -9,13 +9,39 @@ class DestroyController {
 
     async invoke(req, res) {
         const {
-            params: { id }
+            loggedUser,
+            params: { id },
+            rolesInfo: { isManager }
         } = req;
 
         const user = await this.userRepository.findById(id);
 
         if (!user) {
             return res.sendStatus(HTTP.NO_CONTENT);
+        }
+
+        if (loggedUser.id === user.id) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot delete your own account.');
+        }
+
+        if (isManager) {
+            if (user.departmentId !== loggedUser.departmentId) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can delete user from the same department only.'
+                    );
+            }
+
+            const userRolesInfo = await user.rolesInfo();
+
+            if (!userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can delete employee only.');
+            }
         }
 
         const { firstName: userFirstName, email: userEmail } = user;
@@ -25,7 +51,10 @@ class DestroyController {
             const timestamp = dayjs().unix();
             const email = `${user.email}_${timestamp}`;
 
-            await user.update({ email }, { transaction });
+            await user.update(
+                { email, updatedById: loggedUser.id },
+                { transaction }
+            );
             await user.destroy({ transaction });
 
             await transaction.commit();

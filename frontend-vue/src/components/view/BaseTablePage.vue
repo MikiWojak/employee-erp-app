@@ -8,32 +8,47 @@
         :loading="loading"
         item-value="id"
         :items-per-page-options="perPageOptions"
+        mobile-breakpoint="md"
         @update:options="doGetItems"
     >
         <template #top>
             <div>
-                <h1>{{ tableOptions.title }}</h1>
-            </div>
-
-            <div class="d-flex justify-space-between align-center">
-                <div class="d-flex align-center w-50">
-                    <v-text-field
-                        v-model="search"
-                        prepend-icon="mdi-magnify"
-                        variant="outlined"
-                        hide-details
-                        @update:model-value="doSearch"
-                    />
+                <div>
+                    <h1>{{ tableOptions.title }}</h1>
                 </div>
 
-                <v-btn
-                    v-if="computedTableOptions.isAddButtonIncluded"
-                    text="Add"
-                    color="green"
-                    prepend-icon="mdi-plus-circle-outline"
-                    @click="openAddEditDialog(null)"
-                />
+                <div
+                    class="d-flex flex-column-reverse flex-md-row justify-space-between align-start align-md-center ga-4"
+                >
+                    <div class="d-flex align-center w-100 w-md-50">
+                        <v-text-field
+                            v-model="search"
+                            prepend-icon="mdi-magnify"
+                            variant="outlined"
+                            hide-details
+                            @update:model-value="doSearch"
+                        />
+                    </div>
+
+                    <v-btn
+                        v-if="computedTableOptions.isAddButtonIncluded"
+                        text="Add"
+                        color="green"
+                        prepend-icon="mdi-plus-circle-outline"
+                        @click="openAddEditDialog(null)"
+                    />
+                </div>
             </div>
+
+            <v-tabs v-if="tabs.length" v-model="selectedTab" class="mt-2">
+                <v-tab
+                    v-for="(tab, index) in tabs"
+                    :key="index"
+                    :value="tab.value"
+                >
+                    {{ tab.label }}
+                </v-tab>
+            </v-tabs>
         </template>
 
         <template #[`item.icon`]="{ item }">
@@ -49,7 +64,7 @@
 
         <template
             v-for="(field, index) in customFields"
-            :key="index"
+            :key="`tab-${index}`"
             #[`item.${field.name}`]="{ item }"
         >
             <component
@@ -96,6 +111,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { StatusCodes as HTTP } from 'http-status-codes';
 
 import getFullImagePath from '@/helpers/getFullImagePath';
 
@@ -134,7 +150,8 @@ export default {
                 { value: 25, title: '25' },
                 { value: 50, title: '50' },
                 { value: 100, title: '100' }
-            ]
+            ],
+            selectedTab: null
         };
     },
 
@@ -158,9 +175,24 @@ export default {
             return [
                 ...this.headers,
                 ...(this.computedTableOptions.areActionButtonsIncluded
-                    ? [{ title: 'Actions', value: 'actions', sortable: false }]
+                    ? [
+                          {
+                              title: 'Actions',
+                              value: 'actions',
+                              sortable: false,
+                              minWidth: '150px'
+                          }
+                      ]
                     : [])
             ];
+        },
+
+        tabs() {
+            return [];
+        },
+
+        additionalIndexParams() {
+            return {};
         }
     },
 
@@ -193,6 +225,7 @@ export default {
                 this.loading = true;
 
                 const { rows, count } = await this.getItems({
+                    ...this.additionalIndexParams,
                     page: this.page,
                     perPage: this.perPage,
                     search: this.search
@@ -246,6 +279,12 @@ export default {
 
                 this.closeDeleteDialog();
             } catch (error) {
+                if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
+                    this.$toast.error(error.response.data);
+
+                    return;
+                }
+
                 console.error(error);
 
                 this.$toast.error('Error while deleting the item!');
@@ -278,3 +317,9 @@ export default {
     }
 };
 </script>
+
+<style>
+.v-data-table-headers--mobile {
+    display: none;
+}
+</style>

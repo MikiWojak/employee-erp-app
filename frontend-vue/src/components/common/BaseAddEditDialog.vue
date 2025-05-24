@@ -6,6 +6,7 @@
 import { useVuelidate } from '@vuelidate/core';
 
 import BaseForm from '@/components/common/BaseForm';
+import { StatusCodes as HTTP } from 'http-status-codes';
 
 export default {
     name: 'BaseAddEditDialog',
@@ -115,6 +116,12 @@ export default {
 
                 this.onSuccess();
             } catch (error) {
+                if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
+                    this.$toast.error(error.response.data);
+
+                    return;
+                }
+
                 console.error(error);
 
                 if (error?.response?.data?.errors) {

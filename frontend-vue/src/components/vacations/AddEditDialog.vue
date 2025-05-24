@@ -11,42 +11,42 @@
             </v-card-title>
 
             <v-card-text>
+                <v-switch
+                    v-if="isManager && !editedItem"
+                    v-model="isMyRequest"
+                    label="Add for myself"
+                />
+
                 <user-select
-                    v-if="isAdmin"
+                    v-if="fullFormMode"
                     v-model="selectedUser"
                     :error-messages="handleError('userId')"
                     @blur="onBlur('userId')"
                     @update:model-value="clearServerError('userId')"
                 />
 
-                <v-row>
-                    <v-col cols="6">
-                        <date-picker
-                            v-model="formData.startDate"
-                            label="Start date"
-                            :allowed-dates="allowBusinessDays"
-                            :max="formData.endDate"
-                            :error-messages="handleError('startDate')"
-                            @blur="onBlur('startDate')"
-                            @update:model-value="clearServerError('startDate')"
-                        />
-                    </v-col>
+                <date-picker
+                    v-model="formData.startDate"
+                    label="Start date"
+                    :allowed-dates="allowBusinessDays"
+                    :max="formData.endDate"
+                    :error-messages="handleError('startDate')"
+                    @blur="onBlur('startDate')"
+                    @update:model-value="clearServerError('startDate')"
+                />
 
-                    <v-col cols="6">
-                        <date-picker
-                            v-model="formData.endDate"
-                            label="End date"
-                            :allowed-dates="allowBusinessDays"
-                            :min="formData.startDate"
-                            :error-messages="handleError('endDate')"
-                            @blur="onBlur('endDate')"
-                            @update:model-value="clearServerError('endDate')"
-                        />
-                    </v-col>
-                </v-row>
+                <date-picker
+                    v-model="formData.endDate"
+                    label="End date"
+                    :allowed-dates="allowBusinessDays"
+                    :min="formData.startDate"
+                    :error-messages="handleError('endDate')"
+                    @blur="onBlur('endDate')"
+                    @update:model-value="clearServerError('endDate')"
+                />
 
                 <v-checkbox
-                    v-if="isAdmin"
+                    v-if="fullFormMode"
                     v-model="formData.approved"
                     label="Approved"
                     :error-messages="handleError('approved')"
@@ -106,7 +106,8 @@ export default {
             users: [],
             selectedUser: null,
             defaultForm,
-            formData: { ...defaultForm }
+            formData: { ...defaultForm },
+            isMyRequest: false
         };
     },
 
@@ -115,7 +116,7 @@ export default {
             formData: {
                 userId: {
                     required: requiredIf(function () {
-                        return this.isAdmin;
+                        return this.isAdmin || this.isManager;
                     })
                 },
                 startDate: {
@@ -126,7 +127,7 @@ export default {
                 },
                 approved: {
                     required: requiredIf(function () {
-                        return this.isAdmin;
+                        return this.fullFormMode;
                     })
                 }
             }
@@ -134,10 +135,14 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
 
         formTitle() {
             return this.editedItem ? 'Edit vacation' : 'New vacation';
+        },
+
+        fullFormMode() {
+            return this.isAdmin || (this.isManager && !this.isMyRequest);
         }
     },
 
@@ -153,8 +158,21 @@ export default {
             handler(val) {
                 this.formData = val ? { ...val } : { ...this.defaultForm };
                 this.selectedUser = val?.user ? { ...val.user } : null;
+
+                if (val) {
+                    this.isMyRequest =
+                        this.editedItem.userId === this.loggedUser.id;
+                }
             },
             immediate: true
+        },
+
+        isMyRequest: {
+            handler(val) {
+                if (!this.editedItem) {
+                    this.selectedUser = val ? this.loggedUser : null;
+                }
+            }
         }
     },
 

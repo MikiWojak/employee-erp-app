@@ -12,7 +12,7 @@ const paginationValidator = require('../validators/pagination');
 
 const {
     User,
-    Role: { ADMIN }
+    Role: { ADMIN, MANAGER }
 } = require('../models');
 
 module.exports = di => {
@@ -23,11 +23,11 @@ module.exports = di => {
 
     router.get(
         '/',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [
             paginationValidator.pagination,
             validate,
-            searchable([], true, User.ADMIN_SEARCHABLE_FIELDS),
+            searchable(User.SEARCHABLE_FIELDS),
             sorting(),
             pagination
         ],
@@ -35,17 +35,21 @@ module.exports = di => {
     );
     router.post(
         '/',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [userValidator.store, validate],
         invoke(storeController)
     );
     router.put(
         '/:id',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [userValidator.update, validate],
         invoke(updateController)
     );
-    router.delete('/:id', loggedOnly(ADMIN), invoke(destroyController));
+    router.delete(
+        '/:id',
+        loggedOnly(ADMIN, MANAGER),
+        invoke(destroyController)
+    );
 
     return router;
 };

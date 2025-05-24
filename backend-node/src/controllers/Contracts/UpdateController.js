@@ -8,7 +8,9 @@ class UpdateController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
             params: { id },
+            rolesInfo: { isManager },
             body: { userId, position, startDate, endDate, vacationDaysPerYear }
         } = req;
 
@@ -16,6 +18,49 @@ class UpdateController {
 
         if (!contract) {
             return res.sendStatus(HTTP.NOT_FOUND);
+        }
+
+        const oldUser = await this.userRepository.findById(contract.userId);
+        const user = await this.userRepository.findById(userId);
+
+        if (!oldUser || !user) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('Selected user not found.');
+        }
+
+        const oldUserRolesInfo = await oldUser.rolesInfo();
+        const userRolesInfo = await user.rolesInfo();
+
+        if (userRolesInfo.isAdmin) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot assign contract to admin.');
+        }
+
+        if (isManager) {
+            if (oldUser.id === loggedUser.id || user.id === loggedUser.id) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager cannot edit his/her own contract.');
+            }
+
+            if (
+                oldUser.departmentId !== loggedUser.departmentId ||
+                user.departmentId !== loggedUser.departmentId
+            ) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send(
+                        'Manager can edit contract of user in the same department only.'
+                    );
+            }
+
+            if (!oldUserRolesInfo.isEmployee || !userRolesInfo.isEmployee) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('Manager can edit contract of employee only.');
+            }
         }
 
         const transaction = await this.contractRepository.getDbTransaction();
@@ -29,7 +74,8 @@ class UpdateController {
                     position,
                     startDate,
                     endDate,
-                    vacationDaysPerYear
+                    vacationDaysPerYear,
+                    updatedById: loggedUser.id
                 },
                 {
                     transaction
@@ -42,10 +88,6 @@ class UpdateController {
                         where: { userId: oldUserId },
                         transaction
                     });
-
-                const oldUser = await this.userRepository.findById(oldUserId, {
-                    transaction
-                });
 
                 await oldUser.update(
                     { vacationDaysSum: oldUserVacationDaysSum },
@@ -61,22 +103,18 @@ class UpdateController {
                 }
             );
 
-            const user = await this.userRepository.findById(userId, {
-                transaction
-            });
-
             await user.update({ vacationDaysSum }, { transaction });
 
             await transaction.commit();
-
-            const updatedContract = await this.contractRepository.getById(id);
-
-            return res.send(updatedContract);
         } catch (error) {
             await transaction.rollback();
 
             throw error;
         }
+
+        const updatedContract = await this.contractRepository.getById(id);
+
+        return res.send(updatedContract);
     }
 }
 

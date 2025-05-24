@@ -5,8 +5,24 @@
 
             <v-form @submit.prevent="handleUpdateProfile">
                 <v-text-field
+                    v-if="!isAdmin"
+                    v-model="departmentName"
+                    label="Department"
+                    prepend-icon="mdi-office-building"
+                    disabled
+                />
+
+                <v-text-field
+                    v-model="roleName"
+                    label="Role"
+                    prepend-icon="mdi-folder-lock"
+                    disabled
+                />
+
+                <v-text-field
                     v-model="formData.firstName"
                     label="First name"
+                    prepend-icon="mdi-account-circle"
                     :error-messages="handleError('firstName')"
                     @blur="onBlur('firstName')"
                     @input="clearServerError('firstName')"
@@ -15,6 +31,7 @@
                 <v-text-field
                     v-model="formData.lastName"
                     label="Last name"
+                    prepend-icon="mdi-account-circle"
                     :error-messages="handleError('lastName')"
                     @blur="onBlur('lastName')"
                     @input="clearServerError('lastName')"
@@ -33,6 +50,7 @@
                     v-model="formData.email"
                     type="email"
                     label="Email"
+                    prepend-icon="mdi-email"
                     :error-messages="handleError('email')"
                     @blur="onBlur('email')"
                     @input="clearServerError('email')"
@@ -152,7 +170,7 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
 
         previewAvatar() {
             if (this.formData?.avatar?.id) {
@@ -164,6 +182,14 @@ export default {
             }
 
             return null;
+        },
+
+        departmentName() {
+            return this.loggedUser?.department?.name || '';
+        },
+
+        roleName() {
+            return this.loggedUser?.role?.name || '';
         }
     },
 
@@ -232,10 +258,11 @@ export default {
     }
 };
 </script>
+
 <style scoped>
 .preview-avatar {
-    width: 200px;
-    height: 200px;
+    width: 175px;
+    height: 175px;
     margin: 0 auto;
     border: 1px solid #ccc;
     border-radius: 8px;

@@ -9,14 +9,39 @@ class StoreController {
     async invoke(req, res) {
         const {
             loggedUser,
+            rolesInfo: { isAdmin, isManager },
             body: { userId, startDate, endDate, approved }
         } = req;
 
-        const isAdmin = await loggedUser.isAdmin();
+        let vacationId;
 
-        let vacation;
+        if (isAdmin || (isManager && userId !== loggedUser.id)) {
+            const user = await this.userRepository.findById(userId);
 
-        if (isAdmin) {
+            const assignedUserRolesInfo = await user.rolesInfo();
+
+            if (assignedUserRolesInfo.isAdmin) {
+                return res
+                    .status(HTTP.UNPROCESSABLE_ENTITY)
+                    .send('You cannot add vacation for admin.');
+            }
+
+            if (isManager) {
+                if (user.departmentId !== loggedUser.departmentId) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send(
+                            'Manager can add vacation for user in the same department only.'
+                        );
+                }
+
+                if (!assignedUserRolesInfo.isEmployee) {
+                    return res
+                        .status(HTTP.UNPROCESSABLE_ENTITY)
+                        .send('Manager can add vacation for employee only.');
+                }
+            }
+
             const transaction =
                 await this.vacationRepository.getDbTransaction();
 
@@ -26,7 +51,9 @@ class StoreController {
                         userId,
                         startDate,
                         endDate,
-                        approved
+                        approved,
+                        createdById: loggedUser.id,
+                        updatedById: loggedUser.id
                     },
                     { transaction }
                 );
@@ -49,7 +76,7 @@ class StoreController {
 
                 await transaction.commit();
 
-                vacation = await this.vacationRepository.getById(id);
+                vacationId = id;
             } catch (error) {
                 await transaction.rollback();
 
@@ -60,11 +87,15 @@ class StoreController {
                 userId: loggedUser.id,
                 startDate,
                 endDate,
-                approved: false
+                approved: false,
+                createdById: loggedUser.id,
+                updatedById: loggedUser.id
             });
 
-            vacation = await this.vacationRepository.findById(id);
+            vacationId = id;
         }
+
+        const vacation = await this.vacationRepository.getById(vacationId);
 
         return res.status(HTTP.CREATED).send(vacation);
     }

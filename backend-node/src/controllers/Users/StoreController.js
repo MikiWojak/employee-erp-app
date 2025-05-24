@@ -1,7 +1,5 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
-const { Role } = require('../../models');
-
 class StoreController {
     constructor(
         userRepository,
@@ -17,40 +15,39 @@ class StoreController {
 
     async invoke(req, res) {
         const {
-            body: { firstName, lastName, dateOfBirth, email }
+            body: {
+                firstName,
+                lastName,
+                role,
+                departmentId,
+                dateOfBirth,
+                email
+            },
+            loggedUser,
+            rolesInfo: { isAdmin }
         } = req;
+        const { ADMIN, EMPLOYEE } = this.roleRepository.model;
 
-        const roleEmployee = await this.roleRepository.findByName(
-            Role.EMPLOYEE
-        );
+        const roleName = isAdmin ? role : EMPLOYEE;
+        const roleObject = await this.roleRepository.findByName(roleName);
 
-        const transaction = await this.userRepository.getDbTransaction();
+        const data = {
+            roleId: roleObject.id,
+            firstName,
+            lastName,
+            dateOfBirth,
+            email,
+            createdById: loggedUser.id,
+            updatedById: loggedUser.id
+        };
 
-        let createdUser = null;
-
-        try {
-            createdUser = await this.userRepository.create(
-                {
-                    firstName,
-                    lastName,
-                    dateOfBirth,
-                    email
-                },
-                { transaction }
-            );
-
-            await createdUser.setRoles([roleEmployee], { transaction });
-
-            await transaction.commit();
-        } catch (error) {
-            await transaction.rollback();
-
-            throw error;
+        if (isAdmin) {
+            data.departmentId = role === ADMIN ? null : departmentId;
+        } else {
+            data.departmentId = loggedUser.departmentId;
         }
 
-        if (!createdUser) {
-            return res.sendStatus(HTTP.INTERNAL_SERVER_ERROR);
-        }
+        const createdUser = await this.userRepository.create(data);
 
         const user = await this.userRepository.getById(createdUser.id);
 

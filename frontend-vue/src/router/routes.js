@@ -16,10 +16,16 @@ export default [
         meta: { auth: true }
     },
     {
+        path: '/departments',
+        name: 'departments',
+        component: () => import('@/views/departments/TablePage'),
+        meta: { auth: [Roles.ADMIN] }
+    },
+    {
         path: '/users',
         name: 'users',
         component: () => import('@/views/users/TablePage'),
-        meta: { auth: [Roles.ADMIN] }
+        meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
     },
     {
         path: '/contracts',

@@ -12,7 +12,7 @@ const paginationValidator = require('../validators/pagination');
 
 const {
     Contract,
-    Role: { ADMIN }
+    Role: { ADMIN, MANAGER }
 } = require('../models');
 
 module.exports = di => {
@@ -27,11 +27,7 @@ module.exports = di => {
         [
             paginationValidator.pagination,
             validate,
-            searchable(
-                Contract.SEARCHABLE_FIELDS,
-                true,
-                Contract.ADMIN_SEARCHABLE_FIELDS
-            ),
+            searchable(Contract.SEARCHABLE_FIELDS),
             pagination,
             sorting()
         ],
@@ -39,17 +35,21 @@ module.exports = di => {
     );
     router.post(
         '/',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [contractValidator.store, validate],
         invoke(storeController)
     );
     router.put(
         '/:id',
-        loggedOnly(ADMIN),
+        loggedOnly(ADMIN, MANAGER),
         [contractValidator.update, validate],
         invoke(updateController)
     );
-    router.delete('/:id', loggedOnly(ADMIN), invoke(destroyController));
+    router.delete(
+        '/:id',
+        loggedOnly(ADMIN, MANAGER),
+        invoke(destroyController)
+    );
 
     return router;
 };

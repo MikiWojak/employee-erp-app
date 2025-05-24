@@ -40,7 +40,6 @@ describe('Users', () => {
     });
 
     afterEach(async () => {
-        await editedUser.setRoles([]);
         await editedUser.destroy({ force: true });
 
         await request.post('/api/auth/logout');

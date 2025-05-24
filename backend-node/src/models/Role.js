@@ -2,17 +2,22 @@
 
 const { Model } = require('sequelize');
 
-const ADMIN = 'admin';
-const EMPLOYEE = 'employee';
-
 module.exports = (sequelize, DataTypes) => {
     class Role extends Model {
         static associate({ User }) {
-            this.belongsToMany(User, {
-                as: 'users',
-                through: 'Role2User',
-                foreignKey: 'roleId'
-            });
+            this.hasMany(User, { foreignKey: 'roleId' });
+        }
+
+        static get ADMIN() {
+            return 'admin';
+        }
+
+        static get MANAGER() {
+            return 'manager';
+        }
+
+        static get EMPLOYEE() {
+            return 'employee';
         }
     }
 
@@ -36,9 +41,6 @@ module.exports = (sequelize, DataTypes) => {
             paranoid: true
         }
     );
-
-    Role.ADMIN = ADMIN;
-    Role.EMPLOYEE = EMPLOYEE;
 
     return Role;
 };

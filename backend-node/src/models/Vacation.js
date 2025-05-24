@@ -1,27 +1,34 @@
 'use strict';
 
 const dayjs = require('dayjs');
-const { Model, Sequelize } = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Vacation extends Model {
-        static associate(models) {
-            this.belongsTo(models.User, {
+        static associate({ User }) {
+            this.belongsTo(User, {
                 as: 'user',
                 foreignKey: 'userId'
+            });
+            this.belongsTo(User, {
+                as: 'createdBy',
+                foreignKey: 'createdById'
+            });
+            this.belongsTo(User, {
+                as: 'updatedBy',
+                foreignKey: 'updatedById'
             });
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['duration'];
-        }
-
-        static get ADMIN_SEARCHABLE_FIELDS() {
             return [
-                ...this.SEARCHABLE_FIELDS,
-                'user.firstName',
-                'user.lastName',
-                Sequelize.literal("CONCAT(user.firstName, ' ', user.lastName)")
+                'duration',
+                '$user.firstName$',
+                '$user.lastName$',
+                '$createdBy.firstName$',
+                '$createdBy.lastName$',
+                '$updatedBy.firstName$',
+                '$updatedBy.lastName$'
             ];
         }
     }
@@ -56,6 +63,22 @@ module.exports = (sequelize, DataTypes) => {
             approved: {
                 allowNull: false,
                 type: DataTypes.BOOLEAN
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             }
         },
         {

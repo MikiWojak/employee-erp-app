@@ -3,7 +3,9 @@
 const dayjs = require('dayjs');
 const faker = require('faker');
 
-const { Role } = require('../models');
+const {
+    Role: { EMPLOYEE, MANAGER }
+} = require('../models');
 
 const di = require('../di');
 const userRepository = di.get('repositories.user');
@@ -14,17 +16,14 @@ module.exports = {
         const users = await userRepository.findAll({
             include: [
                 {
-                    association: 'roles',
-                    through: {
-                        attributes: []
-                    },
+                    association: 'role',
                     required: true,
-                    where: { name: Role.EMPLOYEE }
+                    where: { name: [EMPLOYEE, MANAGER] }
                 }
             ]
         });
 
-        for (let user of users) {
+        for (const user of users) {
             const userId = user.id;
             const transaction = await contractRepository.getDbTransaction();
 
@@ -73,7 +72,5 @@ module.exports = {
         }
     },
 
-    down: async queryInterface => {
-        await queryInterface.bulkDelete('Contracts', null, {});
-    }
+    down: () => {}
 };

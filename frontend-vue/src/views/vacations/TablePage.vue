@@ -4,6 +4,7 @@ import { mapState, mapActions } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useVacationStore } from '@/stores/vacation';
+import { BelongingTabs } from '@/enums/BelongingTabs';
 import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
@@ -23,12 +24,13 @@ export default {
                 title: 'Vacations',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this vacation?'
-            }
+            },
+            selectedTab: BelongingTabs.EMPLOYEES
         };
     },
 
     computed: {
-        ...mapState(useAuthStore, ['isAdmin']),
+        ...mapState(useAuthStore, ['isAdmin', 'isManager']),
 
         customFields() {
             return [
@@ -43,21 +45,82 @@ export default {
 
         headers() {
             const employeeHeaders = [
-                { title: 'Start date', value: 'startDate' },
-                { title: 'End date', value: 'endDate' },
-                { title: 'Duration', value: 'duration' },
-                { title: 'Status', value: 'approved' }
+                { title: 'Start date', value: 'startDate', minWidth: '125px' },
+                { title: 'End date', value: 'endDate', minWidth: '125px' },
+                { title: 'Duration', value: 'duration', minWidth: '100px' },
+                { title: 'Status', value: 'approved', minWidth: '125px' }
             ];
 
-            if (this.isAdmin) {
+            if (
+                this.isAdmin ||
+                (this.isManager && this.selectedTab !== BelongingTabs.MINE)
+            ) {
                 return [
-                    { title: 'First name', value: 'user.firstName' },
-                    { title: 'Last name', value: 'user.lastName' },
-                    ...employeeHeaders
+                    {
+                        title: 'First name',
+                        value: 'user.firstName',
+                        minWidth: '150px'
+                    },
+                    {
+                        title: 'Last name',
+                        value: 'user.lastName',
+                        minWidth: '150px'
+                    },
+                    ...employeeHeaders,
+                    {
+                        title: 'Created by - First name',
+                        value: 'createdBy.firstName',
+                        minWidth: '200px'
+                    },
+                    {
+                        title: 'Created by - Last name',
+                        value: 'createdBy.lastName',
+                        minWidth: '200px'
+                    },
+                    {
+                        title: 'Updated by - First name',
+                        value: 'updatedBy.firstName',
+                        minWidth: '200px'
+                    },
+                    {
+                        title: 'Updated by - Last name',
+                        value: 'updatedBy.lastName',
+                        minWidth: '200px'
+                    }
                 ];
             }
 
             return employeeHeaders;
+        },
+
+        tabs() {
+            if (this.isManager) {
+                return [
+                    {
+                        label: 'Employees vacations',
+                        value: BelongingTabs.EMPLOYEES
+                    },
+                    { label: 'My vacations', value: BelongingTabs.MINE }
+                ];
+            }
+
+            return [];
+        },
+
+        additionalIndexParams() {
+            return {
+                ...(this.selectedTab === BelongingTabs.MINE && {
+                    mineOnly: true
+                })
+            };
+        }
+    },
+
+    watch: {
+        async selectedTab() {
+            this.page = 1;
+
+            await this.doGetItems();
         }
     },
 
@@ -68,7 +131,14 @@ export default {
         }),
 
         areActionButtonsDisabled(item) {
-            return !this.isAdmin && item.approved;
+            if (
+                this.isAdmin ||
+                (this.isManager && this.selectedTab === BelongingTabs.EMPLOYEES)
+            ) {
+                return false;
+            }
+
+            return item.approved;
         },
 
         getStatus(item) {

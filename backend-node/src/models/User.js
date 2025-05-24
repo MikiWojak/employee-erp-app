@@ -1,18 +1,21 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
-const { Model, Sequelize } = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     const { Role } = sequelize.models;
 
     class User extends Model {
-        static associate({ Role, Contract, Vacation, Media }) {
-            this.belongsToMany(Role, {
-                as: 'roles',
-                through: 'Role2User',
-                foreignKey: 'userId'
-            });
+        static associate({
+            Role,
+            User,
+            Media,
+            Contract,
+            Vacation,
+            Department
+        }) {
+            this.belongsTo(Role, { as: 'role', foreignKey: 'roleId' });
             this.hasMany(Contract, {
                 as: 'contracts',
                 foreignKey: 'userId'
@@ -25,26 +28,40 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'avatar',
                 foreignKey: 'avatarId'
             });
+            this.belongsTo(Department, {
+                as: 'department',
+                foreignKey: 'departmentId'
+            });
+            this.belongsTo(User, {
+                as: 'createdBy',
+                foreignKey: 'createdById'
+            });
+            this.belongsTo(User, {
+                as: 'updatedBy',
+                foreignKey: 'updatedById'
+            });
         }
 
         async rolesInfo() {
-            const roles = await this.getRoles();
+            const role = await this.getRole();
 
-            return roles.map(role => role.name);
+            return {
+                isAdmin: role.name === Role.ADMIN,
+                isManager: role.name === Role.MANAGER,
+                isEmployee: role.name === Role.EMPLOYEE
+            };
         }
 
-        async isAdmin() {
-            const roles = await this.getRoles();
-
-            return roles.some(role => role.name === Role.ADMIN);
-        }
-
-        static get ADMIN_SEARCHABLE_FIELDS() {
+        static get SEARCHABLE_FIELDS() {
             return [
                 'firstName',
                 'lastName',
                 'email',
-                Sequelize.literal("CONCAT(firstName, ' ', lastName)")
+                '$department.name$',
+                '$createdBy.firstName$',
+                '$createdBy.lastName$',
+                '$updatedBy.firstName$',
+                '$updatedBy.lastName$'
             ];
         }
     }
@@ -56,6 +73,23 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
+            },
+            roleId: {
+                allowNull: false,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Roles',
+                    key: 'id'
+                }
+            },
+            departmentId: {
+                allowNull: true,
+                defaultValue: null,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Departments',
+                    key: 'id'
+                }
             },
             firstName: {
                 allowNull: false,
@@ -101,6 +135,22 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 references: {
                     model: 'Media',
+                    key: 'id'
+                }
+            },
+            createdById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            updatedById: {
+                allowNull: true,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Users',
                     key: 'id'
                 }
             }

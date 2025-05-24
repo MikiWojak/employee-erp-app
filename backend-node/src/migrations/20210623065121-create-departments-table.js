@@ -9,30 +9,32 @@ const {
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable(
-            'Role2User',
+            'Departments',
             {
-                roleId: {
+                id: {
                     allowNull: false,
                     primaryKey: true,
                     type: DataTypes.UUID,
-                    references: {
-                        model: 'Roles',
-                        key: 'id'
-                    }
+                    defaultValue: DataTypes.UUIDV4
                 },
-                userId: {
+                name: {
                     allowNull: false,
-                    primaryKey: true,
-                    type: DataTypes.UUID,
-                    references: {
-                        model: 'Users',
-                        key: 'id'
-                    }
+                    unique: true,
+                    type: DataTypes.STRING
                 },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.fn('now')
+                },
+                updatedAt: {
+                    allowNull: false,
+                    type: DataTypes.DATE,
+                    defaultValue: DataTypes.fn('now')
+                },
+                deletedAt: {
+                    type: DataTypes.DATE,
+                    defaultValue: null
                 }
             },
             {
@@ -42,6 +44,6 @@ module.exports = {
         );
     },
     down: async queryInterface => {
-        await queryInterface.dropTable('Role2User');
+        await queryInterface.dropTable('Departments');
     }
 };

@@ -17,6 +17,23 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
+                roleId: {
+                    allowNull: false,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Roles',
+                        key: 'id'
+                    }
+                },
+                departmentId: {
+                    allowNull: true,
+                    defaultValue: null,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Departments',
+                        key: 'id'
+                    }
+                },
                 firstName: {
                     allowNull: false,
                     type: DataTypes.STRING
@@ -55,6 +72,22 @@ module.exports = {
                     type: DataTypes.UUID,
                     references: {
                         model: 'Media',
+                        key: 'id'
+                    }
+                },
+                createdById: {
+                    allowNull: true,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
+                updatedById: {
+                    allowNull: true,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
                         key: 'id'
                     }
                 },

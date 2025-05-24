@@ -43,6 +43,22 @@ module.exports = {
                     type: DataTypes.BOOLEAN,
                     defaultValue: false
                 },
+                createdById: {
+                    allowNull: true,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
+                updatedById: {
+                    allowNull: true,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'Users',
+                        key: 'id'
+                    }
+                },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,

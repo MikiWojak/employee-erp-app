@@ -4,10 +4,19 @@ import axios from '@/services/axios';
 
 export const useUserStore = defineStore('user', {
     actions: {
-        async index({ page = 1, perPage = 10, search = '' } = {}) {
-            const { data } = await axios.get('/users', {
-                params: { page, perPage, q: search }
-            });
+        async index({
+            page = 1,
+            perPage = 10,
+            search = '',
+            allRoles = false
+        } = {}) {
+            const params = { page, perPage, q: search };
+
+            if (allRoles) {
+                params.allRoles = true;
+            }
+
+            const { data } = await axios.get('/users', { params });
 
             return data;
         },

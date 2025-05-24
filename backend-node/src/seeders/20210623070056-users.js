@@ -1,41 +1,56 @@
 'use strict';
 
-const { Role } = require('../models');
+const faker = require('faker');
 
 const di = require('../di');
+const { Role } = require('../models');
+const getRandomDateOfBirth = require('../helpers/getRandomDateOfBirth');
+
 const roleRepository = di.get('repositories.role');
 const userRepository = di.get('repositories.user');
+const departmentRepository = di.get('repositories.department');
 
 module.exports = {
     up: async () => {
-        const roleAdmin = await roleRepository.findByName(Role.ADMIN);
+        const [departments, roleAdmin, roleManager, roleEmployee] =
+            await Promise.all([
+                departmentRepository.findAll(),
+                roleRepository.findByName(Role.ADMIN),
+                roleRepository.findByName(Role.MANAGER),
+                roleRepository.findByName(Role.EMPLOYEE)
+            ]);
 
-        const admin = await userRepository.create({
-            firstName: 'John',
-            lastName: 'Admin',
-            dateOfBirth: '1985-03-17',
+        const [admin, manager, employee] = await Promise.all([
+            userRepository.create({
+                roleId: roleAdmin.id,
+                firstName: faker.name.firstName(),
+                lastName: 'Admin',
+                dateOfBirth: getRandomDateOfBirth(),
+                email: 'admin@erp.test',
+                password: 'Qwerty123!'
+            }),
+            userRepository.create({
+                roleId: roleManager.id,
+                firstName: faker.name.firstName(),
+                lastName: 'Manager',
+                dateOfBirth: getRandomDateOfBirth(),
+                email: 'manager@erp.test',
+                password: 'Qwerty123!'
+            }),
+            userRepository.create({
+                roleId: roleEmployee.id,
+                firstName: faker.name.firstName(),
+                lastName: 'Employee',
+                dateOfBirth: getRandomDateOfBirth(),
+                email: 'employee@erp.test',
+                password: 'Qwerty123!'
+            })
+        ]);
 
-            email: 'admin@erp.test',
-            password: 'Qwerty123!'
-        });
+        const department = faker.random.arrayElement(departments);
 
-        await admin.setRoles([roleAdmin]);
-
-        const roleEmployee = await roleRepository.findByName(Role.EMPLOYEE);
-
-        const employee = await userRepository.create({
-            firstName: 'George',
-            lastName: 'Employee',
-            dateOfBirth: '1990-09-03',
-
-            email: 'employee@erp.test',
-            password: 'Qwerty123!'
-        });
-
-        await employee.setRoles([roleEmployee]);
+        await department.setUsers([manager, employee]);
     },
 
-    down: async queryInterface => {
-        return queryInterface.bulkDelete('Users', null, {});
-    }
+    down: () => {}
 };

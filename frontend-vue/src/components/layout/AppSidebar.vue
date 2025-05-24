@@ -4,7 +4,7 @@
             v-bind="userInfoAvatarProps"
             lines="two"
             :title="fullName"
-            :subtitle="roles"
+            :subtitle="departmentName"
             :to="{ name: 'profile' }"
         />
 
@@ -18,8 +18,15 @@
 
         <v-list-item
             v-if="isAdmin"
+            prepend-icon="mdi-office-building"
+            title="Departments"
+            :to="{ name: 'departments' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin || isManager"
             prepend-icon="mdi-account-multiple"
-            title="Employees"
+            title="Users"
             :to="{ name: 'users' }"
         />
 
@@ -68,7 +75,7 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin']),
+        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
 
         fullName() {
             return this.loggedUser?.fullName || '';
@@ -88,14 +95,8 @@ export default {
             };
         },
 
-        roles() {
-            if (!this.loggedUser) {
-                return '';
-            }
-
-            const { roles } = this.loggedUser;
-
-            return roles.map(role => role.name).join(', ');
+        departmentName() {
+            return this.loggedUser?.department?.name || '';
         }
     },
 
