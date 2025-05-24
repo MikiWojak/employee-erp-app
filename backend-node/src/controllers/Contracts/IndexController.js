@@ -56,6 +56,14 @@ class IndexController {
                             where: { name: roleNames }
                         }
                     ]
+                },
+                {
+                    association: 'createdBy',
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    association: 'updatedBy',
+                    attributes: ['id', 'firstName', 'lastName']
                 }
             ],
             subQuery: false

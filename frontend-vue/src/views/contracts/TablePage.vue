@@ -44,14 +44,15 @@ export default {
 
         headers() {
             const employeeHeaders = [
-                { title: 'Position', value: 'position' },
-                { title: 'Start date', value: 'startDate' },
-                { title: 'End date', value: 'endDate' },
+                { title: 'Position', value: 'position', minWidth: '150px' },
+                { title: 'Start date', value: 'startDate', minWidth: '125px' },
+                { title: 'End date', value: 'endDate', minWidth: '125px' },
                 {
                     title: 'Days off/year',
-                    value: 'vacationDaysPerYear'
+                    value: 'vacationDaysPerYear',
+                    minWidth: '125px'
                 },
-                { title: 'Days off', value: 'vacationDays' }
+                { title: 'Days off', value: 'vacationDays', minWidth: '100px' }
             ];
 
             if (
@@ -59,9 +60,37 @@ export default {
                 (this.isManager && this.selectedTab !== BelongingTabs.MINE)
             ) {
                 return [
-                    { title: 'First name', value: 'user.firstName' },
-                    { title: 'Last name', value: 'user.lastName' },
-                    ...employeeHeaders
+                    {
+                        title: "User's first name",
+                        value: 'user.firstName',
+                        minWidth: '150px'
+                    },
+                    {
+                        title: "User's last name",
+                        value: 'user.lastName',
+                        minWidth: '150px'
+                    },
+                    ...employeeHeaders,
+                    {
+                        title: 'Created by - First name',
+                        value: 'createdBy.firstName',
+                        minWidth: '200px'
+                    },
+                    {
+                        title: 'Created by - Last name',
+                        value: 'createdBy.lastName',
+                        minWidth: '200px'
+                    },
+                    {
+                        title: 'Updated by - First name',
+                        value: 'updatedBy.firstName',
+                        minWidth: '200px'
+                    },
+                    {
+                        title: 'Updated by - Last name',
+                        value: 'updatedBy.lastName',
+                        minWidth: '200px'
+                    }
                 ];
             }
 

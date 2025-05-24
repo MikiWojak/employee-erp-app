@@ -49,15 +49,49 @@ export default {
         headers() {
             return [
                 { title: 'Avatar', value: 'icon' },
-                { title: 'First name', value: 'firstName' },
-                { title: 'Last name', value: 'lastName' },
-                { title: 'Role', value: 'role' },
+                { title: 'First name', value: 'firstName', minWidth: '150px' },
+                { title: 'Last name', value: 'lastName', minWidth: '150px' },
+                { title: 'Role', value: 'role', minWidth: '100px' },
                 ...(this.isAdmin
-                    ? [{ title: 'Department', value: 'department.name' }]
+                    ? [
+                          {
+                              title: 'Department',
+                              value: 'department.name',
+                              minWidth: '150px'
+                          }
+                      ]
                     : []),
-                { title: 'Date of birth', value: 'dateOfBirth' },
-                { title: 'Email', value: 'email' },
-                { title: 'Days off left', value: 'vacationLeft' }
+                {
+                    title: 'Date of birth',
+                    value: 'dateOfBirth',
+                    minWidth: '125px'
+                },
+                { title: 'Email', value: 'email', minWidth: '200px' },
+                {
+                    title: 'Days off left',
+                    value: 'vacationLeft',
+                    minWidth: '125px'
+                },
+                {
+                    title: 'Created by - First name',
+                    value: 'createdBy.firstName',
+                    minWidth: '200px'
+                },
+                {
+                    title: 'Created by - Last name',
+                    value: 'createdBy.lastName',
+                    minWidth: '200px'
+                },
+                {
+                    title: 'Updated by - First name',
+                    value: 'updatedBy.firstName',
+                    minWidth: '200px'
+                },
+                {
+                    title: 'Updated by - Last name',
+                    value: 'updatedBy.lastName',
+                    minWidth: '200px'
+                }
             ];
         },
 
