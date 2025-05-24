@@ -11,11 +11,17 @@
                     disabled
                 />
 
-                <v-text-field v-model="roleName" label="Role" disabled />
+                <v-text-field
+                    v-model="roleName"
+                    label="Role"
+                    prepend-icon="mdi-folder-lock"
+                    disabled
+                />
 
                 <v-text-field
                     v-model="formData.firstName"
                     label="First name"
+                    prepend-icon="mdi-account-circle"
                     :error-messages="handleError('firstName')"
                     @blur="onBlur('firstName')"
                     @input="clearServerError('firstName')"
@@ -24,6 +30,7 @@
                 <v-text-field
                     v-model="formData.lastName"
                     label="Last name"
+                    prepend-icon="mdi-account-circle"
                     :error-messages="handleError('lastName')"
                     @blur="onBlur('lastName')"
                     @input="clearServerError('lastName')"
@@ -42,6 +49,7 @@
                     v-model="formData.email"
                     type="email"
                     label="Email"
+                    prepend-icon="mdi-email"
                     :error-messages="handleError('email')"
                     @blur="onBlur('email')"
                     @input="clearServerError('email')"
