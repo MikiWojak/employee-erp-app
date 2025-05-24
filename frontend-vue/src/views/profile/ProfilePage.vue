@@ -8,6 +8,7 @@
                     v-if="!isAdmin"
                     v-model="departmentName"
                     label="Department"
+                    prepend-icon="mdi-office-building"
                     disabled
                 />
 
