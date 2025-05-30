@@ -33,6 +33,16 @@ module.exports = {
         'repositories.media': {
             class: 'repositories/Media',
             arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackAnswer': {
+            class: 'repositories/FeedbackAnswer',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackQuestion': {
+            class: 'repositories/FeedbackQuestion',
+            arguments: ['@sequelize']
         }
     }
 };

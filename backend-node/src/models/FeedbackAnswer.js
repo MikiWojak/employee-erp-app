@@ -1,0 +1,47 @@
+'use strict';
+
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+    class FeedbackAnswer extends Model {}
+
+    FeedbackAnswer.init(
+        {
+            id: {
+                allowNull: false,
+                primaryKey: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4
+            },
+            roleId: {
+                allowNull: false,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Roles',
+                    key: 'id'
+                }
+            },
+            departmentId: {
+                allowNull: true,
+                defaultValue: null,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'Departments',
+                    key: 'id'
+                }
+            },
+            answer: {
+                allowNull: false,
+                type: DataTypes.STRING
+            }
+        },
+        {
+            modelName: 'FeedbackAnswer',
+            sequelize,
+            timestamps: true,
+            paranoid: true
+        }
+    );
+
+    return FeedbackAnswer;
+};
