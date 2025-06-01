@@ -46,6 +46,12 @@ export default [
         meta: { auth: true }
     },
     {
+        path: '/feedback',
+        name: 'feedback',
+        component: () => import('@/views/feedback/QuestionsPage.vue'),
+        meta: { auth: true }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/auth/LoginPage'),

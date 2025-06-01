@@ -42,6 +42,13 @@
             :to="{ name: 'vacations' }"
         />
 
+        <v-list-item
+            v-if="isEmployee"
+            prepend-icon="mdi-bed"
+            title="Feedback"
+            :to="{ name: 'feedback' }"
+        />
+
         <v-divider />
 
         <v-list-item
@@ -75,7 +82,12 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
+        ...mapState(useAuthStore, [
+            'isAdmin',
+            'isManager',
+            'isEmployee',
+            'loggedUser'
+        ]),
 
         fullName() {
             return this.loggedUser?.fullName || '';
