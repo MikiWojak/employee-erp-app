@@ -30,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id'
                 }
             },
+            questionId: {
+                allowNull: false,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'FeedbackQuestions',
+                    key: 'id'
+                }
+            },
             answer: {
                 allowNull: false,
                 type: DataTypes.STRING

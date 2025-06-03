@@ -9,9 +9,9 @@ class StoreController {
     async invoke(req, res) {
         const { body, loggedUser } = req;
 
-        for (const key in body) {
+        for (const questionId in body) {
             const question =
-                await this.feedbackQuestionRepository.findById(key);
+                await this.feedbackQuestionRepository.findById(questionId);
 
             if (!question) {
                 continue;
@@ -20,7 +20,8 @@ class StoreController {
             await this.feedbackAnswerRepository.create({
                 roleId: loggedUser.roleId,
                 departmentId: loggedUser.departmentId,
-                answer: body[key]
+                questionId,
+                answer: body[questionId]
             });
         }
 
