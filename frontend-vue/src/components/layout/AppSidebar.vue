@@ -44,9 +44,16 @@
 
         <v-list-item
             v-if="isEmployee"
-            prepend-icon="mdi-bed"
+            prepend-icon="mdi-comment"
             title="Feedback"
             :to="{ name: 'feedback' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin"
+            prepend-icon="mdi-comment-multiple"
+            title="Feedback Stats"
+            :to="{ name: 'feedback-stats' }"
         />
 
         <v-divider />
