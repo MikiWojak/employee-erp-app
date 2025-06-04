@@ -3,7 +3,14 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class FeedbackAnswer extends Model {}
+    class FeedbackAnswer extends Model {
+        static associate({ FeedbackQuestion }) {
+            this.belongsTo(FeedbackQuestion, {
+                as: 'question',
+                foreignKey: 'questionId'
+            });
+        }
+    }
 
     FeedbackAnswer.init(
         {

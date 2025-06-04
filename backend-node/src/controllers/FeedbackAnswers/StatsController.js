@@ -1,20 +1,54 @@
 const { fn, col } = require('sequelize');
-const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StatsController {
     constructor(feedbackQuestionRepository, feedbackAnswerRepository) {
-        this.feedbackQuestionRepository = feedbackQuestionRepository;
+        this.feedbackQuestionRepository = feedbackQuestionRepository; // @TODO What about it?
         this.feedbackAnswerRepository = feedbackAnswerRepository;
     }
 
     async invoke(req, res) {
+        const questions = await this.feedbackQuestionRepository.findAll({
+            raw: true
+        });
+
         const stats = await this.feedbackAnswerRepository.findAll({
-            attributes: ['questionId', 'answer', fn('COUNT', col('answer'))],
+            attributes: [
+                'questionId',
+                'answer',
+                [fn('COUNT', col('answer')), 'answersCount']
+            ],
             group: ['questionId', 'answer'],
             raw: true
         });
 
-        return res.send(stats);
+        const processedQuestions = [];
+
+        for (const question of questions) {
+            const rawData = stats.filter(
+                stat => stat.questionId === question.id
+            );
+
+            const data = [];
+
+            question.answerOptions.forEach(answerOption => {
+                const dataItem = rawData.find(
+                    item => item.answer === answerOption
+                );
+
+                if (dataItem) {
+                    data.push(dataItem.answersCount);
+                } else {
+                    data.push(0);
+                }
+            });
+
+            processedQuestions.push({
+                ...question,
+                data
+            });
+        }
+
+        return res.send(processedQuestions);
     }
 }
 
