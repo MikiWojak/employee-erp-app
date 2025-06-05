@@ -1,20 +1,53 @@
 const { body } = require('express-validator');
 
+const includesAll = require('../helpers/includesAll');
+
 const submit = [
-    body().custom((value, { req: { app } }) => {
-        console.dir({ value }, { depth: null });
+    body()
+        .isObject()
+        .withMessage('The form must be an object')
+        .custom(async (value, { req: { app } }) => {
+            if (!Object.keys(value).length) {
+                return Promise.reject('No empty object.');
+            }
 
-        return true;
+            const di = app.get('di');
+            const feedbackQuestionRepository = di.get(
+                'repositories.feedbackQuestion'
+            );
 
-        // const di = app.get('di');
-        // const departmentRepository = di.get('repositories.department');
-        // const department =
-        //     await departmentRepository.findById(departmentId);
-        //
-        // if (!department) {
-        //     return Promise.reject('Department not found.');
-        // }
-    })
+            const questions = await feedbackQuestionRepository.findAll();
+            const questionIdsDb = questions.map(question => question.id);
+
+            const areAllQuestionsFilled = includesAll(
+                Object.keys(value),
+                questionIdsDb
+            );
+
+            if (!areAllQuestionsFilled) {
+                return Promise.reject('Not all questions are filled.');
+            }
+
+            for (const questionId in value) {
+                const question = questions.find(
+                    question => question.id === questionId
+                );
+
+                if (!question) {
+                    return Promise.reject('Question not found.');
+                }
+
+                if (!value[questionId]?.trim()) {
+                    return Promise.reject('Missing value.');
+                }
+
+                if (!question.answerOptions.includes(value[questionId])) {
+                    return Promise.reject('Invalid value.');
+                }
+            }
+
+            return Promise.resolve();
+        })
 ];
 
 module.exports = {
