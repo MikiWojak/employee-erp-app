@@ -9,20 +9,34 @@ class StoreController {
     async invoke(req, res) {
         const { body, loggedUser } = req;
 
-        for (const questionId in body) {
-            const question =
-                await this.feedbackQuestionRepository.findById(questionId);
+        const transaction =
+            await this.feedbackAnswerRepository.getDbTransaction();
 
-            if (!question) {
-                continue;
+        try {
+            for (const questionId in body) {
+                const question =
+                    await this.feedbackQuestionRepository.findById(questionId);
+
+                if (!question) {
+                    throw new Error(`Question ${questionId} not found!`);
+                }
+
+                await this.feedbackAnswerRepository.create(
+                    {
+                        roleId: loggedUser.roleId,
+                        departmentId: loggedUser.departmentId,
+                        questionId,
+                        answer: body[questionId]
+                    },
+                    { transaction }
+                );
             }
 
-            await this.feedbackAnswerRepository.create({
-                roleId: loggedUser.roleId,
-                departmentId: loggedUser.departmentId,
-                questionId,
-                answer: body[questionId]
-            });
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+
+            throw error;
         }
 
         return res.sendStatus(HTTP.NO_CONTENT);

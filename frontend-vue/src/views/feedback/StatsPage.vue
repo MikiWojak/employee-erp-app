@@ -34,7 +34,12 @@ export default {
             questions: [],
             loading: false,
             options: {
-                responsive: true
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
             }
         };
     },
@@ -48,7 +53,6 @@ export default {
                         labels: item.answerOptions,
                         datasets: [
                             {
-                                label: item.title,
                                 backgroundColor: '#03A9F4',
                                 data: item.data
                             }
