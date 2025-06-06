@@ -2,8 +2,8 @@
 
 const faker = require('faker');
 
-const { Role } = require('../models');
 const di = require('../di');
+const { Role } = require('../models');
 
 const userRepository = di.get('repositories.user');
 const feedbackAnswerRepository = di.get('repositories.feedbackAnswer');

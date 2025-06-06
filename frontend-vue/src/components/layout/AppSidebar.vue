@@ -43,7 +43,7 @@
         />
 
         <v-list-item
-            v-if="isEmployee"
+            v-if="isEmployee || isManager"
             prepend-icon="mdi-comment"
             title="Feedback"
             :to="{ name: 'feedback' }"

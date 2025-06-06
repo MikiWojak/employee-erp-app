@@ -5,13 +5,13 @@ const invoke = require('../middlewares/invoke');
 const loggedOnly = require('../middlewares/loggedOnly');
 
 const {
-    Role: { EMPLOYEE }
+    Role: { MANAGER, EMPLOYEE }
 } = require('../models');
 
 module.exports = di => {
     const indexController = di.get('controllers.feedbackQuestions.index');
 
-    router.get('/', loggedOnly(EMPLOYEE), invoke(indexController));
+    router.get('/', loggedOnly(MANAGER, EMPLOYEE), invoke(indexController));
 
     return router;
 };

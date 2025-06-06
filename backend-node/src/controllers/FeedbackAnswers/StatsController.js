@@ -2,7 +2,7 @@ const { fn, col } = require('sequelize');
 
 class StatsController {
     constructor(feedbackQuestionRepository, feedbackAnswerRepository) {
-        this.feedbackQuestionRepository = feedbackQuestionRepository; // @TODO What about it?
+        this.feedbackQuestionRepository = feedbackQuestionRepository;
         this.feedbackAnswerRepository = feedbackAnswerRepository;
     }
 
