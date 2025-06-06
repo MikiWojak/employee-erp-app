@@ -29,8 +29,7 @@ module.exports = (sequelize, DataTypes) => {
                 }
             },
             departmentId: {
-                allowNull: true,
-                defaultValue: null,
+                allowNull: false,
                 type: DataTypes.UUID,
                 references: {
                     model: 'Departments',
