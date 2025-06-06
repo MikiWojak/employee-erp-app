@@ -8,7 +8,7 @@ const submit = [
         .withMessage('The form must be an object')
         .custom(async (value, { req: { app } }) => {
             if (!Object.keys(value).length) {
-                return Promise.reject('No empty object.');
+                return Promise.reject('All the questions must be filled.');
             }
 
             const di = app.get('di');
@@ -25,7 +25,7 @@ const submit = [
             );
 
             if (!areAllQuestionsFilled) {
-                return Promise.reject('Not all questions are filled.');
+                return Promise.reject('All the questions must be filled.');
             }
 
             for (const questionId in value) {
@@ -34,15 +34,19 @@ const submit = [
                 );
 
                 if (!question) {
-                    return Promise.reject('Question not found.');
+                    return Promise.reject(
+                        'At least one question does not exist in the system.'
+                    );
                 }
 
                 if (!value[questionId]?.trim()) {
-                    return Promise.reject('Missing value.');
+                    return Promise.reject('All the questions must be filled.');
                 }
 
                 if (!question.answerOptions.includes(value[questionId])) {
-                    return Promise.reject('Invalid value.');
+                    return Promise.reject(
+                        'At least one question has invalid answer.'
+                    );
                 }
             }
 

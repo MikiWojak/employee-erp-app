@@ -9,7 +9,7 @@
             :question="question"
         />
 
-        <v-btn type="submit" width="100%" :disabled="loading">
+        <v-btn type="submit" :disabled="loading">
             <span>Submit</span>
         </v-btn>
     </v-form>
@@ -18,6 +18,7 @@
 <script>
 import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
+import { StatusCodes as HTTP } from 'http-status-codes';
 
 import { useFeedbackAnswerStore } from '@/stores/feedbackAnswer';
 import { useFeedbackQuestionStore } from '@/stores/feedbackQuestion';
@@ -65,19 +66,7 @@ export default {
             }
         },
 
-        // @TODO Consider BaseError as Parent
         async doSubmitForm() {
-            // this.formErrorMessage = '';
-            // this.serverErrors = [];
-
-            // this.v$.formData.$touch();
-            //
-            // if (this.v$.formData.$invalid) {
-            //     return;
-            // }
-            //
-            // this.v$.formData.$reset();
-
             try {
                 this.loading = true;
 
@@ -85,29 +74,20 @@ export default {
 
                 this.$toast.success('Form submitted successfully');
             } catch (error) {
-                // this.formData.password = '';
-                //
-                // const { response } = error;
-                //
-                // if (
-                //     response?.status === HTTP.BAD_REQUEST &&
-                //     response?.data?.errors
-                // ) {
-                //     this.formErrorMessage = 'Invalid credentials.';
-                //     this.serverErrors = response.data.errors;
-                //
-                //     return;
-                // }
-                //
-                // if (response?.status === HTTP.UNAUTHORIZED) {
-                //     this.formErrorMessage = 'Mismatching credentials.';
-                //
-                //     return;
-                // }
+                const { response } = error;
+
+                if (
+                    response?.status === HTTP.BAD_REQUEST &&
+                    response?.data?.errors
+                ) {
+                    const [errorItem] = response.data.errors;
+
+                    this.$toast.error(errorItem.message);
+
+                    return;
+                }
 
                 console.error(error);
-
-                // this.formErrorMessage = 'Something went wrong...';
             } finally {
                 this.loading = false;
             }
