@@ -4,8 +4,9 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const questions =
-            await this.feedbackQuestionRepository.findAndCountAll();
+        const questions = await this.feedbackQuestionRepository.findAndCountAll(
+            { order: [['order', 'ASC']] }
+        );
 
         return res.send(questions);
     }

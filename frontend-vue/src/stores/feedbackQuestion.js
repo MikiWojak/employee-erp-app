@@ -8,6 +8,12 @@ export const useFeedbackQuestionStore = defineStore('feedbackQuestion', {
             const { data } = await axios.get('/feedback-questions');
 
             return data;
+        },
+
+        async stats() {
+            const { data } = await axios.get('/feedback-questions/stats');
+
+            return data;
         }
     }
 });

@@ -8,6 +8,7 @@ class StatsController {
 
     async invoke(req, res) {
         const questions = await this.feedbackQuestionRepository.findAll({
+            order: [['order', 'ASC']],
             raw: true
         });
 

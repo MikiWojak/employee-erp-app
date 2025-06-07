@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.JSON,
                 default: []
+            },
+            order: {
+                allowNull: false,
+                type: DataTypes.INTEGER
             }
         },
         {

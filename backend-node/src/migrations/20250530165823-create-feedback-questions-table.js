@@ -26,6 +26,10 @@ module.exports = {
                     type: DataTypes.JSON,
                     default: []
                 },
+                order: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER
+                },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,

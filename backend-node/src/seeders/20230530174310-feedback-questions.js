@@ -20,7 +20,8 @@ module.exports = {
                     'tired',
                     'sad',
                     'angry'
-                ]
+                ],
+                order: 1
             },
             {
                 title: 'Are you feeling appreciated?',
@@ -30,7 +31,8 @@ module.exports = {
                     'maybe',
                     'not really',
                     'no'
-                ]
+                ],
+                order: 2
             },
             {
                 title: 'What is your motivation to work?',
@@ -40,7 +42,8 @@ module.exports = {
                     'moderate',
                     'low',
                     'very low'
-                ]
+                ],
+                order: 3
             }
         ]);
     },

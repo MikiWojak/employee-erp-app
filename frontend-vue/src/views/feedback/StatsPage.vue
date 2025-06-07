@@ -20,7 +20,7 @@
 import { Bar } from 'vue-chartjs';
 import { mapActions } from 'pinia';
 
-import { useFeedbackAnswerStore } from '@/stores/feedbackAnswer';
+import { useFeedbackQuestionStore } from '@/stores/feedbackQuestion';
 
 export default {
     name: 'StatsPage',
@@ -68,7 +68,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(useFeedbackAnswerStore, ['stats']),
+        ...mapActions(useFeedbackQuestionStore, ['stats']),
 
         async doGetStats() {
             try {
