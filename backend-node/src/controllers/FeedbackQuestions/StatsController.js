@@ -15,13 +15,14 @@ class StatsController {
             query: { role = null, departmentId = null }
         } = req;
 
-        const where = isAdmin
-            ? {
-                  ...(departmentId && { departmentId: departmentId })
-              }
-            : {
-                  departmentId: loggedUser.departmentId
-              };
+        const where =
+            departmentId || !isAdmin
+                ? {
+                      departmentId: isAdmin
+                          ? departmentId
+                          : loggedUser.departmentId
+                  }
+                : {};
 
         const include =
             role || !isAdmin
@@ -33,11 +34,6 @@ class StatsController {
                       }
                   ]
                 : [];
-
-        console.dir(
-            { msg: 'StatsController', role, departmentId, where, include },
-            { depth: null }
-        );
 
         const questions = await this.feedbackQuestionRepository.findAll({
             order: [['order', 'ASC']],
