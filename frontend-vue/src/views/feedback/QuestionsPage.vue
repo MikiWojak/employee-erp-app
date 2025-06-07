@@ -72,7 +72,7 @@ export default {
 
                 await this.submitForm(this.form);
 
-                this.$toast.success('Form submitted successfully');
+                this.$toast.success('Form submitted successfully.');
             } catch (error) {
                 const { response } = error;
 
@@ -82,10 +82,12 @@ export default {
                 ) {
                     const [errorItem] = response.data.errors;
 
-                    this.$toast.error(errorItem.message);
+                    this.$toast.error(errorItem.message || 'Invalid form.');
 
                     return;
                 }
+
+                this.$toast.error('Something went wrong.');
 
                 console.error(error);
             } finally {
