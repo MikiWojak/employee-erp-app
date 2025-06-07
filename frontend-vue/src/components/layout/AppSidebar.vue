@@ -42,6 +42,20 @@
             :to="{ name: 'vacations' }"
         />
 
+        <v-list-item
+            v-if="isEmployee || isManager"
+            prepend-icon="mdi-comment"
+            title="Feedback"
+            :to="{ name: 'feedback' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin"
+            prepend-icon="mdi-comment-multiple"
+            title="Feedback Stats"
+            :to="{ name: 'feedback-stats' }"
+        />
+
         <v-divider />
 
         <v-list-item
@@ -75,7 +89,12 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
+        ...mapState(useAuthStore, [
+            'isAdmin',
+            'isManager',
+            'isEmployee',
+            'loggedUser'
+        ]),
 
         fullName() {
             return this.loggedUser?.fullName || '';

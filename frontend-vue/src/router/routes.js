@@ -46,6 +46,18 @@ export default [
         meta: { auth: true }
     },
     {
+        path: '/feedback',
+        name: 'feedback',
+        component: () => import('@/views/feedback/QuestionsPage.vue'),
+        meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
+    },
+    {
+        path: '/feedback-stats',
+        name: 'feedback-stats',
+        component: () => import('@/views/feedback/StatsPage.vue'),
+        meta: { auth: [Roles.ADMIN] }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/auth/LoginPage'),
