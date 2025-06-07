@@ -1,6 +1,16 @@
 <template>
     <h1> Feedback - stats </h1>
 
+    <v-row v-if="isAdmin">
+        <v-col cols="12" md="6">
+            <role-select v-model="role" clearable />
+        </v-col>
+
+        <v-col cols="12" md="6">
+            <department-select v-model="selectedDepartment" clearable />
+        </v-col>
+    </v-row>
+
     <v-row>
         <v-col
             v-for="question in processedQuestions"
@@ -18,15 +28,23 @@
 
 <script>
 import { Bar } from 'vue-chartjs';
-import { mapActions } from 'pinia';
+import { defineAsyncComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
 
+import { useAuthStore } from '@/stores/auth';
 import { useFeedbackQuestionStore } from '@/stores/feedbackQuestion';
 
 export default {
     name: 'StatsPage',
 
     components: {
-        Bar
+        Bar,
+        RoleSelect: defineAsyncComponent(
+            () => import('@/components/inputs/RoleSelect')
+        ),
+        DepartmentSelect: defineAsyncComponent(
+            () => import('@/components/inputs/DepartmentSelect')
+        )
     },
 
     data() {
@@ -47,11 +65,15 @@ export default {
                         }
                     }
                 }
-            }
+            },
+            role: null,
+            selectedDepartment: null
         };
     },
 
     computed: {
+        ...mapState(useAuthStore, ['isAdmin']),
+
         processedQuestions() {
             return this.questions.map(item => {
                 return {
@@ -70,6 +92,19 @@ export default {
         }
     },
 
+    watch: {
+        async role() {
+            await this.doGetStats();
+        },
+
+        selectedDepartment: {
+            async handler() {
+                await this.doGetStats();
+            },
+            deep: true
+        }
+    },
+
     async created() {
         await this.doGetStats();
     },
@@ -81,7 +116,12 @@ export default {
             try {
                 this.loading = true;
 
-                const questions = await this.stats();
+                const questions = await this.stats({
+                    ...(this.role && { role: this.role }),
+                    ...(this.selectedDepartment && {
+                        departmentId: this.selectedDepartment.id
+                    })
+                });
 
                 this.questions = questions;
             } catch (error) {
