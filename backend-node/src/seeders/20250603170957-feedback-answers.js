@@ -18,7 +18,7 @@ module.exports = {
                     {
                         association: 'role',
                         required: true,
-                        where: { name: Role.EMPLOYEE }
+                        where: { name: [Role.EMPLOYEE, Role.MANAGER] }
                     }
                 ]
             })
