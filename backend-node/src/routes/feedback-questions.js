@@ -13,7 +13,7 @@ module.exports = di => {
     const statsController = di.get('controllers.feedbackQuestions.stats');
 
     router.get('/', loggedOnly(MANAGER, EMPLOYEE), invoke(indexController));
-    router.get('/stats', loggedOnly(ADMIN), invoke(statsController));
+    router.get('/stats', loggedOnly(ADMIN, MANAGER), invoke(statsController));
 
     return router;
 };

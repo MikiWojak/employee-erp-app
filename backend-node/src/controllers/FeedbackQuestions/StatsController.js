@@ -1,5 +1,7 @@
 const { fn, col } = require('sequelize');
 
+const { Role } = require('../../models');
+
 class StatsController {
     constructor(feedbackQuestionRepository, feedbackAnswerRepository) {
         this.feedbackQuestionRepository = feedbackQuestionRepository;
@@ -7,18 +9,50 @@ class StatsController {
     }
 
     async invoke(req, res) {
+        const {
+            loggedUser,
+            rolesInfo: { isAdmin },
+            query: { role = null, departmentId = null }
+        } = req;
+
+        const where = isAdmin
+            ? {
+                  ...(departmentId && { departmentId: departmentId })
+              }
+            : {
+                  departmentId: loggedUser.departmentId
+              };
+
+        const include =
+            role || !isAdmin
+                ? [
+                      {
+                          association: 'role',
+                          attributes: [],
+                          where: { name: isAdmin ? role : Role.EMPLOYEE }
+                      }
+                  ]
+                : [];
+
+        console.dir(
+            { msg: 'StatsController', role, departmentId, where, include },
+            { depth: null }
+        );
+
         const questions = await this.feedbackQuestionRepository.findAll({
             order: [['order', 'ASC']],
             raw: true
         });
 
         const stats = await this.feedbackAnswerRepository.findAll({
+            where,
             attributes: [
                 'questionId',
                 'answer',
                 [fn('COUNT', col('answer')), 'answersCount']
             ],
             group: ['questionId', 'answer'],
+            include,
             raw: true
         });
 

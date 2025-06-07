@@ -11,6 +11,7 @@
         placeholder="Start typing to Search"
         :error-messages="errorMessages"
         return-object
+        :clearable="clearable"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
         @update:search="doSearch"
@@ -29,6 +30,11 @@ export default {
         modelValue: {
             type: Object,
             default: null
+        },
+
+        clearable: {
+            type: Boolean,
+            default: false
         },
 
         errorMessages: {

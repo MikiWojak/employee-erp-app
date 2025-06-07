@@ -50,7 +50,7 @@
         />
 
         <v-list-item
-            v-if="isAdmin"
+            v-if="isAdmin || isManager"
             prepend-icon="mdi-comment-multiple"
             title="Feedback Stats"
             :to="{ name: 'feedback-stats' }"

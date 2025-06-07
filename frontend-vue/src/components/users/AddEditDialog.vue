@@ -32,6 +32,7 @@
                 <role-select
                     v-if="isAdmin"
                     v-model="formData.role"
+                    all-roles
                     :error-messages="handleError('role')"
                     @blur="onBlur('role')"
                     @update:model-value="clearServerError('role')"

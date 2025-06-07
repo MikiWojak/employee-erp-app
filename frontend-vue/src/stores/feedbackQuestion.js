@@ -10,8 +10,15 @@ export const useFeedbackQuestionStore = defineStore('feedbackQuestion', {
             return data;
         },
 
-        async stats() {
-            const { data } = await axios.get('/feedback-questions/stats');
+        async stats({ role = null, departmentId = null } = {}) {
+            const params = {
+                ...(role && { role }),
+                ...(departmentId && { departmentId })
+            };
+
+            const { data } = await axios.get('/feedback-questions/stats', {
+                params
+            });
 
             return data;
         }
