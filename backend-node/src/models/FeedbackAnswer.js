@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
             },
+            feedbackTokensCollectionId: {
+                allowNull: false,
+                type: DataTypes.UUID,
+                references: {
+                    model: 'FeedbackTokensCollections',
+                    key: 'id'
+                }
+            },
             roleId: {
                 allowNull: false,
                 type: DataTypes.UUID,
@@ -54,8 +62,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             modelName: 'FeedbackAnswer',
             sequelize,
-            timestamps: true,
-            paranoid: true
+            timestamps: false
         }
     );
 

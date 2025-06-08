@@ -28,8 +28,8 @@ class StoreController {
                     { where: { expiresAt: null }, transaction }
                 ),
                 this.feedbackTokenRepository.update(
-                    { expiresAt: dateTime },
-                    { where: { expiresAt: null }, transaction }
+                    { expired: true },
+                    { where: { expired: false }, transaction }
                 ),
                 this.feedbackTokensCollectionRepository.create(
                     { dateTime },

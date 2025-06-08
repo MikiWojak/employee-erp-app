@@ -13,7 +13,7 @@ class FeedbackTokenRepository extends AbstractRepository {
             return null;
         }
 
-        const args = deepmerge(options, { where: { userId, expiresAt: null } });
+        const args = deepmerge(options, { where: { userId, expired: false } });
 
         return this.findOne(args);
     }

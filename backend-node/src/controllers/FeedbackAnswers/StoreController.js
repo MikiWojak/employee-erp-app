@@ -37,6 +37,8 @@ class StoreController {
 
                 await this.feedbackAnswerRepository.create(
                     {
+                        feedbackTokensCollectionId:
+                            token.feedbackTokensCollectionId,
                         roleId: loggedUser.roleId,
                         departmentId: loggedUser.departmentId,
                         questionId,
@@ -46,10 +48,7 @@ class StoreController {
                 );
             }
 
-            await token.update(
-                { expiresAt: dayjs().format() },
-                { transaction }
-            );
+            await token.update({ expired: true }, { transaction });
 
             await transaction.commit();
         } catch (error) {

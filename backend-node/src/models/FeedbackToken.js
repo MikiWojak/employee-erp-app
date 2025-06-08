@@ -29,16 +29,17 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id'
                 }
             },
-            expiresAt: {
-                allowNull: true,
-                defaultValue: null,
-                type: DataTypes.DATE
+            expired: {
+                allowNull: false,
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
             }
         },
         {
             modelName: 'FeedbackToken',
             sequelize,
-            timestamps: true
+            timestamps: true,
+            updatedAt: false
         }
     );
 

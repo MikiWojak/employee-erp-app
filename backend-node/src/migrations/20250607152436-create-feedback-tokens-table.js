@@ -33,17 +33,12 @@ module.exports = {
                         key: 'id'
                     }
                 },
-                expiresAt: {
-                    allowNull: true,
-                    defaultValue: null,
-                    type: DataTypes.DATE
+                expired: {
+                    allowNull: false,
+                    type: DataTypes.BOOLEAN,
+                    defaultValue: false
                 },
                 createdAt: {
-                    allowNull: false,
-                    type: DataTypes.DATE,
-                    defaultValue: DataTypes.fn('now')
-                },
-                updatedAt: {
                     allowNull: false,
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.fn('now')
