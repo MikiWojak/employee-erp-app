@@ -6,7 +6,7 @@ module.exports = {
         },
 
         'controllers.feedbackTokensCollections.store': {
-            class: 'controllers/FeedbackTokensCollections/IndexController',
+            class: 'controllers/FeedbackTokensCollections/StoreController',
             arguments: [
                 '@repositories.feedbackTokensCollection',
                 '@repositories.feedbackToken',

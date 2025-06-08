@@ -20,7 +20,10 @@
                 <div
                     class="d-flex flex-column-reverse flex-md-row justify-space-between align-start align-md-center ga-4"
                 >
-                    <div class="d-flex align-center w-100 w-md-50">
+                    <div
+                        v-if="tableOptions.searchBar"
+                        class="d-flex align-center w-100 w-md-50"
+                    >
                         <v-text-field
                             v-model="search"
                             prepend-icon="mdi-magnify"
@@ -142,6 +145,7 @@ export default {
             isAddEditDialogOpened: false,
             tableOptions: {
                 title: 'Table',
+                searchBar: true,
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this item?'
             },

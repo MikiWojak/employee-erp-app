@@ -5,6 +5,8 @@ class IndexController {
     }
 
     async invoke(req, res) {
+        // @TODO Consider showing stats
+
         const { sorting, pagination } = req;
 
         const { count, rows } =

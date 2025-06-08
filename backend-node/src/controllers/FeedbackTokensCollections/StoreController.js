@@ -3,7 +3,7 @@ const dayjs = require('dayjs');
 const { Role } = require('../../models');
 const { StatusCodes: HTTP } = require('http-status-codes');
 
-class IndexController {
+class StoreController {
     constructor(
         feedbackTokensCollectionRepository,
         feedbackTokenRepository,
@@ -19,37 +19,48 @@ class IndexController {
         const dateTime = dayjs().format();
 
         const transaction =
-            await this.feedbackTokensCollectionRepository.transaction();
+            await this.feedbackTokensCollectionRepository.getDbTransaction();
 
         try {
-            // @TODO Cancel previous ones!
-
-            const tokenCollection =
-                await this.feedbackTokensCollectionRepository.create(
+            const [, , tokenCollection, users] = await Promise.all([
+                this.feedbackTokensCollectionRepository.update(
+                    { expiresAt: dateTime },
+                    { where: { expiresAt: null }, transaction }
+                ),
+                this.feedbackTokenRepository.update(
+                    { expiresAt: dateTime },
+                    { where: { expiresAt: null }, transaction }
+                ),
+                this.feedbackTokensCollectionRepository.create(
                     { dateTime },
                     { transaction }
-                );
+                ),
+                this.userRepository.findAll({
+                    attributes: ['id'],
+                    include: [
+                        {
+                            association: 'role',
+                            attributes: [],
+                            required: true,
+                            where: { name: [Role.EMPLOYEE, Role.MANAGER] }
+                        }
+                    ]
+                })
+            ]);
 
-            const users = await this.userRepository.findAll({
-                attributes: ['id'],
-                include: [
+            // @TODO Consider Savepoint
+
+            for (const user of users) {
+                await this.feedbackTokenRepository.create(
                     {
-                        association: 'role',
-                        attributes: [],
-                        required: true,
-                        where: { name: [Role.EMPLOYEE, Role.MANAGER] }
+                        userId: user.id,
+                        feedbackTokensCollectionId: tokenCollection.id
+                    },
+                    {
+                        transaction
                     }
-                ]
-            });
-
-            const tokenItems = users.map(user => ({
-                userId: user.id,
-                feedbackTokensCollectionId: tokenCollection.id
-            }));
-
-            await this.feedbackTokenRepository.bulkCreate(tokenItems, {
-                transaction
-            });
+                );
+            }
 
             await transaction.commit();
         } catch (error) {
@@ -62,4 +73,4 @@ class IndexController {
     }
 }
 
-module.exports = IndexController;
+module.exports = StoreController;

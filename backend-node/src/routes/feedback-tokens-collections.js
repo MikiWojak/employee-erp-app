@@ -17,7 +17,7 @@ module.exports = di => {
         'controllers.feedbackTokensCollections.index'
     );
     const storeController = di.get(
-        'controllers.feedbackTokensCollections.index'
+        'controllers.feedbackTokensCollections.store'
     );
 
     router.get(
