@@ -48,7 +48,7 @@ class StoreController {
                 );
             }
 
-            await token.update({ expired: true }, { transaction });
+            await token.update({ filled: true }, { transaction });
 
             await transaction.commit();
         } catch (error) {

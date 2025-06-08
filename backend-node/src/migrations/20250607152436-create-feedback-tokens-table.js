@@ -33,7 +33,7 @@ module.exports = {
                         key: 'id'
                     }
                 },
-                expired: {
+                filled: {
                     allowNull: false,
                     type: DataTypes.BOOLEAN,
                     defaultValue: false

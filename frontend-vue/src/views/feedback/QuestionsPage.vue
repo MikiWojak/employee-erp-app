@@ -1,18 +1,28 @@
 <template>
-    <h1> Questions </h1>
+    <div v-if="isNoToken">
+        <h1> No feedback form available </h1>
+    </div>
 
-    <v-form @submit.prevent="doSubmitForm">
-        <question-item
-            v-for="question in items"
-            :key="question.id"
-            v-model="form[question.id]"
-            :question="question"
-        />
+    <div v-else-if="isFormFilled">
+        <h1> Thank you for filling the feedback form </h1>
+    </div>
 
-        <v-btn type="submit" :disabled="loading">
-            <span>Submit</span>
-        </v-btn>
-    </v-form>
+    <div v-else>
+        <h1> Questions </h1>
+
+        <v-form @submit.prevent="doSubmitForm">
+            <question-item
+                v-for="question in items"
+                :key="question.id"
+                v-model="form[question.id]"
+                :question="question"
+            />
+
+            <v-btn type="submit" :disabled="loading">
+                <span>Submit</span>
+            </v-btn>
+        </v-form>
+    </div>
 </template>
 
 <script>
@@ -34,21 +44,41 @@ export default {
 
     data() {
         return {
-            isLoading: false,
+            loading: false,
             items: [],
             total: 0,
-            form: {}
+            form: {},
+            formStatus: null
         };
     },
 
-    async created() {
-        // @TODO Check if has proper token. No - proper info
+    computed: {
+        isNoToken() {
+            return this.formStatus === 'noToken';
+        },
 
-        await this.doGetItems();
+        isFormFilled() {
+            return this.formStatus === 'success';
+        }
+    },
+
+    async created() {
+        try {
+            await this.checkToken();
+
+            await this.doGetItems();
+        } catch (error) {
+            if (error?.response?.status === HTTP.FORBIDDEN) {
+                this.formStatus = 'noToken';
+            }
+        }
     },
 
     methods: {
-        ...mapActions(useFeedbackAnswerStore, { submitForm: 'store' }),
+        ...mapActions(useFeedbackAnswerStore, {
+            submitForm: 'store',
+            checkToken: 'checkToken'
+        }),
         ...mapActions(useFeedbackQuestionStore, { getItems: 'index' }),
 
         async doGetItems() {
@@ -74,11 +104,11 @@ export default {
 
                 await this.submitForm(this.form);
 
+                this.formStatus = 'success';
+
                 this.$toast.success('Form submitted successfully.');
             } catch (error) {
                 const { response } = error;
-
-                // @TODO 403 - proper message
 
                 if (
                     response?.status === HTTP.BAD_REQUEST &&
@@ -92,9 +122,9 @@ export default {
                 }
 
                 if (response?.status === HTTP.FORBIDDEN) {
-                    this.$toast.error(
-                        'You are no longer permitted to fill this form'
-                    );
+                    this.$toast.error('No feedback form available');
+
+                    this.formStatus = 'noToken';
 
                     return;
                 }

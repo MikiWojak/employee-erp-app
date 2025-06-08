@@ -1,7 +1,8 @@
-const AbstractRepository = require('./AbstractRepository');
-const { Op } = require('sequelize');
 const dayjs = require('dayjs');
 const deepmerge = require('deepmerge');
+const { Op } = require('sequelize');
+
+const AbstractRepository = require('./AbstractRepository');
 
 class FeedbackTokenRepository extends AbstractRepository {
     get model() {
@@ -13,7 +14,22 @@ class FeedbackTokenRepository extends AbstractRepository {
             return null;
         }
 
-        const args = deepmerge(options, { where: { userId, expired: false } });
+        const args = deepmerge(options, {
+            where: { userId, filled: false },
+            include: [
+                {
+                    association: 'tokensCollection',
+                    attributes: [],
+                    required: true,
+                    where: {
+                        [Op.or]: [
+                            { expiresAt: null },
+                            { expiresAt: { [Op.lte]: dayjs().format() } }
+                        ]
+                    }
+                }
+            ]
+        });
 
         return this.findOne(args);
     }

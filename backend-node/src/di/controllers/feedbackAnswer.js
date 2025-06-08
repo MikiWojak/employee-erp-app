@@ -7,6 +7,11 @@ module.exports = {
                 '@repositories.feedbackAnswer',
                 '@repositories.feedbackToken'
             ]
+        },
+
+        'controllers.feedbackAnswers.checkToken': {
+            class: 'controllers/FeedbackAnswers/CheckTokenController',
+            arguments: ['@repositories.feedbackToken']
         }
     }
 };

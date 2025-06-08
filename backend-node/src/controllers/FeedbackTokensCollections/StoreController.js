@@ -22,14 +22,10 @@ class StoreController {
             await this.feedbackTokensCollectionRepository.getDbTransaction();
 
         try {
-            const [, , tokenCollection, users] = await Promise.all([
+            const [, tokenCollection, users] = await Promise.all([
                 this.feedbackTokensCollectionRepository.update(
                     { expiresAt: dateTime },
                     { where: { expiresAt: null }, transaction }
-                ),
-                this.feedbackTokenRepository.update(
-                    { expired: true },
-                    { where: { expired: false }, transaction }
                 ),
                 this.feedbackTokensCollectionRepository.create(
                     { dateTime },

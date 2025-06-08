@@ -3,7 +3,14 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class FeedbackToken extends Model {}
+    class FeedbackToken extends Model {
+        static associate({ FeedbackTokensCollection }) {
+            this.belongsTo(FeedbackTokensCollection, {
+                as: 'tokensCollection',
+                foreignKey: 'feedbackTokensCollectionId'
+            });
+        }
+    }
 
     FeedbackToken.init(
         {
@@ -29,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id'
                 }
             },
-            expired: {
+            filled: {
                 allowNull: false,
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
