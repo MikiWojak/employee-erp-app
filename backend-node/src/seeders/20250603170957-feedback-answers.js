@@ -11,6 +11,8 @@ const feedbackQuestionRepository = di.get('repositories.feedbackQuestion');
 
 module.exports = {
     up: async () => {
+        // @TODO Add Token!
+
         const [questions, users] = await Promise.all([
             feedbackQuestionRepository.findAll(),
             userRepository.findAll({

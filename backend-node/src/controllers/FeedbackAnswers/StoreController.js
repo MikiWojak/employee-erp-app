@@ -1,13 +1,27 @@
+const dayjs = require('dayjs');
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StoreController {
-    constructor(feedbackQuestionRepository, feedbackAnswerRepository) {
+    constructor(
+        feedbackQuestionRepository,
+        feedbackAnswerRepository,
+        feedbackTokenRepository
+    ) {
         this.feedbackQuestionRepository = feedbackQuestionRepository;
         this.feedbackAnswerRepository = feedbackAnswerRepository;
+        this.feedbackTokenRepository = feedbackTokenRepository;
     }
 
     async invoke(req, res) {
         const { body, loggedUser } = req;
+
+        const token = await this.feedbackTokenRepository.validate(
+            loggedUser.id
+        );
+
+        if (!token) {
+            return res.sendStatus(HTTP.FORBIDDEN);
+        }
 
         const transaction =
             await this.feedbackAnswerRepository.getDbTransaction();
@@ -31,6 +45,11 @@ class StoreController {
                     { transaction }
                 );
             }
+
+            await token.update(
+                { expiresAt: dayjs().format() },
+                { transaction }
+            );
 
             await transaction.commit();
         } catch (error) {

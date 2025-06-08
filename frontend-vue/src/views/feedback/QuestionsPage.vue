@@ -42,6 +42,8 @@ export default {
     },
 
     async created() {
+        // @TODO Check if has proper token. No - proper info
+
         await this.doGetItems();
     },
 
@@ -76,6 +78,8 @@ export default {
             } catch (error) {
                 const { response } = error;
 
+                // @TODO 403 - proper message
+
                 if (
                     response?.status === HTTP.BAD_REQUEST &&
                     response?.data?.errors
@@ -83,6 +87,14 @@ export default {
                     const [errorItem] = response.data.errors;
 
                     this.$toast.error(errorItem.message || 'Invalid form.');
+
+                    return;
+                }
+
+                if (response?.status === HTTP.FORBIDDEN) {
+                    this.$toast.error(
+                        'You are no longer permitted to fill this form'
+                    );
 
                     return;
                 }
