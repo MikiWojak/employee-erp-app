@@ -1,18 +1,15 @@
 const dayjs = require('dayjs');
 
-const { Role } = require('../../models');
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StoreController {
     constructor(
         feedbackTokensCollectionRepository,
-        feedbackTokenRepository,
-        userRepository
+        generateTokenCollectionHandler
     ) {
         this.feedbackTokensCollectionRepository =
             feedbackTokensCollectionRepository;
-        this.feedbackTokenRepository = feedbackTokenRepository;
-        this.userRepository = userRepository;
+        this.generateTokenCollectionHandler = generateTokenCollectionHandler;
     }
 
     async invoke(req, res) {
@@ -22,41 +19,14 @@ class StoreController {
             await this.feedbackTokensCollectionRepository.getDbTransaction();
 
         try {
-            const [, tokenCollection, users] = await Promise.all([
-                this.feedbackTokensCollectionRepository.update(
-                    { expiresAt: dateTime },
-                    { where: { expiresAt: null }, transaction }
-                ),
-                this.feedbackTokensCollectionRepository.create(
-                    { dateTime },
-                    { transaction }
-                ),
-                this.userRepository.findAll({
-                    attributes: ['id'],
-                    include: [
-                        {
-                            association: 'role',
-                            attributes: [],
-                            required: true,
-                            where: { name: [Role.EMPLOYEE, Role.MANAGER] }
-                        }
-                    ]
-                })
-            ]);
+            await this.feedbackTokensCollectionRepository.update(
+                { expiresAt: dayjs().format() },
+                { where: { expiresAt: null }, transaction }
+            );
 
-            // @TODO Consider Savepoint
-
-            for (const user of users) {
-                await this.feedbackTokenRepository.create(
-                    {
-                        userId: user.id,
-                        feedbackTokensCollectionId: tokenCollection.id
-                    },
-                    {
-                        transaction
-                    }
-                );
-            }
+            await this.generateTokenCollectionHandler.handle(dateTime, {
+                transaction
+            });
 
             await transaction.commit();
         } catch (error) {

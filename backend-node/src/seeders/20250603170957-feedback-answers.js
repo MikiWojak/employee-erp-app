@@ -1,5 +1,6 @@
 'use strict';
 
+const dayjs = require('dayjs');
 const faker = require('faker');
 
 const di = require('../di');
@@ -8,11 +9,14 @@ const { Role } = require('../models');
 const userRepository = di.get('repositories.user');
 const feedbackAnswerRepository = di.get('repositories.feedbackAnswer');
 const feedbackQuestionRepository = di.get('repositories.feedbackQuestion');
+const feedbackTokenRepository = di.get('repositories.feedbackToken');
+const generateTokenCollectionHandler = di.get(
+    'services.feedbackTokensCollections.generateTokenCollection'
+);
 
 module.exports = {
     up: async () => {
-        // @TODO FIX SEEDER - TOKEN COLLECTION!!!
-        // @TODO Add Token!
+        await generateTokenCollectionHandler.handle(dayjs().format());
 
         const [questions, users] = await Promise.all([
             feedbackQuestionRepository.findAll(),
@@ -28,14 +32,24 @@ module.exports = {
         ]);
 
         for (const user of users) {
+            const token = await feedbackTokenRepository.validate(user.id);
+
+            if (!token) {
+                continue;
+            }
+
             for (const question of questions) {
                 await feedbackAnswerRepository.create({
+                    feedbackTokensCollectionId:
+                        token.feedbackTokensCollectionId,
                     roleId: user.roleId,
                     departmentId: user.departmentId,
                     questionId: question.id,
                     answer: faker.random.arrayElement(question.answerOptions)
                 });
             }
+
+            await token.update({ filled: true });
         }
     },
 

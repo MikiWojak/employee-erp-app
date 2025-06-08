@@ -9,8 +9,7 @@ module.exports = {
             class: 'controllers/FeedbackTokensCollections/StoreController',
             arguments: [
                 '@repositories.feedbackTokensCollection',
-                '@repositories.feedbackToken',
-                '@repositories.user'
+                '@services.feedbackTokensCollections.generateTokenCollection'
             ]
         }
     }
