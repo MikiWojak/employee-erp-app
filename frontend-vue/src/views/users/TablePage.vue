@@ -18,18 +18,16 @@ export default {
 
     extends: BaseTablePage,
 
-    data() {
-        return {
-            tableOptions: {
+    computed: {
+        ...mapState(useAuthStore, ['isAdmin', 'isManager', 'loggedUser']),
+
+        customTableOptions() {
+            return {
                 title: 'Users',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this user?'
-            }
-        };
-    },
-
-    computed: {
-        ...mapState(useAuthStore, ['isAdmin', 'isManager', 'loggedUser']),
+            };
+        },
 
         customFields() {
             return [

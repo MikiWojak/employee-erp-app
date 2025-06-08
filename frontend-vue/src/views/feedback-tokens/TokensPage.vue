@@ -9,15 +9,6 @@ export default {
 
     extends: BaseTablePage,
 
-    // @TODO Hide search bar
-    data() {
-        return {
-            tableOptions: {
-                title: 'Feedback Tokens'
-            }
-        };
-    },
-
     computed: {
         headers() {
             return [
@@ -27,8 +18,11 @@ export default {
             ];
         },
 
-        computedTableOptions() {
+        customTableOptions() {
             return {
+                title: 'Feedback Tokens Collections',
+                searchBar: false,
+                addButtonText: 'Add Tokens Collection',
                 isAddButtonIncluded: true,
                 areActionButtonsIncluded: false
             };
@@ -41,8 +35,7 @@ export default {
             createTokens: 'store'
         }),
 
-        // @TODO Rename in other component
-        async openAddEditDialog() {
+        async onAddButtonClick() {
             try {
                 await this.createTokens();
 

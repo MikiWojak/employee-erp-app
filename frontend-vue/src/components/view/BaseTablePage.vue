@@ -34,11 +34,11 @@
                     </div>
 
                     <v-btn
-                        v-if="computedTableOptions.isAddButtonIncluded"
-                        text="Add"
+                        v-if="tableOptions.isAddButtonIncluded"
+                        :text="tableOptions.addButtonText"
                         color="green"
                         prepend-icon="mdi-plus-circle-outline"
-                        @click="openAddEditDialog(null)"
+                        @click="onAddButtonClick(null)"
                     />
                 </div>
             </div>
@@ -83,7 +83,7 @@
                 variant="plain"
                 icon="mdi-pencil"
                 :disabled="areActionButtonsDisabled(item)"
-                @click="openAddEditDialog(item)"
+                @click="onAddButtonClick(item)"
             />
 
             <v-btn
@@ -143,12 +143,6 @@ export default {
             itemToDeleteId: null,
             confirmationModalLoading: false,
             isAddEditDialogOpened: false,
-            tableOptions: {
-                title: 'Table',
-                searchBar: true,
-                deleteConfirmationModalTitle:
-                    'Do you really want to delete this item?'
-            },
             perPageOptions: [
                 { value: 10, title: '10' },
                 { value: 25, title: '25' },
@@ -160,11 +154,25 @@ export default {
     },
 
     computed: {
-        computedTableOptions() {
-            return {
+        tableOptions() {
+            const defaultTableOptions = {
+                title: 'Table',
+                searchBar: true,
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this item?',
+                addButtonText: 'Add',
                 isAddButtonIncluded: true,
                 areActionButtonsIncluded: true
             };
+
+            return {
+                ...defaultTableOptions,
+                ...this.customTableOptions
+            };
+        },
+
+        customTableOptions() {
+            return {};
         },
 
         customFields() {
@@ -178,7 +186,7 @@ export default {
         computedHeaders() {
             return [
                 ...this.headers,
-                ...(this.computedTableOptions.areActionButtonsIncluded
+                ...(this.tableOptions.areActionButtonsIncluded
                     ? [
                           {
                               title: 'Actions',
@@ -297,7 +305,7 @@ export default {
             }
         },
 
-        openAddEditDialog(editedItem = null) {
+        onAddButtonClick(editedItem = null) {
             this.isAddEditDialogOpened = true;
             this.editedItem = editedItem ? { ...editedItem } : null;
         },
