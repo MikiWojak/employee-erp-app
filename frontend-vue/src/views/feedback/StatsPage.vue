@@ -1,6 +1,15 @@
 <template>
     <h1> Feedback - stats </h1>
 
+    <v-row>
+        <v-col cols="12" md="6">
+            <tokens-collection-select
+                v-model="selectedTokensCollection"
+                clearable
+            />
+        </v-col>
+    </v-row>
+
     <v-row v-if="isAdmin">
         <v-col cols="12" md="6">
             <role-select v-model="role" clearable />
@@ -44,6 +53,9 @@ export default {
         ),
         DepartmentSelect: defineAsyncComponent(
             () => import('@/components/inputs/DepartmentSelect')
+        ),
+        TokensCollectionSelect: defineAsyncComponent(
+            () => import('@/components/inputs/FeedbackTokensCollectionSelect')
         )
     },
 
@@ -67,7 +79,8 @@ export default {
                 }
             },
             role: null,
-            selectedDepartment: null
+            selectedDepartment: null,
+            selectedTokensCollection: null
         };
     },
 
@@ -102,6 +115,13 @@ export default {
                 await this.doGetStats();
             },
             deep: true
+        },
+
+        selectedTokensCollection: {
+            async handler() {
+                await this.doGetStats();
+            },
+            deep: true
         }
     },
 
@@ -120,6 +140,10 @@ export default {
                     ...(this.role && { role: this.role }),
                     ...(this.selectedDepartment && {
                         departmentId: this.selectedDepartment.id
+                    }),
+                    ...(this.selectedTokensCollection && {
+                        feedbackTokensCollectionId:
+                            this.selectedTokensCollection.id
                     })
                 });
 

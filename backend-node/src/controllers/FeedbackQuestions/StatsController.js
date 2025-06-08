@@ -12,10 +12,14 @@ class StatsController {
         const {
             loggedUser,
             rolesInfo: { isAdmin },
-            query: { role = null, departmentId = null }
+            query: {
+                role = null,
+                departmentId = null,
+                feedbackTokensCollectionId = null
+            }
         } = req;
 
-        const where =
+        const whereDepartmentId =
             departmentId || !isAdmin
                 ? {
                       departmentId: isAdmin
@@ -23,6 +27,11 @@ class StatsController {
                           : loggedUser.departmentId
                   }
                 : {};
+
+        const where = {
+            ...whereDepartmentId,
+            ...(feedbackTokensCollectionId && { feedbackTokensCollectionId })
+        };
 
         const include =
             role || !isAdmin
