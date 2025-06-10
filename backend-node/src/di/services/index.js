@@ -47,12 +47,20 @@ module.exports = {
             arguments: ['@repositories.media']
         },
 
-        'services.feedbackTokensCollections.generateTokenCollection': {
-            class: 'services/feedbackTokensCollections/GenerateTokenCollectionHandler',
+        'services.feedback.generateTokenCollection': {
+            class: 'services/feedback/GenerateTokenCollectionHandler',
             arguments: [
                 '@repositories.feedbackTokensCollection',
                 '@repositories.feedbackToken',
                 '@repositories.user'
+            ]
+        },
+
+        'services.feedback.answer': {
+            class: 'services/feedback/AnswerHandler',
+            arguments: [
+                '@repositories.feedbackAnswer',
+                '@repositories.feedbackTokensCollection'
             ]
         }
     }

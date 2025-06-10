@@ -26,6 +26,16 @@ module.exports = {
                     defaultValue: null,
                     type: DataTypes.DATE
                 },
+                usersPermitted: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER,
+                    defaultValue: 0
+                },
+                usersFilled: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER,
+                    defaultValue: 0
+                },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,

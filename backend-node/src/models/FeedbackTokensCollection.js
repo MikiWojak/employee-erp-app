@@ -21,6 +21,16 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: true,
                 defaultValue: null,
                 type: DataTypes.DATE
+            },
+            usersPermitted: {
+                allowNull: false,
+                type: DataTypes.INTEGER,
+                defaultValue: 0
+            },
+            usersFilled: {
+                allowNull: false,
+                type: DataTypes.INTEGER,
+                defaultValue: 0
             }
         },
         {

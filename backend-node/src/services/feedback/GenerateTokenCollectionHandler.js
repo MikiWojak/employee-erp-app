@@ -15,23 +15,24 @@ class GenerateTokenCollectionHandler {
     }
 
     async handle(dateTime, options = {}) {
-        const [tokenCollection, users] = await Promise.all([
-            this.feedbackTokensCollectionRepository.create(
-                { dateTime },
+        const users = await this.userRepository.findAll({
+            attributes: ['id'],
+            include: [
+                {
+                    association: 'role',
+                    attributes: [],
+                    required: true,
+                    where: { name: [Role.EMPLOYEE, Role.MANAGER] }
+                }
+            ]
+        });
+
+
+        const tokenCollection =
+            await this.feedbackTokensCollectionRepository.create(
+                { dateTime, usersPermitted: users.length },
                 options
-            ),
-            this.userRepository.findAll({
-                attributes: ['id'],
-                include: [
-                    {
-                        association: 'role',
-                        attributes: [],
-                        required: true,
-                        where: { name: [Role.EMPLOYEE, Role.MANAGER] }
-                    }
-                ]
-            })
-        ]);
+            );
 
         for (const user of users) {
             await this.feedbackTokenRepository.create(

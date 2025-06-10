@@ -14,7 +14,17 @@ export default {
             return [
                 { title: 'ID', value: 'id', minWidth: '150px' },
                 { title: 'Date Time', value: 'dateTime', minWidth: '150px' },
-                { title: 'Expires At', value: 'expiresAt', minWidth: '150px' }
+                { title: 'Expires At', value: 'expiresAt', minWidth: '150px' },
+                {
+                    title: 'Users Permitted',
+                    value: 'usersPermitted',
+                    minWidth: '150px'
+                },
+                {
+                    title: 'Users Filled',
+                    value: 'usersFilled',
+                    minWidth: '150px'
+                }
             ];
         },
 

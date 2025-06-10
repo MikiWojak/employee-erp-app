@@ -7,15 +7,17 @@ const di = require('../di');
 const { Role } = require('../models');
 
 const userRepository = di.get('repositories.user');
-const feedbackAnswerRepository = di.get('repositories.feedbackAnswer');
 const feedbackQuestionRepository = di.get('repositories.feedbackQuestion');
 const feedbackTokenRepository = di.get('repositories.feedbackToken');
+const answerHandler = di.get('services.feedback.answer');
 const generateTokenCollectionHandler = di.get(
-    'services.feedbackTokensCollections.generateTokenCollection'
+    'services.feedback.generateTokenCollection'
 );
 
 module.exports = {
     up: async () => {
+        // @TODO Transaction
+
         await generateTokenCollectionHandler.handle(dayjs().format());
 
         const [questions, users] = await Promise.all([
@@ -38,18 +40,15 @@ module.exports = {
                 continue;
             }
 
+            const answers = {};
+
             for (const question of questions) {
-                await feedbackAnswerRepository.create({
-                    feedbackTokensCollectionId:
-                        token.feedbackTokensCollectionId,
-                    roleId: user.roleId,
-                    departmentId: user.departmentId,
-                    questionId: question.id,
-                    answer: faker.random.arrayElement(question.answerOptions)
-                });
+                answers[question.id] = faker.random.arrayElement(
+                    question.answerOptions
+                );
             }
 
-            await token.update({ filled: true });
+            await answerHandler.handle({ token, user, answers });
         }
     },
 

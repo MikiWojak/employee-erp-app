@@ -1,15 +1,9 @@
-const dayjs = require('dayjs');
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StoreController {
-    constructor(
-        feedbackQuestionRepository,
-        feedbackAnswerRepository,
-        feedbackTokenRepository
-    ) {
-        this.feedbackQuestionRepository = feedbackQuestionRepository;
-        this.feedbackAnswerRepository = feedbackAnswerRepository;
+    constructor(feedbackTokenRepository, answerHandler) {
         this.feedbackTokenRepository = feedbackTokenRepository;
+        this.answerHandler = answerHandler;
     }
 
     async invoke(req, res) {
@@ -24,31 +18,13 @@ class StoreController {
         }
 
         const transaction =
-            await this.feedbackAnswerRepository.getDbTransaction();
+            await this.feedbackTokenRepository.getDbTransaction();
 
         try {
-            for (const questionId in body) {
-                const question =
-                    await this.feedbackQuestionRepository.findById(questionId);
-
-                if (!question) {
-                    throw new Error(`Question ${questionId} not found!`);
-                }
-
-                await this.feedbackAnswerRepository.create(
-                    {
-                        feedbackTokensCollectionId:
-                            token.feedbackTokensCollectionId,
-                        roleId: loggedUser.roleId,
-                        departmentId: loggedUser.departmentId,
-                        questionId,
-                        answer: body[questionId]
-                    },
-                    { transaction }
-                );
-            }
-
-            await token.update({ filled: true }, { transaction });
+            this.answerHandler.handle(
+                { token, user: loggedUser, answers: body },
+                { transaction }
+            );
 
             await transaction.commit();
         } catch (error) {

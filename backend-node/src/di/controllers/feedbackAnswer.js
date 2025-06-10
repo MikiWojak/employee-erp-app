@@ -3,9 +3,8 @@ module.exports = {
         'controllers.feedbackAnswers.store': {
             class: 'controllers/FeedbackAnswers/StoreController',
             arguments: [
-                '@repositories.feedbackQuestion',
-                '@repositories.feedbackAnswer',
-                '@repositories.feedbackToken'
+                '@repositories.feedbackToken',
+                '@services.feedback.answer'
             ]
         },
 
