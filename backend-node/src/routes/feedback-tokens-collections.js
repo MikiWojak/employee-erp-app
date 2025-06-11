@@ -9,8 +9,11 @@ const loggedOnly = require('../middlewares/loggedOnly');
 const paginationValidator = require('../validators/pagination');
 
 const {
-    Role: { ADMIN, MANAGER }
+    Role: { ADMIN, MANAGER },
+    User,
+    FeedbackTokensCollection
 } = require('../models');
+const searchable = require('../middlewares/searchable');
 
 module.exports = di => {
     const indexController = di.get(
@@ -23,7 +26,13 @@ module.exports = di => {
     router.get(
         '/',
         loggedOnly(ADMIN, MANAGER),
-        [paginationValidator.pagination, validate, sorting(), pagination],
+        [
+            paginationValidator.pagination,
+            validate,
+            searchable(FeedbackTokensCollection.SEARCHABLE_FIELDS),
+            sorting(),
+            pagination
+        ],
         invoke(indexController)
     );
 

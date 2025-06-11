@@ -3,7 +3,11 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class FeedbackTokensCollection extends Model {}
+    class FeedbackTokensCollection extends Model {
+        static get SEARCHABLE_FIELDS() {
+            return ['number'];
+        }
+    }
 
     FeedbackTokensCollection.init(
         {
@@ -12,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4
+            },
+            number: {
+                allowNull: false,
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                unique: true
             },
             dateTime: {
                 allowNull: false,

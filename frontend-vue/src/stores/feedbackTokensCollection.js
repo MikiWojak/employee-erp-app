@@ -6,8 +6,8 @@ export const useFeedbackTokensCollectionStore = defineStore(
     'feedbackTokensCollection',
     {
         actions: {
-            async index({ page = 1, perPage = 10 } = {}) {
-                const params = { page, perPage };
+            async index({ page = 1, perPage = 10, search = '' } = {}) {
+                const params = { page, perPage, q: search };
 
                 const { data } = await axios.get(
                     '/feedback-tokens-collections',

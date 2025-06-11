@@ -17,6 +17,12 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
+                number: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER,
+                    autoIncrement: true,
+                    unique: true
+                },
                 dateTime: {
                     allowNull: false,
                     type: DataTypes.DATE

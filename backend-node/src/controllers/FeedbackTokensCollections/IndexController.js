@@ -5,12 +5,11 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        // @TODO Consider showing stats
-
-        const { sorting, pagination } = req;
+        const { search, sorting, pagination } = req;
 
         const { count, rows } =
             await this.feedbackTokensCollectionRepository.findAndCountAll({
+                where: search,
                 ...sorting,
                 ...pagination
             });

@@ -15,6 +15,11 @@ export default {
             return [
                 { title: 'ID', value: 'id', minWidth: '150px' },
                 {
+                    title: 'Number',
+                    value: 'number',
+                    minWidth: '150px'
+                },
+                {
                     title: 'Date Time',
                     value: 'formattedDateTime',
                     minWidth: '150px'
@@ -53,9 +58,7 @@ export default {
         customTableOptions() {
             return {
                 title: 'Feedback Tokens Collections',
-                searchBar: false,
                 addButtonText: 'Add Tokens Collection',
-                isAddButtonIncluded: true,
                 areActionButtonsIncluded: false
             };
         }
