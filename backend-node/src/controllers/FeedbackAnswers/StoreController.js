@@ -21,7 +21,7 @@ class StoreController {
             await this.feedbackTokenRepository.getDbTransaction();
 
         try {
-            this.answerHandler.handle(
+            await this.answerHandler.handle(
                 { token, user: loggedUser, answers: body },
                 { transaction }
             );

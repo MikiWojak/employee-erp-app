@@ -26,11 +26,11 @@ class AnswerHandler {
                 options
             );
 
-        // @TODO In cannot change `updatedAt`!!!
         await tokenCollection.increment(
             { usersFilled: 1 },
             {
                 where: { id: token.feedbackTokensCollectionId },
+                silent: true,
                 ...options
             }
         );

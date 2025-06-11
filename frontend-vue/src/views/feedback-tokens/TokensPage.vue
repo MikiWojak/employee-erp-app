@@ -1,4 +1,5 @@
 <script>
+import dayjs from 'dayjs';
 import { mapActions } from 'pinia';
 
 import BaseTablePage from '@/components/view/BaseTablePage';
@@ -13,8 +14,16 @@ export default {
         headers() {
             return [
                 { title: 'ID', value: 'id', minWidth: '150px' },
-                { title: 'Date Time', value: 'dateTime', minWidth: '150px' },
-                { title: 'Expires At', value: 'expiresAt', minWidth: '150px' },
+                {
+                    title: 'Date Time',
+                    value: 'formattedDateTime',
+                    minWidth: '150px'
+                },
+                {
+                    title: 'Expires At',
+                    value: 'formattedExpiresAt',
+                    minWidth: '150px'
+                },
                 {
                     title: 'Users Permitted',
                     value: 'usersPermitted',
@@ -24,6 +33,19 @@ export default {
                     title: 'Users Filled',
                     value: 'usersFilled',
                     minWidth: '150px'
+                }
+            ];
+        },
+
+        customFields() {
+            return [
+                {
+                    name: 'formattedDateTime',
+                    value: this.getFormattedDateTime
+                },
+                {
+                    name: 'formattedExpiresAt',
+                    value: this.getFormattedExpiresAt
                 }
             ];
         },
@@ -57,6 +79,18 @@ export default {
 
                 this.$toast.error('Error while creating token collection!');
             }
+        },
+
+        getFormattedDateTime(item) {
+            return this.formatDateTime(item.dateTime);
+        },
+
+        getFormattedExpiresAt(item) {
+            return item.expiresAt ? this.formatDateTime(item.expiresAt) : null;
+        },
+
+        formatDateTime(value) {
+            return dayjs(value).format('YYYY-MM-DD HH:mm:ss');
         }
     }
 };

@@ -4,7 +4,7 @@
         :items="tokensCollections"
         :loading="loading"
         hide-no-data
-        item-title="dateTime"
+        :item-title="formatDateTime"
         item-value="id"
         label="Tokens Collection"
         prepend-icon="mdi-ticket-account"
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
 import { mapActions } from 'pinia';
 
 import { useFeedbackTokensCollectionStore } from '@/stores/feedbackTokensCollection';
@@ -86,6 +87,12 @@ export default {
 
                 this.$toast.error('Cannot get a list of token collections!');
             }
+        },
+
+        formatDateTime(tokenCollection) {
+            return dayjs(tokenCollection.dateTime).format(
+                'YYYY-MM-DD HH:mm:ss'
+            );
         }
     }
 };

@@ -16,9 +16,19 @@ const generateTokenCollectionHandler = di.get(
 
 module.exports = {
     up: async () => {
-        // @TODO Transaction
+        const transaction = await feedbackTokenRepository.getDbTransaction();
 
-        await generateTokenCollectionHandler.handle(dayjs().format());
+        try {
+            await generateTokenCollectionHandler.handle(dayjs().format(), {
+                transaction
+            });
+
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+
+            console.error(error);
+        }
 
         const [questions, users] = await Promise.all([
             feedbackQuestionRepository.findAll(),
@@ -48,7 +58,21 @@ module.exports = {
                 );
             }
 
-            await answerHandler.handle({ token, user, answers });
+            const transaction =
+                await feedbackTokenRepository.getDbTransaction();
+
+            try {
+                await answerHandler.handle(
+                    { token, user, answers },
+                    { transaction }
+                );
+
+                await transaction.commit();
+            } catch (error) {
+                await transaction.rollback();
+
+                console.error(error);
+            }
         }
     },
 
