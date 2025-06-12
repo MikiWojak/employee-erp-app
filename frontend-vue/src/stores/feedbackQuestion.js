@@ -10,10 +10,17 @@ export const useFeedbackQuestionStore = defineStore('feedbackQuestion', {
             return data;
         },
 
-        async stats({ role = null, departmentId = null } = {}) {
+        async stats({
+            role = null,
+            departmentId = null,
+            feedbackTokensCollectionId = null
+        } = {}) {
             const params = {
                 ...(role && { role }),
-                ...(departmentId && { departmentId })
+                ...(departmentId && { departmentId }),
+                ...(feedbackTokensCollectionId && {
+                    feedbackTokensCollectionId
+                })
             };
 
             const { data } = await axios.get('/feedback-questions/stats', {

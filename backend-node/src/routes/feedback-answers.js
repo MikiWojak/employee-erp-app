@@ -12,6 +12,15 @@ const {
 
 module.exports = di => {
     const storeController = di.get('controllers.feedbackAnswers.store');
+    const checkTokenController = di.get(
+        'controllers.feedbackAnswers.checkToken'
+    );
+
+    router.get(
+        '/check-token',
+        loggedOnly(MANAGER, EMPLOYEE),
+        invoke(checkTokenController)
+    );
 
     router.post(
         '/',

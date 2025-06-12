@@ -1,16 +1,35 @@
 'use strict';
 
+const dayjs = require('dayjs');
 const faker = require('faker');
 
 const di = require('../di');
 const { Role } = require('../models');
 
 const userRepository = di.get('repositories.user');
-const feedbackAnswerRepository = di.get('repositories.feedbackAnswer');
+const answerHandler = di.get('services.feedback.answer');
+const feedbackTokenRepository = di.get('repositories.feedbackToken');
 const feedbackQuestionRepository = di.get('repositories.feedbackQuestion');
+const generateTokenCollectionHandler = di.get(
+    'services.feedback.generateTokenCollection'
+);
 
 module.exports = {
     up: async () => {
+        const transaction = await feedbackTokenRepository.getDbTransaction();
+
+        try {
+            await generateTokenCollectionHandler.handle(dayjs().format(), {
+                transaction
+            });
+
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+
+            console.error(error);
+        }
+
         const [questions, users] = await Promise.all([
             feedbackQuestionRepository.findAll(),
             userRepository.findAll({
@@ -25,13 +44,34 @@ module.exports = {
         ]);
 
         for (const user of users) {
+            const token = await feedbackTokenRepository.validate(user.id);
+
+            if (!token) {
+                continue;
+            }
+
+            const answers = {};
+
             for (const question of questions) {
-                await feedbackAnswerRepository.create({
-                    roleId: user.roleId,
-                    departmentId: user.departmentId,
-                    questionId: question.id,
-                    answer: faker.random.arrayElement(question.answerOptions)
-                });
+                answers[question.id] = faker.random.arrayElement(
+                    question.answerOptions
+                );
+            }
+
+            const transaction =
+                await feedbackTokenRepository.getDbTransaction();
+
+            try {
+                await answerHandler.handle(
+                    { token, user, answers },
+                    { transaction }
+                );
+
+                await transaction.commit();
+            } catch (error) {
+                await transaction.rollback();
+
+                console.error(error);
             }
         }
     },

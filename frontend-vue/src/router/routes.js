@@ -58,6 +58,12 @@ export default [
         meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
     },
     {
+        path: '/feedback-tokens-collections',
+        name: 'feedback-tokens-collections',
+        component: () => import('@/views/feedback-tokens/TokensPage.vue'),
+        meta: { auth: [Roles.ADMIN] }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/auth/LoginPage'),

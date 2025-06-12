@@ -56,6 +56,13 @@
             :to="{ name: 'feedback-stats' }"
         />
 
+        <v-list-item
+            v-if="isAdmin"
+            prepend-icon="mdi-ticket-account"
+            title="Feedback Tokens"
+            :to="{ name: 'feedback-tokens-collections' }"
+        />
+
         <v-divider />
 
         <v-list-item

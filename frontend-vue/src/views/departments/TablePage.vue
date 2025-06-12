@@ -16,17 +16,15 @@ export default {
 
     extends: BaseTablePage,
 
-    data() {
-        return {
-            tableOptions: {
+    computed: {
+        customTableOptions() {
+            return {
                 title: 'Departments',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this department?'
-            }
-        };
-    },
+            };
+        },
 
-    computed: {
         customFields() {
             return [
                 {

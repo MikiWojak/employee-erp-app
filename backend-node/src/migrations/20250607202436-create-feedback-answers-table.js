@@ -17,6 +17,14 @@ module.exports = {
                     type: DataTypes.UUID,
                     defaultValue: DataTypes.UUIDV4
                 },
+                feedbackTokensCollectionId: {
+                    allowNull: false,
+                    type: DataTypes.UUID,
+                    references: {
+                        model: 'FeedbackTokensCollections',
+                        key: 'id'
+                    }
+                },
                 roleId: {
                     allowNull: false,
                     type: DataTypes.UUID,
@@ -44,20 +52,6 @@ module.exports = {
                 answer: {
                     allowNull: false,
                     type: DataTypes.STRING
-                },
-                createdAt: {
-                    allowNull: false,
-                    type: DataTypes.DATE,
-                    defaultValue: DataTypes.fn('now')
-                },
-                updatedAt: {
-                    allowNull: false,
-                    type: DataTypes.DATE,
-                    defaultValue: DataTypes.fn('now')
-                },
-                deletedAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: null
                 }
             },
             {

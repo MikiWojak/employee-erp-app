@@ -43,6 +43,16 @@ module.exports = {
         'repositories.feedbackQuestion': {
             class: 'repositories/FeedbackQuestion',
             arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackTokensCollection': {
+            class: 'repositories/FeedbackTokensCollection',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackToken': {
+            class: 'repositories/FeedbackToken',
+            arguments: ['@sequelize']
         }
     }
 };

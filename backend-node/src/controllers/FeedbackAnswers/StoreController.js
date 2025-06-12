@@ -1,36 +1,30 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StoreController {
-    constructor(feedbackQuestionRepository, feedbackAnswerRepository) {
-        this.feedbackQuestionRepository = feedbackQuestionRepository;
-        this.feedbackAnswerRepository = feedbackAnswerRepository;
+    constructor(feedbackTokenRepository, answerHandler) {
+        this.feedbackTokenRepository = feedbackTokenRepository;
+        this.answerHandler = answerHandler;
     }
 
     async invoke(req, res) {
         const { body, loggedUser } = req;
 
+        const token = await this.feedbackTokenRepository.validate(
+            loggedUser.id
+        );
+
+        if (!token) {
+            return res.sendStatus(HTTP.FORBIDDEN);
+        }
+
         const transaction =
-            await this.feedbackAnswerRepository.getDbTransaction();
+            await this.feedbackTokenRepository.getDbTransaction();
 
         try {
-            for (const questionId in body) {
-                const question =
-                    await this.feedbackQuestionRepository.findById(questionId);
-
-                if (!question) {
-                    throw new Error(`Question ${questionId} not found!`);
-                }
-
-                await this.feedbackAnswerRepository.create(
-                    {
-                        roleId: loggedUser.roleId,
-                        departmentId: loggedUser.departmentId,
-                        questionId,
-                        answer: body[questionId]
-                    },
-                    { transaction }
-                );
-            }
+            await this.answerHandler.handle(
+                { token, user: loggedUser, answers: body },
+                { transaction }
+            );
 
             await transaction.commit();
         } catch (error) {
