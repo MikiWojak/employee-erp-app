@@ -1,6 +1,7 @@
 const dayjs = require('dayjs');
 
 const { StatusCodes: HTTP } = require('http-status-codes');
+const { Op } = require('sequelize');
 
 class StoreController {
     constructor(
@@ -21,7 +22,15 @@ class StoreController {
         try {
             await this.feedbackTokensCollectionRepository.update(
                 { expiresAt: dayjs().format() },
-                { where: { expiresAt: null }, transaction }
+                {
+                    where: {
+                        [Op.or]: [
+                            { expiresAt: null },
+                            { expiresAt: { [Op.gte]: dayjs().format() } }
+                        ]
+                    },
+                    transaction
+                }
             );
 
             await this.generateTokenCollectionHandler.handle(dateTime, {

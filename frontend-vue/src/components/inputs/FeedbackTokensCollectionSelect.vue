@@ -1,23 +1,24 @@
 <template>
-    <v-select
+    <v-autocomplete
         v-model="tokensCollection"
         :items="tokensCollections"
         :loading="loading"
         hide-no-data
-        :item-title="formatDateTime"
+        item-title="number"
         item-value="id"
         label="Tokens Collection"
         prepend-icon="mdi-ticket-account"
+        placeholder="Start searching by number"
         :error-messages="errorMessages"
         return-object
         :clearable="clearable"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
+        @update:search="doSearch"
     />
 </template>
 
 <script>
-import dayjs from 'dayjs';
 import { mapActions } from 'pinia';
 
 import { useFeedbackTokensCollectionStore } from '@/stores/feedbackTokensCollection';
@@ -48,6 +49,7 @@ export default {
         return {
             tokensCollections: [],
             tokensCollection: null,
+            timer: null,
             loading: false
         };
     },
@@ -59,10 +61,6 @@ export default {
             },
             immediate: true
         }
-    },
-
-    async created() {
-        await this.doGetTokensCollections();
     },
 
     methods: {
@@ -78,7 +76,7 @@ export default {
             try {
                 const { rows } = await this.getTokensCollections({
                     search,
-                    perPage: 10
+                    perPage: 50
                 });
 
                 this.tokensCollections = rows;
@@ -89,10 +87,23 @@ export default {
             }
         },
 
-        formatDateTime(tokenCollection) {
-            return dayjs(tokenCollection.dateTime).format(
-                'YYYY-MM-DD HH:mm:ss'
-            );
+        async doSearch(search) {
+            if (!search) {
+                return;
+            }
+
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+
+            this.loading = true;
+
+            this.timer = setTimeout(async () => {
+                await this.doGetTokensCollections(search);
+
+                this.loading = false;
+            }, 1000);
         }
     }
 };
