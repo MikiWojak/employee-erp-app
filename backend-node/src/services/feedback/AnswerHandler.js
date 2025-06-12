@@ -20,6 +20,8 @@ class AnswerHandler {
             );
         }
 
+        await token.update({ filled: true }, options);
+
         const tokenCollection =
             await this.feedbackTokensCollectionRepository.findById(
                 token.feedbackTokensCollectionId,
@@ -29,13 +31,10 @@ class AnswerHandler {
         await tokenCollection.increment(
             { usersFilled: 1 },
             {
-                where: { id: token.feedbackTokensCollectionId },
                 silent: true,
                 ...options
             }
         );
-
-        await token.update({ filled: true }, options);
     }
 }
 

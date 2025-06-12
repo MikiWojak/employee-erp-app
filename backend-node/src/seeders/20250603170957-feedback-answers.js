@@ -7,9 +7,9 @@ const di = require('../di');
 const { Role } = require('../models');
 
 const userRepository = di.get('repositories.user');
-const feedbackQuestionRepository = di.get('repositories.feedbackQuestion');
-const feedbackTokenRepository = di.get('repositories.feedbackToken');
 const answerHandler = di.get('services.feedback.answer');
+const feedbackTokenRepository = di.get('repositories.feedbackToken');
+const feedbackQuestionRepository = di.get('repositories.feedbackQuestion');
 const generateTokenCollectionHandler = di.get(
     'services.feedback.generateTokenCollection'
 );

@@ -6,14 +6,13 @@ const sorting = require('../middlewares/sorting');
 const validate = require('../middlewares/validate');
 const pagination = require('../middlewares/pagination');
 const loggedOnly = require('../middlewares/loggedOnly');
+const searchable = require('../middlewares/searchable');
 const paginationValidator = require('../validators/pagination');
 
 const {
     Role: { ADMIN, MANAGER },
-    User,
     FeedbackTokensCollection
 } = require('../models');
-const searchable = require('../middlewares/searchable');
 
 module.exports = di => {
     const indexController = di.get(

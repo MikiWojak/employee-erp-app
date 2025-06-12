@@ -1,6 +1,6 @@
 const dayjs = require('dayjs');
-const deepmerge = require('deepmerge');
 const { Op } = require('sequelize');
+const deepmerge = require('deepmerge');
 
 const AbstractRepository = require('./AbstractRepository');
 

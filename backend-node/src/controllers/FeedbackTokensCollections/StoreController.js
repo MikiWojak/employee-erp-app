@@ -1,7 +1,6 @@
 const dayjs = require('dayjs');
-
-const { StatusCodes: HTTP } = require('http-status-codes');
 const { Op } = require('sequelize');
+const { StatusCodes: HTTP } = require('http-status-codes');
 
 class StoreController {
     constructor(
