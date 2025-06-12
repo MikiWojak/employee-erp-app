@@ -24,7 +24,7 @@ class FeedbackTokenRepository extends AbstractRepository {
                     where: {
                         [Op.or]: [
                             { expiresAt: null },
-                            { expiresAt: { [Op.lte]: dayjs().format() } }
+                            { expiresAt: { [Op.gte]: dayjs().format() } }
                         ]
                     }
                 }
