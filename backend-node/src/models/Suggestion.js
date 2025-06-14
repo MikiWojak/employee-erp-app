@@ -3,7 +3,11 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class Suggestion extends Model {}
+    class Suggestion extends Model {
+        static get SEARCHABLE_FIELDS() {
+            return ['title'];
+        }
+    }
 
     Suggestion.init(
         {
