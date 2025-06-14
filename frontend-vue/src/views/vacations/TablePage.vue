@@ -20,17 +20,20 @@ export default {
 
     data() {
         return {
-            tableOptions: {
-                title: 'Vacations',
-                deleteConfirmationModalTitle:
-                    'Do you really want to delete this vacation?'
-            },
             selectedTab: BelongingTabs.EMPLOYEES
         };
     },
 
     computed: {
         ...mapState(useAuthStore, ['isAdmin', 'isManager']),
+
+        customTableOptions() {
+            return {
+                title: 'Vacations',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this vacation?'
+            };
+        },
 
         customFields() {
             return [

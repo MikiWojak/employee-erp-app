@@ -1,0 +1,65 @@
+'use strict';
+
+const {
+    db: {
+        define: { charset, collate }
+    }
+} = require('../config');
+
+module.exports = {
+    up: async (queryInterface, DataTypes) => {
+        await queryInterface.createTable(
+            'FeedbackTokensCollections',
+            {
+                id: {
+                    allowNull: false,
+                    primaryKey: true,
+                    type: DataTypes.UUID,
+                    defaultValue: DataTypes.UUIDV4
+                },
+                number: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER,
+                    autoIncrement: true,
+                    unique: true
+                },
+                dateTime: {
+                    allowNull: false,
+                    type: DataTypes.DATE
+                },
+                expiresAt: {
+                    allowNull: true,
+                    defaultValue: null,
+                    type: DataTypes.DATE
+                },
+                usersPermitted: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER,
+                    defaultValue: 0
+                },
+                usersFilled: {
+                    allowNull: false,
+                    type: DataTypes.INTEGER,
+                    defaultValue: 0
+                },
+                createdAt: {
+                    allowNull: false,
+                    type: DataTypes.DATE,
+                    defaultValue: DataTypes.fn('now')
+                },
+                updatedAt: {
+                    allowNull: false,
+                    type: DataTypes.DATE,
+                    defaultValue: DataTypes.fn('now')
+                }
+            },
+            {
+                charset,
+                collate
+            }
+        );
+    },
+    down: async queryInterface => {
+        await queryInterface.dropTable('FeedbackTokensCollections');
+    }
+};

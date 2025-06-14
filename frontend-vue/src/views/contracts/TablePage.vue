@@ -20,11 +20,6 @@ export default {
 
     data() {
         return {
-            tableOptions: {
-                title: 'Contracts',
-                deleteConfirmationModalTitle:
-                    'Do you really want to delete this contract?'
-            },
             selectedTab: BelongingTabs.EMPLOYEES
         };
     },
@@ -32,8 +27,11 @@ export default {
     computed: {
         ...mapState(useAuthStore, ['isAdmin', 'isManager']),
 
-        computedTableOptions() {
+        customTableOptions() {
             return {
+                title: 'Contracts',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this contract?',
                 isAddButtonIncluded: this.isAdmin || this.isManager,
                 areActionButtonsIncluded:
                     this.isAdmin ||

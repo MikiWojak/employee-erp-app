@@ -1,14 +1,14 @@
 <template>
     <v-autocomplete
-        v-model="department"
-        :items="departments"
+        v-model="tokensCollection"
+        :items="tokensCollections"
         :loading="loading"
         hide-no-data
-        item-title="name"
+        item-title="number"
         item-value="id"
-        label="Department"
-        prepend-icon="mdi-office-building"
-        placeholder="Start typing to Search"
+        label="Tokens Collection"
+        prepend-icon="mdi-ticket-account"
+        placeholder="Start searching by number"
         :error-messages="errorMessages"
         return-object
         :clearable="clearable"
@@ -21,10 +21,10 @@
 <script>
 import { mapActions } from 'pinia';
 
-import { useDepartmentStore } from '@/stores/department';
+import { useFeedbackTokensCollectionStore } from '@/stores/feedbackTokensCollection';
 
 export default {
-    name: 'DepartmentSelect',
+    name: 'FeedbackTokensCollectionSelect',
 
     props: {
         modelValue: {
@@ -47,8 +47,8 @@ export default {
 
     data() {
         return {
-            departments: [],
-            department: null,
+            tokensCollections: [],
+            tokensCollection: null,
             timer: null,
             loading: false
         };
@@ -57,31 +57,33 @@ export default {
     watch: {
         modelValue: {
             handler(newVal) {
-                this.department = newVal;
+                this.tokensCollection = newVal;
             },
             immediate: true
         }
     },
 
     methods: {
-        ...mapActions(useDepartmentStore, { getDepartments: 'index' }),
+        ...mapActions(useFeedbackTokensCollectionStore, {
+            getTokensCollections: 'index'
+        }),
 
         handleInput(value) {
             this.$emit('update:model-value', value);
         },
 
-        async doGetDepartments(search = '') {
+        async doGetTokensCollections(search = '') {
             try {
-                const { rows } = await this.getDepartments({
+                const { rows } = await this.getTokensCollections({
                     search,
-                    perPage: 10
+                    perPage: 50
                 });
 
-                this.departments = rows;
+                this.tokensCollections = rows;
             } catch (error) {
                 console.error(error);
 
-                this.$toast.error('Cannot get a list of departments!');
+                this.$toast.error('Cannot get a list of token collections!');
             }
         },
 
@@ -98,7 +100,7 @@ export default {
             this.loading = true;
 
             this.timer = setTimeout(async () => {
-                await this.doGetDepartments(search);
+                await this.doGetTokensCollections(search);
 
                 this.loading = false;
             }, 1000);
