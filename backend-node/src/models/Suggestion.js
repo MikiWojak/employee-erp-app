@@ -4,6 +4,13 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class Suggestion extends Model {
+        static associate({ User }) {
+            this.belongsTo(User, {
+                as: 'user',
+                foreignKey: 'userId'
+            });
+        }
+
         static get SEARCHABLE_FIELDS() {
             return ['title'];
         }

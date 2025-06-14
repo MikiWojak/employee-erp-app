@@ -42,6 +42,12 @@
             :to="{ name: 'vacations' }"
         />
 
+        <v-list-item
+            prepend-icon="mdi-bed"
+            title="Suggestions"
+            :to="{ name: 'suggestions' }"
+        />
+
         <v-list-subheader class="ml-4" inset> Feedback </v-list-subheader>
 
         <v-list-item

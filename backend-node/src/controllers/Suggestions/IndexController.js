@@ -10,7 +10,11 @@ class IndexController {
             {
                 where: search,
                 ...sorting,
-                ...pagination
+                ...pagination,
+                include: {
+                    association: 'user',
+                    required: true
+                }
             }
         );
 
