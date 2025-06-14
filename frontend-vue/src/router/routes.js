@@ -52,16 +52,16 @@ export default [
         meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
     },
     {
-        path: '/feedback-stats',
-        name: 'feedback-stats',
+        path: '/feedback/statistics',
+        name: 'feedback-statistics',
         component: () => import('@/views/feedback/StatsPage.vue'),
         meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
     },
     {
-        path: '/feedback-tokens-collections',
+        path: '/feedback/tokens-collections',
         name: 'feedback-tokens-collections',
         component: () => import('@/views/feedback-tokens/TokensPage.vue'),
-        meta: { auth: [Roles.ADMIN] }
+        meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
     },
     {
         path: '/login',

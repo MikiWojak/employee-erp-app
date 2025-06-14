@@ -5,13 +5,21 @@ class IndexController {
     }
 
     async invoke(req, res) {
-        const { search, sorting, pagination } = req;
+        const {
+            search,
+            sorting,
+            pagination,
+            rolesInfo: { isManager }
+        } = req;
 
         const { count, rows } =
             await this.feedbackTokensCollectionRepository.findAndCountAll({
                 where: search,
                 ...sorting,
-                ...pagination
+                ...pagination,
+                ...(isManager && {
+                    attributes: { exclude: ['usersPermitted', 'usersFilled'] }
+                })
             });
 
         return res.send({ count, rows });

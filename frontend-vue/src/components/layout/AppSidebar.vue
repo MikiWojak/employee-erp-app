@@ -42,25 +42,27 @@
             :to="{ name: 'vacations' }"
         />
 
+        <v-list-subheader class="ml-4" inset> Feedback </v-list-subheader>
+
         <v-list-item
             v-if="isEmployee || isManager"
             prepend-icon="mdi-comment"
-            title="Feedback"
+            title="Form"
             :to="{ name: 'feedback' }"
         />
 
         <v-list-item
             v-if="isAdmin || isManager"
-            prepend-icon="mdi-comment-multiple"
-            title="Feedback Stats"
-            :to="{ name: 'feedback-stats' }"
+            prepend-icon="mdi-ticket-account"
+            title="Tokens Collections"
+            :to="{ name: 'feedback-tokens-collections' }"
         />
 
         <v-list-item
-            v-if="isAdmin"
-            prepend-icon="mdi-ticket-account"
-            title="Feedback Tokens"
-            :to="{ name: 'feedback-tokens-collections' }"
+            v-if="isAdmin || isManager"
+            prepend-icon="mdi-comment-multiple"
+            title="Statistics"
+            :to="{ name: 'feedback-statistics' }"
         />
 
         <v-divider />

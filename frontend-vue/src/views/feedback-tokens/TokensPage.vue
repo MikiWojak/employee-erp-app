@@ -1,7 +1,8 @@
 <script>
 import dayjs from 'dayjs';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 
+import { useAuthStore } from '@/stores/auth';
 import BaseTablePage from '@/components/view/BaseTablePage';
 import { useFeedbackTokensCollectionStore } from '@/stores/feedbackTokensCollection';
 
@@ -11,8 +12,10 @@ export default {
     extends: BaseTablePage,
 
     computed: {
+        ...mapState(useAuthStore, ['isAdmin']),
+
         headers() {
-            return [
+            const baseHeaders = [
                 { title: 'ID', value: 'id', minWidth: '150px' },
                 {
                     title: 'Number',
@@ -28,18 +31,26 @@ export default {
                     title: 'Expires At',
                     value: 'formattedExpiresAt',
                     minWidth: '150px'
-                },
-                {
-                    title: 'Users Permitted',
-                    value: 'usersPermitted',
-                    minWidth: '150px'
-                },
-                {
-                    title: 'Users Filled',
-                    value: 'usersFilled',
-                    minWidth: '150px'
                 }
             ];
+
+            if (this.isAdmin) {
+                return [
+                    ...baseHeaders,
+                    {
+                        title: 'Users Permitted',
+                        value: 'usersPermitted',
+                        minWidth: '150px'
+                    },
+                    {
+                        title: 'Users Filled',
+                        value: 'usersFilled',
+                        minWidth: '150px'
+                    }
+                ];
+            }
+
+            return baseHeaders;
         },
 
         customFields() {
@@ -59,7 +70,8 @@ export default {
             return {
                 title: 'Feedback Tokens Collections',
                 addButtonText: 'Add Tokens Collection',
-                areActionButtonsIncluded: false
+                areActionButtonsIncluded: false,
+                isAddButtonIncluded: this.isAdmin
             };
         }
     },

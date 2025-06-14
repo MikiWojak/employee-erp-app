@@ -1,5 +1,5 @@
 <template>
-    <h1> Feedback - stats </h1>
+    <h1> Feedback Statistics </h1>
 
     <v-row>
         <v-col cols="12" md="6">
