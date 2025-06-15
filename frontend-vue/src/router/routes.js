@@ -48,20 +48,26 @@ export default [
     {
         path: '/feedback',
         name: 'feedback',
-        component: () => import('@/views/feedback/QuestionsPage.vue'),
+        component: () => import('@/views/feedback/QuestionsPage'),
         meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
     },
     {
         path: '/feedback/statistics',
         name: 'feedback-statistics',
-        component: () => import('@/views/feedback/StatsPage.vue'),
+        component: () => import('@/views/feedback/StatsPage'),
         meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
     },
     {
         path: '/feedback/tokens-collections',
         name: 'feedback-tokens-collections',
-        component: () => import('@/views/feedback-tokens/TokensPage.vue'),
+        component: () => import('@/views/feedback-tokens/TokensPage'),
         meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
+    },
+    {
+        path: '/suggestions',
+        name: 'suggestions',
+        component: () => import('@/views/suggestions/TablePage'),
+        meta: { auth: true }
     },
     {
         path: '/login',
