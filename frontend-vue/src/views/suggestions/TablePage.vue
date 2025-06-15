@@ -1,20 +1,30 @@
 <script>
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
+import { defineAsyncComponent } from 'vue';
 
+import { useAuthStore } from '@/stores/auth';
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseTablePage from '@/components/view/BaseTablePage';
 
 export default {
     name: 'TablePage',
 
+    components: {
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/suggestions/AddEditDialog')
+        )
+    },
+
     extends: BaseTablePage,
 
     computed: {
+        ...mapState(useAuthStore, ['isManager', 'isEmployee', 'loggedUser']),
+
         customTableOptions() {
             return {
                 title: 'Suggestions',
-                isAddButtonIncluded: false,
-                areActionButtonsIncluded: false
+                areActionButtonsIncluded: this.isManager || this.isEmployee,
+                isAddButtonIncluded: this.isManager || this.isEmployee
             };
         },
 
@@ -37,8 +47,13 @@ export default {
 
     methods: {
         ...mapActions(useSuggestionStore, {
-            getItems: 'index'
-        })
+            getItems: 'index',
+            deleteItem: 'destroy'
+        }),
+
+        areActionButtonsDisabled(item) {
+            return item.userId !== this.loggedUser.id;
+        }
     }
 };
 </script>

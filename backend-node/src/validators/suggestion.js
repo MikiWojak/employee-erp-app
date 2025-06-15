@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-const store = [
+const update = [
     body('title').trim().not().isEmpty().withMessage('This field is required.'),
 
     body('description')
@@ -10,6 +10,9 @@ const store = [
         .withMessage('This field is required.')
 ];
 
+const store = update;
+
 module.exports = {
-    store
+    store,
+    update
 };

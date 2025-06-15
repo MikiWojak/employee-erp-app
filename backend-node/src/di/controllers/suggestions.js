@@ -8,6 +8,16 @@ module.exports = {
         'controllers.suggestions.store': {
             class: 'controllers/Suggestions/StoreController',
             arguments: ['@repositories.suggestion']
+        },
+
+        'controllers.suggestions.update': {
+            class: 'controllers/Suggestions/UpdateController',
+            arguments: ['@repositories.suggestion']
+        },
+
+        'controllers.suggestions.destroy': {
+            class: 'controllers/Suggestions/DestroyController',
+            arguments: ['@repositories.suggestion']
         }
     }
 };

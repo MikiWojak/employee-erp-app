@@ -12,7 +12,12 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         static get SEARCHABLE_FIELDS() {
-            return ['title'];
+            return [
+                'title',
+                'description',
+                '$user.firstName$',
+                '$user.lastName$'
+            ];
         }
     }
 

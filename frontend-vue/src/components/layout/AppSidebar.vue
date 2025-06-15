@@ -43,7 +43,7 @@
         />
 
         <v-list-item
-            prepend-icon="mdi-bed"
+            prepend-icon="mdi-lightbulb-on"
             title="Suggestions"
             :to="{ name: 'suggestions' }"
         />

@@ -14,10 +14,13 @@ const {
     Suggestion,
     Role: { MANAGER, EMPLOYEE }
 } = require('../models');
+const userValidator = require('../validators/user');
 
 module.exports = di => {
     const indexController = di.get('controllers.suggestions.index');
     const storeController = di.get('controllers.suggestions.store');
+    const updateController = di.get('controllers.suggestions.update');
+    const destroyController = di.get('controllers.suggestions.destroy');
 
     router.get(
         '/',
@@ -37,6 +40,19 @@ module.exports = di => {
         loggedOnly(MANAGER, EMPLOYEE),
         [suggestionValidator.store, validate],
         invoke(storeController)
+    );
+
+    router.put(
+        '/:id',
+        loggedOnly(MANAGER, EMPLOYEE),
+        [suggestionValidator.update, validate],
+        invoke(updateController)
+    );
+
+    router.delete(
+        '/:id',
+        loggedOnly(MANAGER, EMPLOYEE),
+        invoke(destroyController)
     );
 
     return router;

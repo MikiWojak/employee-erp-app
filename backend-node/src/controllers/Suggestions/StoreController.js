@@ -7,10 +7,12 @@ class StoreController {
 
     async invoke(req, res) {
         const {
+            loggedUser,
             body: { title, description }
         } = req;
 
         const data = {
+            userId: loggedUser.id,
             title,
             description
         };
