@@ -14,7 +14,6 @@ const {
     Suggestion,
     Role: { MANAGER, EMPLOYEE }
 } = require('../models');
-const userValidator = require('../validators/user');
 
 module.exports = di => {
     const indexController = di.get('controllers.suggestions.index');

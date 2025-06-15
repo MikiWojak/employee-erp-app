@@ -1,6 +1,6 @@
 <script>
-import { mapActions, mapState } from 'pinia';
 import { defineAsyncComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
 import { useSuggestionStore } from '@/stores/suggestion';
