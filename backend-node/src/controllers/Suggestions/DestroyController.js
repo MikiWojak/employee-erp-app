@@ -13,8 +13,6 @@ class DestroyController {
 
         const suggestion = await this.suggestionRepository.findById(id);
 
-        console.log({ id, suggestion, msg: 'Destroy Suggestion - prepare' });
-
         if (!suggestion) {
             return res.sendStatus(HTTP.NO_CONTENT);
         }
@@ -22,8 +20,6 @@ class DestroyController {
         if (suggestion.userId !== loggedUser.id) {
             return res.sendStatus(HTTP.FORBIDDEN);
         }
-
-        console.log({ msg: 'Destroy Suggestion' });
 
         await suggestion.destroy();
 

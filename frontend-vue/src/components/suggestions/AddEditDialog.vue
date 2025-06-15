@@ -48,7 +48,6 @@ import { required } from '@vuelidate/validators';
 
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
-import { BelongingTabs } from '@/enums/BelongingTabs';
 
 export default {
     name: 'AddEditDialog',
