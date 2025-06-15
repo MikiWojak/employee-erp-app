@@ -44,6 +44,16 @@ module.exports = (sequelize, DataTypes) => {
             description: {
                 allowNull: false,
                 type: DataTypes.TEXT
+            },
+            votesUp: {
+                allowNull: false,
+                type: DataTypes.INTEGER,
+                defaultValue: 0
+            },
+            votesDown: {
+                allowNull: false,
+                type: DataTypes.INTEGER,
+                defaultValue: 0
             }
         },
         {

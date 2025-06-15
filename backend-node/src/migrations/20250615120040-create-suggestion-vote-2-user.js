@@ -9,39 +9,29 @@ const {
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable(
-            'Suggestions',
+            'SuggestionVote2User',
             {
-                id: {
+                suggestionId: {
                     allowNull: false,
                     primaryKey: true,
                     type: DataTypes.UUID,
-                    defaultValue: DataTypes.UUIDV4
+                    references: {
+                        model: 'Suggestions',
+                        key: 'id'
+                    }
                 },
                 userId: {
                     allowNull: false,
+                    primaryKey: true,
                     type: DataTypes.UUID,
                     references: {
                         model: 'Users',
                         key: 'id'
                     }
                 },
-                title: {
+                vote: {
                     allowNull: false,
-                    type: DataTypes.STRING
-                },
-                description: {
-                    allowNull: false,
-                    type: DataTypes.TEXT
-                },
-                votesUp: {
-                    allowNull: false,
-                    type: DataTypes.INTEGER,
-                    defaultValue: 0
-                },
-                votesDown: {
-                    allowNull: false,
-                    type: DataTypes.INTEGER,
-                    defaultValue: 0
+                    type: DataTypes.INTEGER
                 },
                 createdAt: {
                     allowNull: false,
@@ -52,10 +42,6 @@ module.exports = {
                     allowNull: false,
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.fn('now')
-                },
-                deletedAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: null
                 }
             },
             {
@@ -65,6 +51,6 @@ module.exports = {
         );
     },
     down: async queryInterface => {
-        await queryInterface.dropTable('Suggestions');
+        await queryInterface.dropTable('SuggestionVote2User');
     }
 };
