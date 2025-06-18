@@ -80,6 +80,13 @@
 
         <template #[`item.actions`]="{ item }">
             <v-btn
+                v-for="(button, index) in additionalActionButtons"
+                :key="`action-button-${item.id}-${index}`"
+                v-bind="button.props"
+                @click="button.action"
+            />
+
+            <v-btn
                 variant="plain"
                 icon="mdi-pencil"
                 :disabled="areActionButtonsDisabled(item)"
@@ -192,7 +199,7 @@ export default {
                               title: 'Actions',
                               value: 'actions',
                               sortable: false,
-                              minWidth: '150px'
+                              minWidth: '250px'
                           }
                       ]
                     : [])
@@ -205,6 +212,10 @@ export default {
 
         additionalIndexParams() {
             return {};
+        },
+
+        additionalActionButtons() {
+            return [];
         }
     },
 

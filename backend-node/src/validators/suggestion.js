@@ -13,7 +13,7 @@ const update = [
 const store = update;
 
 const vote = [
-    body('vacationDaysPerYear')
+    body('vote')
         .not()
         .isEmpty()
         .withMessage('This field is required.')

@@ -54,10 +54,7 @@ class VoteController {
                         ? { votesUp: 1 }
                         : { votesDown: 1 };
 
-                await this.suggestionVote2UserRepository.decrement(
-                    revertOptions,
-                    { transaction }
-                );
+                await suggestion.decrement(revertOptions, { transaction });
             }
 
             const increaseOptions =

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import axios from '@/services/axios';
+import { id } from 'vuetify/locale';
 
 export const useSuggestionStore = defineStore('suggestion', {
     actions: {
@@ -26,6 +27,10 @@ export const useSuggestionStore = defineStore('suggestion', {
 
         async destroy(id) {
             await axios.delete(`/suggestions/${id}`);
+        },
+
+        async vote({ id, vote }) {
+            await axios.post(`/suggestions/${id}/vote`, { vote });
         }
     }
 });
