@@ -82,8 +82,8 @@
             <v-btn
                 v-for="(button, index) in additionalActionButtons"
                 :key="`action-button-${item.id}-${index}`"
-                v-bind="button.props"
-                @click="button.action"
+                v-bind="button.props(item)"
+                @click="button.action(item)"
             />
 
             <v-btn
@@ -169,7 +169,8 @@ export default {
                     'Do you really want to delete this item?',
                 addButtonText: 'Add',
                 isAddButtonIncluded: true,
-                areActionButtonsIncluded: true
+                areActionButtonsIncluded: true,
+                actionsMinWidth: '150px'
             };
 
             return {
@@ -199,7 +200,7 @@ export default {
                               title: 'Actions',
                               value: 'actions',
                               sortable: false,
-                              minWidth: '250px'
+                              minWidth: this.tableOptions.actionsMinWidth
                           }
                       ]
                     : [])
