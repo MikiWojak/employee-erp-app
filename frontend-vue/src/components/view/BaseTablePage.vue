@@ -87,17 +87,17 @@
             />
 
             <v-btn
+                v-if="areEditDeleteButtonsVisible(item)"
                 variant="plain"
                 icon="mdi-pencil"
-                :disabled="areActionButtonsDisabled(item)"
                 @click="onAddButtonClick(item)"
             />
 
             <v-btn
+                v-if="areEditDeleteButtonsVisible(item)"
                 variant="plain"
                 icon="mdi-delete"
                 color="red"
-                :disabled="areActionButtonsDisabled(item)"
                 @click="openDeleteDialog(item.id)"
             />
         </template>
@@ -224,8 +224,8 @@ export default {
         getFullImagePath,
 
         // eslint-disable-next-line no-unused-vars
-        areActionButtonsDisabled(item) {
-            return false;
+        areEditDeleteButtonsVisible(item) {
+            return true;
         },
 
         getColumnAttributes(field, item) {

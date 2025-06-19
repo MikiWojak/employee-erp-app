@@ -71,6 +71,13 @@ export default {
                         disabled: this.isSuggestionVoteDisabled(item)
                     }),
                     action: item => this.doVote(item, -1)
+                },
+                {
+                    props: () => ({
+                        variant: 'plain',
+                        'prepend-icon': 'mdi-eye'
+                    }),
+                    action: () => {}
                 }
             ];
         }
@@ -83,8 +90,8 @@ export default {
             deleteItem: 'destroy'
         }),
 
-        areActionButtonsDisabled(item) {
-            return item.userId !== this.loggedUser.id;
+        areEditDeleteButtonsVisible(item) {
+            return item.userId === this.loggedUser.id;
         },
 
         async doVote(item, vote) {

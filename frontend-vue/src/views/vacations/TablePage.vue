@@ -133,15 +133,15 @@ export default {
             deleteItem: 'destroy'
         }),
 
-        areActionButtonsDisabled(item) {
+        areEditDeleteButtonsVisible(item) {
             if (
                 this.isAdmin ||
                 (this.isManager && this.selectedTab === BelongingTabs.EMPLOYEES)
             ) {
-                return false;
+                return true;
             }
 
-            return item.approved;
+            return !item.approved;
         },
 
         getStatus(item) {
