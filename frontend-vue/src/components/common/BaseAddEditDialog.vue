@@ -21,6 +21,10 @@ export default {
         editedItem: {
             type: Object,
             default: null
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -48,6 +52,7 @@ export default {
     watch: {
         isOpened() {
             this.isDialogOpened = this.isOpened;
+            console.log('readonly', this.readonly);
         },
 
         editedItem: {

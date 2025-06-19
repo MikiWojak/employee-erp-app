@@ -73,11 +73,14 @@ export default {
                     action: item => this.doVote(item, -1)
                 },
                 {
-                    props: () => ({
+                    props: item => ({
                         variant: 'plain',
-                        'prepend-icon': 'mdi-eye'
+                        icon: 'mdi-eye',
+                        ...(this.areEditDeleteButtonsVisible(item) && {
+                            class: 'd-none'
+                        })
                     }),
-                    action: () => {}
+                    action: item => this.viewSuggestion(item)
                 }
             ];
         }
@@ -133,6 +136,15 @@ export default {
             );
 
             return !!userVote;
+        },
+
+        viewSuggestion(item) {
+            this.isAddEditDialogReadonly = true;
+            console.log(
+                'isAddEditDialogReadonly',
+                this.isAddEditDialogReadonly
+            );
+            this.onAddButtonClick(item);
         }
     }
 };

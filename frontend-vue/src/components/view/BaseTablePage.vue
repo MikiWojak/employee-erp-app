@@ -106,6 +106,7 @@
     <add-edit-dialog
         :is-opened="isAddEditDialogOpened"
         :edited-item="editedItem"
+        :readonly="isAddEditDialogReadonly"
         @success="doGetItems"
         @close="closeAddEditDialog"
     />
@@ -150,6 +151,7 @@ export default {
             itemToDeleteId: null,
             confirmationModalLoading: false,
             isAddEditDialogOpened: false,
+            isAddEditDialogReadonly: false,
             perPageOptions: [
                 { value: 10, title: '10' },
                 { value: 25, title: '25' },
@@ -324,6 +326,7 @@ export default {
 
         closeAddEditDialog() {
             this.isAddEditDialogOpened = false;
+            this.isAddEditDialogReadonly = false;
         },
 
         openDeleteDialog(id) {
