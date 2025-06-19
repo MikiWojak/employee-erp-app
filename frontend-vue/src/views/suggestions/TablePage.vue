@@ -30,7 +30,9 @@ export default {
             return {
                 title: 'Suggestions',
                 isAddButtonIncluded: this.isManager || this.isEmployee,
-                actionsMinWidth: '250px'
+                actionsMinWidth: '250px',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this suggestion?'
             };
         },
 
