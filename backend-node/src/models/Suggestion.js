@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'user',
                 foreignKey: 'userId'
             });
+
+            this.belongsToMany(User, {
+                as: 'userVotes',
+                through: 'SuggestionVote2User',
+                foreignKey: 'suggestionId'
+            });
         }
 
         static get SEARCHABLE_FIELDS() {

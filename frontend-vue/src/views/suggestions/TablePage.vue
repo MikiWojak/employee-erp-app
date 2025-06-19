@@ -1,11 +1,11 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
+import { StatusCodes as HTTP } from 'http-status-codes';
 
 import { useAuthStore } from '@/stores/auth';
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseTablePage from '@/components/view/BaseTablePage';
-import { StatusCodes as HTTP } from 'http-status-codes/build/cjs/status-codes';
 
 export default {
     name: 'TablePage',
@@ -50,7 +50,9 @@ export default {
             return [
                 {
                     props: item => ({
-                        variant: 'plain',
+                        variant: this.isVoteSelected(item, 1)
+                            ? 'outlined'
+                            : 'plain',
                         text: item.votesUp,
                         'prepend-icon': 'mdi-thumb-up',
                         color: 'green',
@@ -60,7 +62,9 @@ export default {
                 },
                 {
                     props: item => ({
-                        variant: 'plain',
+                        variant: this.isVoteSelected(item, -1)
+                            ? 'outlined'
+                            : 'plain',
                         text: item.votesDown,
                         'prepend-icon': 'mdi-thumb-down',
                         color: 'red',
@@ -108,6 +112,20 @@ export default {
 
         isSuggestionVoteDisabled(item) {
             return this.loggedUser.id === item.userId;
+        },
+
+        isVoteSelected(item, vote) {
+            if (!item.userVotes?.length) {
+                return false;
+            }
+
+            const userVote = item.userVotes.find(
+                _userVote =>
+                    _userVote.id === this.loggedUser.id &&
+                    _userVote.SuggestionVote2User.vote === vote
+            );
+
+            return !!userVote;
         }
     }
 };
