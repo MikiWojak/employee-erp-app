@@ -17,7 +17,7 @@ class IndexController {
                         required: true
                     },
                     {
-                        association: 'userVotes',
+                        association: 'usersVoted',
                         attributes: ['id'],
                         through: {
                             attributes: ['suggestionId', 'userId', 'vote']

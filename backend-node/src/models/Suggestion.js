@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             });
 
             this.belongsToMany(User, {
-                as: 'userVotes',
+                as: 'usersVoted',
                 through: 'SuggestionVote2User',
                 foreignKey: 'suggestionId'
             });

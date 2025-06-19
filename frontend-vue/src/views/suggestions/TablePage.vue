@@ -19,12 +19,16 @@ export default {
     extends: BaseTablePage,
 
     computed: {
-        ...mapState(useAuthStore, ['isManager', 'isEmployee', 'loggedUser']),
+        ...mapState(useAuthStore, [
+            'isAdmin',
+            'isManager',
+            'isEmployee',
+            'loggedUser'
+        ]),
 
         customTableOptions() {
             return {
                 title: 'Suggestions',
-                areActionButtonsIncluded: this.isManager || this.isEmployee,
                 isAddButtonIncluded: this.isManager || this.isEmployee,
                 actionsMinWidth: '250px'
             };
@@ -52,11 +56,16 @@ export default {
                     props: item => ({
                         variant: this.isVoteSelected(item, 1)
                             ? 'outlined'
-                            : 'plain',
+                            : 'text',
                         text: item.votesUp,
                         'prepend-icon': 'mdi-thumb-up',
                         color: 'green',
-                        disabled: this.isSuggestionVoteDisabled(item)
+                        class: this.isVoteSelected(item, 1)
+                            ? 'selected'
+                            : 'vote',
+                        disabled:
+                            this.isSuggestionVoteDisabled(item) ||
+                            this.isVoteSelected(item, 1)
                     }),
                     action: item => this.doVote(item, 1)
                 },
@@ -64,11 +73,16 @@ export default {
                     props: item => ({
                         variant: this.isVoteSelected(item, -1)
                             ? 'outlined'
-                            : 'plain',
+                            : 'text',
                         text: item.votesDown,
                         'prepend-icon': 'mdi-thumb-down',
                         color: 'red',
-                        disabled: this.isSuggestionVoteDisabled(item)
+                        class: this.isVoteSelected(item, -1)
+                            ? 'selected'
+                            : 'vote',
+                        disabled:
+                            this.isSuggestionVoteDisabled(item) ||
+                            this.isVoteSelected(item, -1)
                     }),
                     action: item => this.doVote(item, -1)
                 },
@@ -94,7 +108,7 @@ export default {
         }),
 
         areEditDeleteButtonsVisible(item) {
-            return item.userId === this.loggedUser.id;
+            return this.loggedUser.id === item.userId;
         },
 
         async doVote(item, vote) {
@@ -121,21 +135,17 @@ export default {
         },
 
         isSuggestionVoteDisabled(item) {
-            return this.loggedUser.id === item.userId;
+            return this.isAdmin || this.loggedUser.id === item.userId;
         },
 
         isVoteSelected(item, vote) {
-            if (!item.userVotes?.length) {
-                return false;
-            }
-
-            const userVote = item.userVotes.find(
-                _userVote =>
-                    _userVote.id === this.loggedUser.id &&
-                    _userVote.SuggestionVote2User.vote === vote
+            const userVoted = item.usersVoted.find(
+                _userVoted =>
+                    _userVoted.id === this.loggedUser.id &&
+                    _userVoted.SuggestionVote2User.vote === vote
             );
 
-            return !!userVote;
+            return !!userVoted;
         },
 
         viewSuggestion(item) {
@@ -145,3 +155,13 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.v-btn--disabled.selected {
+    opacity: 1;
+}
+
+.v-btn--disabled.vote {
+    opacity: 0.75;
+}
+</style>
