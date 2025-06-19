@@ -140,10 +140,6 @@ export default {
 
         viewSuggestion(item) {
             this.isAddEditDialogReadonly = true;
-            console.log(
-                'isAddEditDialogReadonly',
-                this.isAddEditDialogReadonly
-            );
             this.onAddButtonClick(item);
         }
     }

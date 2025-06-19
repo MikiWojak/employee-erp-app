@@ -52,7 +52,6 @@ export default {
     watch: {
         isOpened() {
             this.isDialogOpened = this.isOpened;
-            console.log('readonly', this.readonly);
         },
 
         editedItem: {
