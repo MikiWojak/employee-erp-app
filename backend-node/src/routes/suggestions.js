@@ -16,6 +16,7 @@ const {
 } = require('../models');
 
 module.exports = di => {
+    const voteController = di.get('controllers.suggestions.vote');
     const indexController = di.get('controllers.suggestions.index');
     const storeController = di.get('controllers.suggestions.store');
     const updateController = di.get('controllers.suggestions.update');
@@ -32,6 +33,13 @@ module.exports = di => {
             pagination
         ],
         invoke(indexController)
+    );
+
+    router.post(
+        '/:id/vote',
+        loggedOnly(MANAGER, EMPLOYEE),
+        [suggestionValidator.vote, validate],
+        invoke(voteController)
     );
 
     router.post(

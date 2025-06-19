@@ -15,6 +15,7 @@
                     v-model="formData.title"
                     label="Title"
                     prepend-icon="mdi-lightbulb-on"
+                    :readonly="readonly"
                     :error-messages="handleError('title')"
                     @blur="onBlur('title')"
                     @input="clearServerError('title')"
@@ -24,6 +25,7 @@
                     v-model="formData.description"
                     label="Description"
                     prepend-icon="mdi-text-box"
+                    :readonly="readonly"
                     :error-messages="handleError('description')"
                     @blur="onBlur('description')"
                     @input="clearServerError('description')"
@@ -33,9 +35,18 @@
             <v-card-actions>
                 <v-spacer />
 
-                <v-btn text="Cancel" :disabled="loading" @click="close" />
+                <v-btn
+                    :text="readonly ? 'Exit' : 'Cancel'"
+                    :disabled="loading"
+                    @click="close"
+                />
 
-                <v-btn text="Save" :disabled="loading" @click="save" />
+                <v-btn
+                    v-if="!readonly"
+                    text="Save"
+                    :disabled="loading"
+                    @click="save"
+                />
             </v-card-actions>
         </v-card>
     </v-dialog>

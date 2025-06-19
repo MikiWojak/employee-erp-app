@@ -130,18 +130,18 @@ export default {
             return item?.role?.name || '';
         },
 
-        areActionButtonsDisabled(item) {
+        areEditDeleteButtonsVisible(item) {
             if (this.loggedUser?.id === item.id) {
-                return true;
+                return false;
             }
 
             const isUserManager = item.role.name === Roles.MANAGER;
 
             if (this.isManager && isUserManager) {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 };

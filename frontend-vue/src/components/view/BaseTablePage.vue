@@ -80,17 +80,24 @@
 
         <template #[`item.actions`]="{ item }">
             <v-btn
+                v-for="(button, index) in additionalActionButtons"
+                :key="`action-button-${item.id}-${index}`"
+                v-bind="button.props(item)"
+                @click="button.action(item)"
+            />
+
+            <v-btn
+                v-if="areEditDeleteButtonsVisible(item)"
                 variant="plain"
                 icon="mdi-pencil"
-                :disabled="areActionButtonsDisabled(item)"
                 @click="onAddButtonClick(item)"
             />
 
             <v-btn
+                v-if="areEditDeleteButtonsVisible(item)"
                 variant="plain"
                 icon="mdi-delete"
                 color="red"
-                :disabled="areActionButtonsDisabled(item)"
                 @click="openDeleteDialog(item.id)"
             />
         </template>
@@ -99,6 +106,7 @@
     <add-edit-dialog
         :is-opened="isAddEditDialogOpened"
         :edited-item="editedItem"
+        :readonly="isAddEditDialogReadonly"
         @success="doGetItems"
         @close="closeAddEditDialog"
     />
@@ -143,6 +151,7 @@ export default {
             itemToDeleteId: null,
             confirmationModalLoading: false,
             isAddEditDialogOpened: false,
+            isAddEditDialogReadonly: false,
             perPageOptions: [
                 { value: 10, title: '10' },
                 { value: 25, title: '25' },
@@ -162,7 +171,8 @@ export default {
                     'Do you really want to delete this item?',
                 addButtonText: 'Add',
                 isAddButtonIncluded: true,
-                areActionButtonsIncluded: true
+                areActionButtonsIncluded: true,
+                actionsMinWidth: '150px'
             };
 
             return {
@@ -192,7 +202,7 @@ export default {
                               title: 'Actions',
                               value: 'actions',
                               sortable: false,
-                              minWidth: '150px'
+                              minWidth: this.tableOptions.actionsMinWidth
                           }
                       ]
                     : [])
@@ -205,6 +215,10 @@ export default {
 
         additionalIndexParams() {
             return {};
+        },
+
+        additionalActionButtons() {
+            return [];
         }
     },
 
@@ -212,8 +226,8 @@ export default {
         getFullImagePath,
 
         // eslint-disable-next-line no-unused-vars
-        areActionButtonsDisabled(item) {
-            return false;
+        areEditDeleteButtonsVisible(item) {
+            return true;
         },
 
         getColumnAttributes(field, item) {
@@ -312,6 +326,7 @@ export default {
 
         closeAddEditDialog() {
             this.isAddEditDialogOpened = false;
+            this.isAddEditDialogReadonly = false;
         },
 
         openDeleteDialog(id) {
