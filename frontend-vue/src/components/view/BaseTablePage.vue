@@ -118,6 +118,14 @@
         @confirm="doDeleteItem"
         @discard="closeDeleteDialog"
     />
+
+    <component
+        v-for="(additionalComponent, index) of additionalComponents"
+        :is="additionalComponent.name"
+        :key="index"
+        v-bind="additionalComponent.props"
+        v-on="additionalComponent.actions"
+    />
 </template>
 
 <script>
@@ -218,6 +226,10 @@ export default {
         },
 
         additionalActionButtons() {
+            return [];
+        },
+
+        additionalComponents() {
             return [];
         }
     },

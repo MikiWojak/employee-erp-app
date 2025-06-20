@@ -15,10 +15,19 @@ export default {
     components: {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/suggestions/AddEditDialog')
+        ),
+        StatusDialog: defineAsyncComponent(
+            () => import('@/components/suggestions/StatusDialog')
         )
     },
 
     extends: BaseTablePage,
+
+    data() {
+        return {
+            isStatusDialogOpened: false
+        };
+    },
 
     computed: {
         ...mapState(useAuthStore, [
@@ -100,6 +109,16 @@ export default {
                         })
                     }),
                     action: item => this.viewSuggestion(item)
+                },
+                {
+                    props: () => ({
+                        variant: 'plain',
+                        icon: 'mdi-home',
+                        ...(!this.isAdmin && {
+                            class: 'd-none'
+                        })
+                    }),
+                    action: item => this.onChangeStatusClick(item)
                 }
             ];
         },
@@ -111,6 +130,22 @@ export default {
                     name: 'status',
                     value: item => capitalize(item.status),
                     color: this.getColor
+                }
+            ];
+        },
+
+        additionalComponents() {
+            return [
+                {
+                    name: 'StatusDialog',
+                    props: {
+                        isOpened: this.isStatusDialogOpened,
+                        editedItem: this.editedItem
+                    },
+                    actions: {
+                        success: this.doGetItems,
+                        close: this.closeStatusDialog
+                    }
                 }
             ];
         }
@@ -179,6 +214,15 @@ export default {
             };
 
             return colors[item.status];
+        },
+
+        onChangeStatusClick(editedItem) {
+            this.isStatusDialogOpened = true;
+            this.editedItem = editedItem;
+        },
+
+        closeStatusDialog() {
+            this.isStatusDialogOpened = false;
         }
     }
 };
