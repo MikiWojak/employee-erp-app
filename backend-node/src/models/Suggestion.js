@@ -25,6 +25,26 @@ module.exports = (sequelize, DataTypes) => {
                 '$user.lastName$'
             ];
         }
+
+        static get STATUS_PENDING() {
+            return 'pending';
+        }
+
+        static get STATUS_VOTING() {
+            return 'voting';
+        }
+
+        static get STATUS_ACCEPTED() {
+            return 'accepted';
+        }
+
+        static get STATUS_REJECTED() {
+            return 'rejected';
+        }
+
+        static get STATUS_IMPLEMENTED() {
+            return 'implemented';
+        }
     }
 
     Suggestion.init(
@@ -60,6 +80,17 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 type: DataTypes.INTEGER,
                 defaultValue: 0
+            },
+            status: {
+                allowNull: false,
+                type: DataTypes.ENUM(
+                    'pending',
+                    'voting',
+                    'accepted',
+                    'rejected',
+                    'implemented'
+                ),
+                defaultValue: 'pending'
             }
         },
         {

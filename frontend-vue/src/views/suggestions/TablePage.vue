@@ -1,4 +1,5 @@
 <script>
+import { capitalize } from 'lodash';
 import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 import { StatusCodes as HTTP } from 'http-status-codes';
@@ -6,6 +7,7 @@ import { StatusCodes as HTTP } from 'http-status-codes';
 import { useAuthStore } from '@/stores/auth';
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseTablePage from '@/components/view/BaseTablePage';
+import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
 
 export default {
     name: 'TablePage',
@@ -48,7 +50,8 @@ export default {
                     title: 'Author - Last name',
                     value: 'user.lastName',
                     minWidth: '200px'
-                }
+                },
+                { title: 'Status', value: 'status', minWidth: '150px' }
             ];
         },
 
@@ -97,6 +100,17 @@ export default {
                         })
                     }),
                     action: item => this.viewSuggestion(item)
+                }
+            ];
+        },
+
+        customFields() {
+            return [
+                {
+                    component: 'v-chip',
+                    name: 'status',
+                    value: item => capitalize(item.status),
+                    color: this.getColor
                 }
             ];
         }
@@ -153,6 +167,18 @@ export default {
         viewSuggestion(item) {
             this.isAddEditDialogReadonly = true;
             this.onAddButtonClick(item);
+        },
+
+        getColor(item) {
+            const colors = {
+                [SuggestionStatuses.PENDING]: 'orange',
+                [SuggestionStatuses.VOTING]: 'blue',
+                [SuggestionStatuses.ACCEPTED]: 'green',
+                [SuggestionStatuses.REJECTED]: 'red',
+                [SuggestionStatuses.IMPLEMENTED]: 'purple'
+            };
+
+            return colors[item.status];
         }
     }
 };
