@@ -79,7 +79,7 @@ export default {
 
     computed: {
         formTitle() {
-            return 'Edit Suggestion status';
+            return 'Edit suggestion status';
         },
 
         statusOptions() {
@@ -90,12 +90,7 @@ export default {
     methods: {
         ...mapActions(useSuggestionStore, {
             updateItem: 'status'
-        }),
-
-        clearInputs() {
-            this.formData = { ...this.defaultForm };
-            this.selectedDepartment = null;
-        }
+        })
     }
 };
 </script>
