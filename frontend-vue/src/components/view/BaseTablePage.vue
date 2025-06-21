@@ -120,8 +120,8 @@
     />
 
     <component
-        v-for="(additionalComponent, index) of additionalComponents"
         :is="additionalComponent.name"
+        v-for="(additionalComponent, index) of additionalComponents"
         :key="index"
         v-bind="additionalComponent.props"
         v-on="additionalComponent.actions"
