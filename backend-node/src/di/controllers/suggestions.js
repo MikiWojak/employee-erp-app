@@ -26,6 +26,11 @@ module.exports = {
                 '@repositories.suggestion',
                 '@repositories.suggestionVote2User'
             ]
+        },
+
+        'controllers.suggestions.status': {
+            class: 'controllers/Suggestions/StatusController',
+            arguments: ['@repositories.suggestion']
         }
     }
 };

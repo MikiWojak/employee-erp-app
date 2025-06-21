@@ -43,6 +43,17 @@ module.exports = {
                     type: DataTypes.INTEGER,
                     defaultValue: 0
                 },
+                status: {
+                    allowNull: false,
+                    type: DataTypes.ENUM(
+                        'pending',
+                        'voting',
+                        'accepted',
+                        'rejected',
+                        'implemented'
+                    ),
+                    defaultValue: 'pending'
+                },
                 createdAt: {
                     allowNull: false,
                     type: DataTypes.DATE,

@@ -25,6 +25,14 @@ class VoteController {
                 .send('You cannot vote on your own suggestion.');
         }
 
+        const { STATUS_VOTING } = this.suggestionRepository.model;
+
+        if (suggestion.status !== STATUS_VOTING) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send("You can vote only on suggestion with status 'voting'.");
+        }
+
         const data = {
             suggestionId: id,
             userId: loggedUser.id

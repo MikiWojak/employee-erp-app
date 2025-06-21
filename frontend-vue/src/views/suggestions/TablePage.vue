@@ -1,4 +1,5 @@
 <script>
+import { capitalize } from 'lodash';
 import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 import { StatusCodes as HTTP } from 'http-status-codes';
@@ -6,6 +7,7 @@ import { StatusCodes as HTTP } from 'http-status-codes';
 import { useAuthStore } from '@/stores/auth';
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseTablePage from '@/components/view/BaseTablePage';
+import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
 
 export default {
     name: 'TablePage',
@@ -13,10 +15,19 @@ export default {
     components: {
         AddEditDialog: defineAsyncComponent(
             () => import('@/components/suggestions/AddEditDialog')
+        ),
+        StatusDialog: defineAsyncComponent(
+            () => import('@/components/suggestions/StatusDialog')
         )
     },
 
     extends: BaseTablePage,
+
+    data() {
+        return {
+            isStatusDialogOpened: false
+        };
+    },
 
     computed: {
         ...mapState(useAuthStore, [
@@ -48,7 +59,8 @@ export default {
                     title: 'Author - Last name',
                     value: 'user.lastName',
                     minWidth: '200px'
-                }
+                },
+                { title: 'Status', value: 'status', minWidth: '150px' }
             ];
         },
 
@@ -97,6 +109,43 @@ export default {
                         })
                     }),
                     action: item => this.viewSuggestion(item)
+                },
+                {
+                    props: () => ({
+                        variant: 'plain',
+                        icon: 'mdi-clipboard-check',
+                        ...(!this.isAdmin && {
+                            class: 'd-none'
+                        })
+                    }),
+                    action: item => this.onChangeStatusClick(item)
+                }
+            ];
+        },
+
+        customFields() {
+            return [
+                {
+                    component: 'v-chip',
+                    name: 'status',
+                    value: item => capitalize(item.status),
+                    color: this.getColor
+                }
+            ];
+        },
+
+        additionalComponents() {
+            return [
+                {
+                    name: 'StatusDialog',
+                    props: {
+                        isOpened: this.isStatusDialogOpened,
+                        editedItem: this.editedItem
+                    },
+                    actions: {
+                        success: this.doGetItems,
+                        close: this.closeStatusDialog
+                    }
                 }
             ];
         }
@@ -110,7 +159,10 @@ export default {
         }),
 
         areEditDeleteButtonsVisible(item) {
-            return this.loggedUser.id === item.userId;
+            return (
+                this.loggedUser?.id === item.userId &&
+                item.status === SuggestionStatuses.PENDING
+            );
         },
 
         async doVote(item, vote) {
@@ -137,13 +189,17 @@ export default {
         },
 
         isSuggestionVoteDisabled(item) {
-            return this.isAdmin || this.loggedUser.id === item.userId;
+            return (
+                this.isAdmin ||
+                this.loggedUser?.id === item.userId ||
+                item.status !== SuggestionStatuses.VOTING
+            );
         },
 
         isVoteSelected(item, vote) {
             const userVoted = item.usersVoted.find(
                 _userVoted =>
-                    _userVoted.id === this.loggedUser.id &&
+                    _userVoted.id === this.loggedUser?.id &&
                     _userVoted.SuggestionVote2User.vote === vote
             );
 
@@ -153,6 +209,27 @@ export default {
         viewSuggestion(item) {
             this.isAddEditDialogReadonly = true;
             this.onAddButtonClick(item);
+        },
+
+        getColor(item) {
+            const colors = {
+                [SuggestionStatuses.PENDING]: 'orange',
+                [SuggestionStatuses.VOTING]: 'blue',
+                [SuggestionStatuses.ACCEPTED]: 'green',
+                [SuggestionStatuses.REJECTED]: 'red',
+                [SuggestionStatuses.IMPLEMENTED]: 'purple'
+            };
+
+            return colors[item.status];
+        },
+
+        onChangeStatusClick(editedItem) {
+            this.isStatusDialogOpened = true;
+            this.editedItem = editedItem;
+        },
+
+        closeStatusDialog() {
+            this.isStatusDialogOpened = false;
         }
     }
 };

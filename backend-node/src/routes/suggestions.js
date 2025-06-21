@@ -12,7 +12,7 @@ const suggestionValidator = require('../validators/suggestion');
 
 const {
     Suggestion,
-    Role: { MANAGER, EMPLOYEE }
+    Role: { ADMIN, MANAGER, EMPLOYEE }
 } = require('../models');
 
 module.exports = di => {
@@ -20,6 +20,7 @@ module.exports = di => {
     const indexController = di.get('controllers.suggestions.index');
     const storeController = di.get('controllers.suggestions.store');
     const updateController = di.get('controllers.suggestions.update');
+    const statusController = di.get('controllers.suggestions.status');
     const destroyController = di.get('controllers.suggestions.destroy');
 
     router.get(
@@ -40,6 +41,13 @@ module.exports = di => {
         loggedOnly(MANAGER, EMPLOYEE),
         [suggestionValidator.vote, validate],
         invoke(voteController)
+    );
+
+    router.post(
+        '/:id/status',
+        loggedOnly(ADMIN),
+        [suggestionValidator.status, validate],
+        invoke(statusController)
     );
 
     router.post(
