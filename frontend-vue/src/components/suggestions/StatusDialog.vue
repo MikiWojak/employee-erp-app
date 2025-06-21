@@ -37,7 +37,7 @@
 <script>
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, helpers } from '@vuelidate/validators';
 
 import { useSuggestionStore } from '@/stores/suggestion';
 import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
@@ -67,8 +67,11 @@ export default {
         return {
             formData: {
                 status: {
-                    required
-                    // @TODO Extend
+                    required,
+                    isIn: helpers.withMessage(
+                        'Invalid value. Please select other value.',
+                        value => this.statusOptions.includes(value)
+                    )
                 }
             }
         };
