@@ -159,7 +159,7 @@ export default {
         }),
 
         areEditDeleteButtonsVisible(item) {
-            return this.loggedUser.id === item.userId;
+            return this.loggedUser?.id === item.userId;
         },
 
         async doVote(item, vote) {
@@ -186,7 +186,11 @@ export default {
         },
 
         isSuggestionVoteDisabled(item) {
-            return this.isAdmin || this.loggedUser.id === item.userId;
+            return (
+                this.isAdmin ||
+                this.loggedUser?.id === item.userId ||
+                item.status !== SuggestionStatuses.VOTING
+            );
         },
 
         isVoteSelected(item, vote) {
