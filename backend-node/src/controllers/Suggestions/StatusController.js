@@ -19,7 +19,7 @@ class StatusController {
 
         await suggestion.update({ status });
 
-        const updatedSuggestion = this.suggestionRepository.findById(id);
+        const updatedSuggestion = await this.suggestionRepository.findById(id);
 
         return res.send(updatedSuggestion);
     }
