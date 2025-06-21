@@ -159,7 +159,10 @@ export default {
         }),
 
         areEditDeleteButtonsVisible(item) {
-            return this.loggedUser?.id === item.userId;
+            return (
+                this.loggedUser?.id === item.userId &&
+                item.status === SuggestionStatuses.PENDING
+            );
         },
 
         async doVote(item, vote) {

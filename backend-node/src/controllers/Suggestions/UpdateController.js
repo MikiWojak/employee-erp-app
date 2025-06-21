@@ -22,6 +22,14 @@ class UpdateController {
             return res.sendStatus(HTTP.FORBIDDEN);
         }
 
+        const { STATUS_PENDING } = this.suggestionRepository.model;
+
+        if (suggestion.status !== STATUS_PENDING) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('Only pending suggestion can be edited.');
+        }
+
         const data = {
             title,
             description

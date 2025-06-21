@@ -30,9 +30,7 @@ class VoteController {
         if (suggestion.status !== STATUS_VOTING) {
             return res
                 .status(HTTP.UNPROCESSABLE_ENTITY)
-                .send(
-                    "You cannot vote on suggestion with status other than 'voting'."
-                );
+                .send("You can vote only on suggestion with status 'voting'.");
         }
 
         const data = {
