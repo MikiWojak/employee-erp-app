@@ -199,7 +199,7 @@ export default {
         isVoteSelected(item, vote) {
             const userVoted = item.usersVoted.find(
                 _userVoted =>
-                    _userVoted.id === this.loggedUser.id &&
+                    _userVoted.id === this.loggedUser?.id &&
                     _userVoted.SuggestionVote2User.vote === vote
             );
 

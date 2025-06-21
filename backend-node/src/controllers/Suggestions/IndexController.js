@@ -16,9 +16,10 @@ class IndexController {
 
         const { STATUS_PENDING } = this.suggestionRepository.model;
 
-        const where = {
-            ...search,
-            ...(!isAdmin && {
+        const whereConditions = [search];
+
+        if (!isAdmin) {
+            whereConditions.push({
                 [Op.or]: [
                     {
                         status: {
@@ -30,7 +31,11 @@ class IndexController {
                         userId: loggedUser.id
                     }
                 ]
-            })
+            });
+        }
+
+        const where = {
+            [Op.and]: whereConditions
         };
 
         const { count, rows } = await this.suggestionRepository.findAndCountAll(
