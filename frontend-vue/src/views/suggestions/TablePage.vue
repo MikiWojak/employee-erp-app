@@ -113,7 +113,7 @@ export default {
                 {
                     props: () => ({
                         variant: 'plain',
-                        icon: 'mdi-home',
+                        icon: 'mdi-clipboard-check',
                         ...(!this.isAdmin && {
                             class: 'd-none'
                         })

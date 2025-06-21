@@ -45,6 +45,16 @@ module.exports = (sequelize, DataTypes) => {
         static get STATUS_IMPLEMENTED() {
             return 'implemented';
         }
+
+        static get ALL_STATUSES() {
+            return [
+                this.STATUS_PENDING,
+                this.STATUS_VOTING,
+                this.STATUS_ACCEPTED,
+                this.STATUS_REJECTED,
+                this.STATUS_IMPLEMENTED
+            ];
+        }
     }
 
     Suggestion.init(

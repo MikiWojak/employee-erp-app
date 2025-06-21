@@ -30,6 +30,10 @@ export const useSuggestionStore = defineStore('suggestion', {
 
         async vote({ id, vote }) {
             await axios.post(`/suggestions/${id}/vote`, { vote });
+        },
+
+        async status({ id, status }) {
+            await axios.post(`/suggestions/${id}/status`, { status });
         }
     }
 });

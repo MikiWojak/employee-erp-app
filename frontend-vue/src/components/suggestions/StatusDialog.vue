@@ -11,13 +11,12 @@
             </v-card-title>
 
             <v-card-text>
-                <!-- // @TODO Icon-->
                 <v-select
                     v-model="formData.status"
                     :items="statusOptions"
                     hide-no-data
                     label="Status"
-                    prepend-icon="mdi-folder-lock"
+                    prepend-icon="mdi-clipboard-check"
                     :error-messages="handleError('status')"
                     @blur="onBlur('status')"
                     @update:model-value="clearServerError('status')"
@@ -36,11 +35,11 @@
 </template>
 
 <script>
-// import {  mapActions } from 'pinia';
+import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 
-// import { useUserStore } from '@/stores/user';
+import { useSuggestionStore } from '@/stores/suggestion';
 import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
 
@@ -85,12 +84,10 @@ export default {
         }
     },
 
-    // @TODO Map properly
     methods: {
-        // ...mapActions(useUserStore, {
-        //     createItem: 'store',
-        //     updateItem: 'update'
-        // }),
+        ...mapActions(useSuggestionStore, {
+            updateItem: 'status'
+        }),
 
         clearInputs() {
             this.formData = { ...this.defaultForm };
