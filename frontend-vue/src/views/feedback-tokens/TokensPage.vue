@@ -82,7 +82,7 @@ export default {
             createTokens: 'store'
         }),
 
-        async onAddButtonClick() {
+        async onAddEditButtonClick() {
             try {
                 await this.createTokens();
 

@@ -38,7 +38,7 @@
                         :text="tableOptions.addButtonText"
                         color="green"
                         prepend-icon="mdi-plus-circle-outline"
-                        @click="onAddButtonClick(null)"
+                        @click="onAddEditButtonClick(null)"
                     />
                 </div>
             </div>
@@ -90,7 +90,7 @@
                 v-if="areEditDeleteButtonsVisible(item)"
                 variant="plain"
                 icon="mdi-pencil"
-                @click="onAddButtonClick(item)"
+                @click="onAddEditButtonClick(item)"
             />
 
             <v-btn
@@ -313,8 +313,6 @@ export default {
 
                 this.$toast.success('Item has been deleted');
 
-                this.confirmationModalLoading = false;
-
                 this.closeDeleteDialog();
             } catch (error) {
                 if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
@@ -331,7 +329,7 @@ export default {
             }
         },
 
-        onAddButtonClick(editedItem = null) {
+        onAddEditButtonClick(editedItem = null) {
             this.isAddEditDialogOpened = true;
             this.editedItem = editedItem ? { ...editedItem } : null;
         },

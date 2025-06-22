@@ -1,33 +1,18 @@
 <script>
 import { capitalize } from 'lodash';
-import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
-import { StatusCodes as HTTP } from 'http-status-codes';
 
 import { useAuthStore } from '@/stores/auth';
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseTablePage from '@/components/view/BaseTablePage';
 import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
+import getStatusColor from '@/helpers/suggestions/getStatusColor';
+import isVoteSelected from '@/helpers/suggestions/isVoteSelected';
 
 export default {
     name: 'TablePage',
 
-    components: {
-        AddEditDialog: defineAsyncComponent(
-            () => import('@/components/suggestions/AddEditDialog')
-        ),
-        StatusDialog: defineAsyncComponent(
-            () => import('@/components/suggestions/StatusDialog')
-        )
-    },
-
     extends: BaseTablePage,
-
-    data() {
-        return {
-            isStatusDialogOpened: false
-        };
-    },
 
     computed: {
         ...mapState(useAuthStore, [
@@ -41,7 +26,7 @@ export default {
             return {
                 title: 'Suggestions',
                 isAddButtonIncluded: this.isManager || this.isEmployee,
-                actionsMinWidth: '250px',
+                actionsMinWidth: '275px',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this suggestion?'
             };
@@ -64,41 +49,34 @@ export default {
             ];
         },
 
+        // @TODO Consider dedicated cols for votes up and down
         additionalActionButtons() {
             return [
                 {
                     props: item => ({
-                        variant: this.isVoteSelected(item, 1)
+                        variant: isVoteSelected(item, 1, this.loggedUser)
                             ? 'outlined'
                             : 'text',
                         text: item.votesUp,
                         'prepend-icon': 'mdi-thumb-up',
                         color: 'green',
-                        class: this.isVoteSelected(item, 1)
-                            ? 'selected'
-                            : 'vote',
-                        disabled:
-                            this.isSuggestionVoteDisabled(item) ||
-                            this.isVoteSelected(item, 1)
+                        class: 'vote-icon',
+                        disabled: true
                     }),
-                    action: item => this.doVote(item, 1)
+                    action: () => {}
                 },
                 {
                     props: item => ({
-                        variant: this.isVoteSelected(item, -1)
+                        variant: isVoteSelected(item, -1, this.loggedUser)
                             ? 'outlined'
                             : 'text',
                         text: item.votesDown,
                         'prepend-icon': 'mdi-thumb-down',
                         color: 'red',
-                        class: this.isVoteSelected(item, -1)
-                            ? 'selected'
-                            : 'vote',
-                        disabled:
-                            this.isSuggestionVoteDisabled(item) ||
-                            this.isVoteSelected(item, -1)
+                        class: 'vote-icon',
+                        disabled: true
                     }),
-                    action: item => this.doVote(item, -1)
+                    action: () => {}
                 },
                 {
                     props: item => ({
@@ -108,17 +86,7 @@ export default {
                             class: 'd-none'
                         })
                     }),
-                    action: item => this.viewSuggestion(item)
-                },
-                {
-                    props: () => ({
-                        variant: 'plain',
-                        icon: 'mdi-clipboard-check',
-                        ...(!this.isAdmin && {
-                            class: 'd-none'
-                        })
-                    }),
-                    action: item => this.onChangeStatusClick(item)
+                    action: item => this.onAddEditButtonClick(item)
                 }
             ];
         },
@@ -129,23 +97,7 @@ export default {
                     component: 'v-chip',
                     name: 'status',
                     value: item => capitalize(item.status),
-                    color: this.getColor
-                }
-            ];
-        },
-
-        additionalComponents() {
-            return [
-                {
-                    name: 'StatusDialog',
-                    props: {
-                        isOpened: this.isStatusDialogOpened,
-                        editedItem: this.editedItem
-                    },
-                    actions: {
-                        success: this.doGetItems,
-                        close: this.closeStatusDialog
-                    }
+                    color: this.getStatusColor
                 }
             ];
         }
@@ -158,6 +110,8 @@ export default {
             deleteItem: 'destroy'
         }),
 
+        getStatusColor,
+
         areEditDeleteButtonsVisible(item) {
             return (
                 this.loggedUser?.id === item.userId &&
@@ -165,82 +119,26 @@ export default {
             );
         },
 
-        async doVote(item, vote) {
-            try {
-                await this.vote({
-                    id: item.id,
-                    vote
+        onAddEditButtonClick(editedItem = null) {
+            if (editedItem) {
+                this.$router.push({
+                    name: 'edit-suggestion',
+                    params: { id: editedItem.id }
                 });
 
-                await this.doGetItems();
-
-                this.$toast.success('Vote has been saved');
-            } catch (error) {
-                if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
-                    this.$toast.error(error.response.data);
-
-                    return;
-                }
-
-                console.error(error);
-
-                this.$toast.error('Error on vote!');
+                return;
             }
-        },
 
-        isSuggestionVoteDisabled(item) {
-            return (
-                this.isAdmin ||
-                this.loggedUser?.id === item.userId ||
-                item.status !== SuggestionStatuses.VOTING
-            );
-        },
-
-        isVoteSelected(item, vote) {
-            const userVoted = item.usersVoted.find(
-                _userVoted =>
-                    _userVoted.id === this.loggedUser?.id &&
-                    _userVoted.SuggestionVote2User.vote === vote
-            );
-
-            return !!userVoted;
-        },
-
-        viewSuggestion(item) {
-            this.isAddEditDialogReadonly = true;
-            this.onAddButtonClick(item);
-        },
-
-        getColor(item) {
-            const colors = {
-                [SuggestionStatuses.PENDING]: 'orange',
-                [SuggestionStatuses.VOTING]: 'blue',
-                [SuggestionStatuses.ACCEPTED]: 'green',
-                [SuggestionStatuses.REJECTED]: 'red',
-                [SuggestionStatuses.IMPLEMENTED]: 'purple'
-            };
-
-            return colors[item.status];
-        },
-
-        onChangeStatusClick(editedItem) {
-            this.isStatusDialogOpened = true;
-            this.editedItem = editedItem;
-        },
-
-        closeStatusDialog() {
-            this.isStatusDialogOpened = false;
+            this.$router.push({
+                name: 'add-suggestion'
+            });
         }
     }
 };
 </script>
 
 <style scoped>
-.v-btn--disabled.selected {
-    opacity: 1;
-}
-
-.v-btn--disabled.vote {
+.v-btn--disabled.vote-icon {
     opacity: 0.75;
 }
 </style>

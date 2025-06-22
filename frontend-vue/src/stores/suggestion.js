@@ -12,6 +12,12 @@ export const useSuggestionStore = defineStore('suggestion', {
             return data;
         },
 
+        async show(id) {
+            const { data } = await axios.get(`/suggestions/${id}`);
+
+            return data;
+        },
+
         async store(body) {
             const { data } = await axios.post('/suggestions', body);
 

@@ -5,6 +5,11 @@ module.exports = {
             arguments: ['@repositories.suggestion']
         },
 
+        'controllers.suggestions.show': {
+            class: 'controllers/Suggestions/ShowController',
+            arguments: ['@repositories.suggestion']
+        },
+
         'controllers.suggestions.store': {
             class: 'controllers/Suggestions/StoreController',
             arguments: ['@repositories.suggestion']
