@@ -26,7 +26,6 @@ export default {
             return {
                 title: 'Suggestions',
                 isAddButtonIncluded: this.isManager || this.isEmployee,
-                actionsMinWidth: '275px',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this suggestion?'
             };
@@ -51,35 +50,8 @@ export default {
             ];
         },
 
-        // @TODO Consider dedicated cols for votes up and down
         additionalActionButtons() {
             return [
-                {
-                    props: item => ({
-                        variant: isVoteSelected(item, 1, this.loggedUser)
-                            ? 'outlined'
-                            : 'text',
-                        text: item.votesUp,
-                        'prepend-icon': 'mdi-thumb-up',
-                        color: 'green',
-                        class: 'vote-icon',
-                        disabled: true
-                    }),
-                    action: () => {}
-                },
-                {
-                    props: item => ({
-                        variant: isVoteSelected(item, -1, this.loggedUser)
-                            ? 'outlined'
-                            : 'text',
-                        text: item.votesDown,
-                        'prepend-icon': 'mdi-thumb-down',
-                        color: 'red',
-                        class: 'vote-icon',
-                        disabled: true
-                    }),
-                    action: () => {}
-                },
                 {
                     props: item => ({
                         variant: 'plain',
@@ -99,32 +71,38 @@ export default {
                     component: 'v-chip',
                     name: 'status',
                     value: item => capitalize(item.status),
-                    color: this.getStatusColor
+                    attributes: item => ({
+                        color: this.getStatusColor(item)
+                    })
                 },
                 {
                     component: 'v-btn',
                     name: 'votesUp',
                     value: item => item.votesUp,
-                    attributes: {
-                        variant: 'text',
+                    attributes: item => ({
+                        variant: isVoteSelected(item, 1, this.loggedUser)
+                            ? 'outlined'
+                            : 'text',
                         text: '0',
                         'prepend-icon': 'mdi-thumb-up',
                         color: 'green',
                         class: 'vote-icon',
                         disabled: true
-                    }
+                    })
                 },
                 {
                     component: 'v-btn',
                     name: 'votesDown',
                     value: item => item.votesDown,
-                    attributes: {
-                        variant: 'text',
+                    attributes: item => ({
+                        variant: isVoteSelected(item, -1, this.loggedUser)
+                            ? 'outlined'
+                            : 'text',
                         'prepend-icon': 'mdi-thumb-down',
                         color: 'red',
                         class: 'vote-icon',
                         disabled: true
-                    }
+                    })
                 }
             ];
         }

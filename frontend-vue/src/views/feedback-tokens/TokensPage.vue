@@ -57,11 +57,13 @@ export default {
             return [
                 {
                     name: 'formattedDateTime',
-                    value: this.getFormattedDateTime
+                    value: this.getFormattedDateTime,
+                    attributes: () => ({})
                 },
                 {
                     name: 'formattedExpiresAt',
-                    value: this.getFormattedExpiresAt
+                    value: this.getFormattedExpiresAt,
+                    attributes: () => ({})
                 }
             ];
         },

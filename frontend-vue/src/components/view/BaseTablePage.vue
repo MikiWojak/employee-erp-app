@@ -72,7 +72,7 @@
         >
             <component
                 :is="field.component || 'span'"
-                v-bind="getColumnAttributes(field, item)"
+                v-bind="field.attributes(item)"
             >
                 {{ field.value(item) }}
             </component>
@@ -240,18 +240,6 @@ export default {
         // eslint-disable-next-line no-unused-vars
         areEditDeleteButtonsVisible(item) {
             return true;
-        },
-
-        getColumnAttributes(field, item) {
-            const { attributes = {} } = field;
-
-            const preparedAttributes = { ...attributes };
-
-            if (typeof field.color === 'function') {
-                preparedAttributes.color = field.color(item);
-            }
-
-            return preparedAttributes;
         },
 
         async getItems() {
