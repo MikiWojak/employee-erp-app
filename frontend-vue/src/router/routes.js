@@ -74,12 +74,12 @@ export default [
             },
             {
                 path: ':id',
-                name: 'edit-suggestion',
+                name: 'suggestion-show',
                 component: () => import('@/views/suggestions/SinglePage')
             },
             {
                 path: 'add',
-                name: 'add-suggestion',
+                name: 'suggestion-add',
                 component: () => import('@/views/suggestions/SinglePage'),
                 meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
             }

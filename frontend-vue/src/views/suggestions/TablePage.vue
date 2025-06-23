@@ -45,7 +45,9 @@ export default {
                     value: 'user.lastName',
                     minWidth: '200px'
                 },
-                { title: 'Status', value: 'status', minWidth: '150px' }
+                { title: 'Status', value: 'status', minWidth: '150px' },
+                { title: 'Votes Up', value: 'votesUp', minWidth: '125px' },
+                { title: 'Votes Down', value: 'votesDown', minWidth: '125px' }
             ];
         },
 
@@ -98,6 +100,31 @@ export default {
                     name: 'status',
                     value: item => capitalize(item.status),
                     color: this.getStatusColor
+                },
+                {
+                    component: 'v-btn',
+                    name: 'votesUp',
+                    value: item => item.votesUp,
+                    attributes: {
+                        variant: 'text',
+                        text: '0',
+                        'prepend-icon': 'mdi-thumb-up',
+                        color: 'green',
+                        class: 'vote-icon',
+                        disabled: true
+                    }
+                },
+                {
+                    component: 'v-btn',
+                    name: 'votesDown',
+                    value: item => item.votesDown,
+                    attributes: {
+                        variant: 'text',
+                        'prepend-icon': 'mdi-thumb-down',
+                        color: 'red',
+                        class: 'vote-icon',
+                        disabled: true
+                    }
                 }
             ];
         }
@@ -122,7 +149,7 @@ export default {
         onAddEditButtonClick(editedItem = null) {
             if (editedItem) {
                 this.$router.push({
-                    name: 'edit-suggestion',
+                    name: 'suggestion-show',
                     params: { id: editedItem.id }
                 });
 
@@ -130,7 +157,7 @@ export default {
             }
 
             this.$router.push({
-                name: 'add-suggestion'
+                name: 'suggestion-add'
             });
         }
     }

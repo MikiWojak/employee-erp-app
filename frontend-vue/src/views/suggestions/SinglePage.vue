@@ -242,15 +242,15 @@ export default {
             try {
                 this.loading = true;
 
-                if (this.editMode) {
-                    await this.updateItem(this.formData);
-                } else {
+                if (!this.editMode) {
                     const suggestion = await this.createItem(this.formData);
 
                     this.$router.push({
-                        name: 'edit-suggestion',
+                        name: 'suggestion-show',
                         params: { id: suggestion.id }
                     });
+                } else {
+                    await this.updateItem(this.formData);
                 }
 
                 const successMessage = this.editMode

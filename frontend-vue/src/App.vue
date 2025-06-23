@@ -1,6 +1,6 @@
 <template>
     <component :is="layoutComponent">
-        <router-view />
+        <router-view :key="$route.fullPath" />
     </component>
 </template>
 
