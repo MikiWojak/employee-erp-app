@@ -9,14 +9,14 @@
                     v-model="departmentName"
                     label="Department"
                     prepend-icon="mdi-office-building"
-                    disabled
+                    readonly
                 />
 
                 <v-text-field
                     v-model="roleName"
                     label="Role"
                     prepend-icon="mdi-folder-lock"
-                    disabled
+                    readonly
                 />
 
                 <v-text-field
