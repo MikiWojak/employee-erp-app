@@ -83,7 +83,6 @@ export default {
                         variant: isVoteSelected(item, 1, this.loggedUser)
                             ? 'outlined'
                             : 'text',
-                        text: '0',
                         'prepend-icon': 'mdi-thumb-up',
                         color: 'green',
                         class: 'vote-icon',
