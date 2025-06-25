@@ -41,7 +41,9 @@ export default {
                     component: 'v-chip',
                     name: 'approved',
                     value: this.getStatus,
-                    color: this.getColor
+                    attributes: item => ({
+                        color: this.getColor(item)
+                    })
                 }
             ];
         },

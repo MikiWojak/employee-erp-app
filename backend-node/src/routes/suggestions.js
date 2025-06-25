@@ -16,6 +16,7 @@ const {
 } = require('../models');
 
 module.exports = di => {
+    const showController = di.get('controllers.suggestions.show');
     const voteController = di.get('controllers.suggestions.vote');
     const indexController = di.get('controllers.suggestions.index');
     const storeController = di.get('controllers.suggestions.store');
@@ -56,6 +57,8 @@ module.exports = di => {
         [suggestionValidator.store, validate],
         invoke(storeController)
     );
+
+    router.get('/:id', loggedOnly(), invoke(showController));
 
     router.put(
         '/:id',
