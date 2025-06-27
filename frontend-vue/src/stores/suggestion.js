@@ -40,6 +40,14 @@ export const useSuggestionStore = defineStore('suggestion', {
 
         async status({ id, status }) {
             await axios.post(`/suggestions/${id}/status`, { status });
+        },
+
+        async getComments(suggestionId) {
+            const { data } = await axios.get(
+                `/suggestions/${suggestionId}/comments`
+            );
+
+            return data;
         }
     }
 });

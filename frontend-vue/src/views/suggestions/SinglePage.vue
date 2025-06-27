@@ -84,6 +84,12 @@
         </v-col>
     </v-row>
 
+    <v-row>
+        <v-col>
+            <comments-section :comments="comments" />
+        </v-col>
+    </v-row>
+
     <confirmation-modal
         :is-opened="isConfirmDeleteDialogOpened"
         title="Do you really want to delete this suggestion?"
@@ -124,6 +130,9 @@ export default {
         ),
         ConfirmationModal: defineAsyncComponent(
             () => import('@/components/modals/ConfirmationModal')
+        ),
+        CommentsSection: defineAsyncComponent(
+            () => import('@/components/suggestions/comments/Section.vue')
         )
     },
 
@@ -142,6 +151,7 @@ export default {
         return {
             defaultForm,
             formData: { ...defaultForm },
+            comments: [],
             loading: false,
             editMode: false,
             readonlyMode: false,
@@ -195,6 +205,7 @@ export default {
     async created() {
         if (this.$route.params?.id) {
             await this.doGetItem();
+            await this.doGetComments();
         }
     },
 
@@ -204,7 +215,8 @@ export default {
             getItem: 'show',
             createItem: 'store',
             updateItem: 'update',
-            deleteItem: 'destroy'
+            deleteItem: 'destroy',
+            getComments: 'getComments'
         }),
 
         capitalize,
@@ -225,6 +237,16 @@ export default {
                 ) {
                     this.readonlyMode = true;
                 }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async doGetComments() {
+            try {
+                const { rows } = await this.getComments(this.$route.params.id);
+
+                this.comments = rows;
             } catch (error) {
                 console.error(error);
             }

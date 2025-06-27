@@ -23,6 +23,9 @@ module.exports = di => {
     const updateController = di.get('controllers.suggestions.update');
     const statusController = di.get('controllers.suggestions.status');
     const destroyController = di.get('controllers.suggestions.destroy');
+    const commentsIndexController = di.get(
+        'controllers.suggestionComments.index'
+    );
 
     router.get(
         '/',
@@ -35,6 +38,13 @@ module.exports = di => {
             pagination
         ],
         invoke(indexController)
+    );
+
+    router.get(
+        '/:id/comments',
+        loggedOnly(),
+        [paginationValidator.pagination, validate, pagination],
+        invoke(commentsIndexController)
     );
 
     router.post(
