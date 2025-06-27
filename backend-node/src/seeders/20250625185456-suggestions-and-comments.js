@@ -9,6 +9,7 @@ const {
 const di = require('../di');
 const userRepository = di.get('repositories.user');
 const suggestionRepository = di.get('repositories.suggestion');
+const suggestionCommentRepository = di.get('repositories.suggestionComment');
 
 module.exports = {
     up: async () => {
@@ -24,30 +25,30 @@ module.exports = {
             ]
         });
 
-        // @TODO More sophisticated
-        // @TODO Longer "description"
-        await suggestionRepository.bulkCreate([
-            {
-                userId: faker.random.arrayElement(users).id,
-                title: faker.lorem.words(),
-                description: faker.lorem.paragraphs(),
-                status: STATUS_ACCEPTED
-            },
-            {
-                userId: faker.random.arrayElement(users).id,
-                title: faker.lorem.words(),
-                description: faker.lorem.paragraphs(),
-                status: STATUS_ACCEPTED
-            },
-            {
-                userId: faker.random.arrayElement(users).id,
-                title: faker.lorem.words(),
-                description: faker.lorem.paragraphs(),
-                status: STATUS_ACCEPTED
-            }
-        ]);
+        const suggestionsCount = Math.floor(Math.random() * 5) + 3;
 
-        // @TODO Comments
+        for (let i = 0; i < suggestionsCount; i++) {
+            await suggestionRepository.create({
+                userId: faker.random.arrayElement(users).id,
+                title: faker.lorem.words(),
+                description: faker.lorem.paragraphs(),
+                status: STATUS_ACCEPTED
+            });
+        }
+
+        const suggestions = await suggestionRepository.findAll({});
+
+        for (const suggestion of suggestions) {
+            const commentsCount = Math.floor(Math.random() * 10) + 3;
+
+            for (let j = 0; j < commentsCount; j++) {
+                await suggestionCommentRepository.create({
+                    suggestionId: suggestion.id,
+                    userId: faker.random.arrayElement(users).id,
+                    content: faker.lorem.paragraphs()
+                });
+            }
+        }
     },
 
     down: () => {}
