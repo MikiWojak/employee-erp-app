@@ -39,12 +39,10 @@ module.exports = {
         const suggestions = await suggestionRepository.findAll({});
 
         for (const suggestion of suggestions) {
-            const commentsCount = Math.floor(Math.random() * 10) + 15;
+            const commentsCount = Math.floor(Math.random() * 25) + 15;
 
             for (let j = 0; j < commentsCount; j++) {
                 const content = faker.lorem.paragraphs();
-
-                console.log({ content });
 
                 await suggestionCommentRepository.create({
                     suggestionId: suggestion.id,
