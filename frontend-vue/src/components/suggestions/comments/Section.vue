@@ -1,11 +1,22 @@
 <template>
-    <h2> Comments </h2>
+    <div class="d-flex justify-space-between align-center">
+        <h2> Comments </h2>
+
+        <v-btn
+            text="Add a comment"
+            color="green"
+            prepend-icon="mdi-plus-circle-outline"
+            @click="$emit('add-edit')"
+        />
+    </div>
 
     <div v-if="comments.length">
         <comment-item
             v-for="comment in comments"
             :key="comment.id"
             :comment="comment"
+            @edit="doAddEdit"
+            @delete="doDelete"
         />
     </div>
 
@@ -45,6 +56,16 @@ export default {
         }
     },
 
-    emits: ['load-more']
+    emits: ['load-more', 'add-edit', 'delete'],
+
+    methods: {
+        doAddEdit(editedItem = null) {
+            this.$emit('add-edit', editedItem);
+        },
+
+        doDelete(id) {
+            this.$emit('delete', id);
+        }
+    }
 };
 </script>

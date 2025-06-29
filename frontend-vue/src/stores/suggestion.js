@@ -49,6 +49,17 @@ export const useSuggestionStore = defineStore('suggestion', {
             );
 
             return data;
+        },
+
+        async storeComment({ suggestionId, content } = {}) {
+            console.log('storeComment');
+
+            const { data } = await axios.post(
+                `/suggestions/${suggestionId}/comments`,
+                { content }
+            );
+
+            return data;
         }
     }
 });

@@ -90,6 +90,8 @@
                 :comments="comments"
                 :load-more-enabled="isLoadMoreEnabled"
                 @load-more="doLoadMore"
+                @add-edit="onAddEditComment"
+                @delete="openDeleteCommentConfirmationDialog"
             />
         </v-col>
     </v-row>
@@ -108,6 +110,22 @@
         @success="doGetItem"
         @close="toggleStatusDialog(false)"
     />
+
+    <add-edit-dialog
+        :is-opened="isAddEditDialogOpened"
+        :suggestion="formData"
+        :edited-item="editedItem"
+        @success="reloadComments"
+        @close="closeAddEditDialog"
+    />
+
+    <confirmation-modal
+        :is-opened="!!commentToDeleteId"
+        title="Do you really want to delete this comment?"
+        :loading="confirmationModalLoading"
+        @confirm="doDeleteComment"
+        @discard="closeDeleteCommentDialog"
+    />
 </template>
 
 <script>
@@ -124,6 +142,7 @@ import { useSuggestionStore } from '@/stores/suggestion';
 import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
 import getStatusColor from '@/helpers/suggestions/getStatusColor';
 import isVoteSelected from '@/helpers/suggestions/isVoteSelected';
+import { useSuggestionCommentStore } from '@/stores/suggestionComment';
 
 export default {
     name: 'SinglePage',
@@ -137,6 +156,9 @@ export default {
         ),
         CommentsSection: defineAsyncComponent(
             () => import('@/components/suggestions/comments/Section')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/suggestions/comments/AddEditDialog')
         )
     },
 
@@ -164,7 +186,10 @@ export default {
             readonlyMode: false,
             isStatusDialogOpened: false,
             isConfirmDeleteDialogOpened: false,
-            confirmationModalLoading: false
+            confirmationModalLoading: false,
+            editedItem: null,
+            isAddEditDialogOpened: false,
+            commentToDeleteId: null
         };
     },
 
@@ -228,6 +253,9 @@ export default {
             updateItem: 'update',
             deleteItem: 'destroy',
             getComments: 'getComments'
+        }),
+        ...mapActions(useSuggestionCommentStore, {
+            deleteComment: 'destroy'
         }),
 
         capitalize,
@@ -394,6 +422,57 @@ export default {
             this.page++;
 
             await this.doGetComments(true);
+        },
+
+        onAddEditComment(editedItem = null) {
+            this.isAddEditDialogOpened = true;
+            this.editedItem = editedItem ? { ...editedItem } : null;
+        },
+
+        closeAddEditDialog() {
+            this.isAddEditDialogOpened = false;
+        },
+
+        async reloadComments() {
+            this.page = 1;
+
+            await this.doGetComments();
+        },
+
+        async doDeleteComment() {
+            try {
+                this.confirmationModalLoading = true;
+
+                await this.deleteComment(this.commentToDeleteId);
+
+                this.$toast.success('Comment has been deleted');
+
+                this.changeConfirmDeleteDialogStatus(false);
+
+                this.closeDeleteCommentDialog();
+
+                await this.reloadComments();
+            } catch (error) {
+                if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
+                    this.$toast.error(error.response.data);
+
+                    return;
+                }
+
+                console.error(error);
+
+                this.$toast.error('Error while deleting the comment!');
+            } finally {
+                this.confirmationModalLoading = false;
+            }
+        },
+
+        openDeleteCommentConfirmationDialog(id) {
+            this.commentToDeleteId = id;
+        },
+
+        closeDeleteCommentDialog() {
+            this.commentToDeleteId = null;
         }
     }
 };

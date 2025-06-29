@@ -9,6 +9,7 @@ const loggedOnly = require('../middlewares/loggedOnly');
 const searchable = require('../middlewares/searchable');
 const paginationValidator = require('../validators/pagination');
 const suggestionValidator = require('../validators/suggestion');
+const suggestionCommentValidator = require('../validators/suggestion-comment');
 
 const {
     Suggestion,
@@ -25,6 +26,9 @@ module.exports = di => {
     const destroyController = di.get('controllers.suggestions.destroy');
     const commentsIndexController = di.get(
         'controllers.suggestionComments.index'
+    );
+    const commentsStoreController = di.get(
+        'controllers.suggestionComments.store'
     );
 
     router.get(
@@ -45,6 +49,13 @@ module.exports = di => {
         loggedOnly(),
         [paginationValidator.pagination, validate, pagination],
         invoke(commentsIndexController)
+    );
+
+    router.post(
+        '/:id/comments',
+        loggedOnly(),
+        [suggestionCommentValidator.store, validate],
+        invoke(commentsStoreController)
     );
 
     router.post(

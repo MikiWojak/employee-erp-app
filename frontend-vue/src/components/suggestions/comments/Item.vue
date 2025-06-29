@@ -18,6 +18,23 @@
                     {{ formattedCreatedAt }}
                 </div>
             </div>
+
+            <div class="d-flex align-center">
+                <v-btn
+                    v-if="isAuthor"
+                    variant="plain"
+                    icon="mdi-pencil"
+                    @click="$emit('edit', comment)"
+                />
+
+                <v-btn
+                    v-if="isAuthor"
+                    variant="plain"
+                    icon="mdi-delete"
+                    color="red"
+                    @click="$emit('delete', comment.id)"
+                />
+            </div>
         </div>
 
         <div class="text-pre-line"> {{ comment.content }} </div>
@@ -26,7 +43,9 @@
 
 <script>
 import dayjs from 'dayjs';
+import { mapState } from 'pinia';
 
+import { useAuthStore } from '@/stores/auth';
 import getFullImagePath from '@/helpers/getFullImagePath';
 
 export default {
@@ -39,9 +58,17 @@ export default {
         }
     },
 
+    emits: ['edit', 'delete'],
+
     computed: {
+        ...mapState(useAuthStore, ['loggedUser']),
+
         formattedCreatedAt() {
             return dayjs(this.comment.createdAt).format('YYYY-MM-DD HH:mm:ss');
+        },
+
+        isAuthor() {
+            return this.comment.userId === this.loggedUser?.id;
         }
     },
 
