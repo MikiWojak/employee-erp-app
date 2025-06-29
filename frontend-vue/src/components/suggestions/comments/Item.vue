@@ -1,7 +1,23 @@
 <template>
     <div class="my-2">
-        <div>
-            <b> {{ comment.user.fullName }} </b>, {{ formattedCreatedAt }}
+        <div class="d-flex align-center ga-2">
+            <v-avatar size="36px">
+                <v-img
+                    v-if="comment.user?.avatar"
+                    alt="Icon"
+                    :src="getFullImagePath(comment.user.avatar)"
+                />
+                <v-icon v-else icon="mdi-account-circle" size="36px" />
+            </v-avatar>
+
+            <div>
+                <div>
+                    <b> {{ comment.user.fullName }} </b>
+                </div>
+                <div>
+                    {{ formattedCreatedAt }}
+                </div>
+            </div>
         </div>
 
         <div class="text-pre-line"> {{ comment.content }} </div>
@@ -10,6 +26,8 @@
 
 <script>
 import dayjs from 'dayjs';
+
+import getFullImagePath from '@/helpers/getFullImagePath';
 
 export default {
     name: 'CommentItem',
@@ -25,6 +43,10 @@ export default {
         formattedCreatedAt() {
             return dayjs(this.comment.createdAt).format('YYYY-MM-DD HH:mm:ss');
         }
+    },
+
+    methods: {
+        getFullImagePath
     }
 };
 </script>

@@ -1,10 +1,22 @@
 <template>
     <h2> Comments </h2>
 
-    <comment-item
-        v-for="comment in comments"
-        :key="comment.id"
-        :comment="comment"
+    <div v-if="comments.length">
+        <comment-item
+            v-for="comment in comments"
+            :key="comment.id"
+            :comment="comment"
+        />
+    </div>
+
+    <div v-else>
+        <p>No comments found</p>
+    </div>
+
+    <v-btn
+        v-if="loadMoreEnabled"
+        text="Load more comments"
+        @click="$emit('load-more')"
     />
 </template>
 
@@ -24,7 +36,15 @@ export default {
         comments: {
             type: Array,
             required: true
+        },
+
+        loadMoreEnabled: {
+            type: Boolean,
+            required: false,
+            default: false
         }
-    }
+    },
+
+    emits: ['load-more']
 };
 </script>

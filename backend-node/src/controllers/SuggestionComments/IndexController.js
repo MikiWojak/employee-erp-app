@@ -18,7 +18,12 @@ class IndexController {
                 include: [
                     {
                         association: 'user',
-                        required: false
+                        required: false,
+                        include: [
+                            {
+                                association: 'avatar'
+                            }
+                        ]
                     }
                 ],
                 order: [['createdAt', 'DESC']]

@@ -42,9 +42,10 @@ export const useSuggestionStore = defineStore('suggestion', {
             await axios.post(`/suggestions/${id}/status`, { status });
         },
 
-        async getComments(suggestionId) {
+        async getComments({ suggestionId, page = 1, perPage = 10 } = {}) {
             const { data } = await axios.get(
-                `/suggestions/${suggestionId}/comments`
+                `/suggestions/${suggestionId}/comments`,
+                { params: { page, perPage } }
             );
 
             return data;

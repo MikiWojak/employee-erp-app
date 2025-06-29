@@ -86,7 +86,11 @@
 
     <v-row>
         <v-col>
-            <comments-section :comments="comments" />
+            <comments-section
+                :comments="comments"
+                :load-more-enabled="isLoadMoreEnabled"
+                @load-more="doLoadMore"
+            />
         </v-col>
     </v-row>
 
@@ -132,7 +136,7 @@ export default {
             () => import('@/components/modals/ConfirmationModal')
         ),
         CommentsSection: defineAsyncComponent(
-            () => import('@/components/suggestions/comments/Section.vue')
+            () => import('@/components/suggestions/comments/Section')
         )
     },
 
@@ -152,6 +156,9 @@ export default {
             defaultForm,
             formData: { ...defaultForm },
             comments: [],
+            page: 1,
+            perPage: 10,
+            commentsTotal: 0,
             loading: false,
             editMode: false,
             readonlyMode: false,
@@ -199,6 +206,10 @@ export default {
                 this.loggedUser?.id === this.formData.userId ||
                 this.formData.status !== SuggestionStatuses.VOTING
             );
+        },
+
+        isLoadMoreEnabled() {
+            return this.page * this.perPage < this.commentsTotal;
         }
     },
 
@@ -242,11 +253,21 @@ export default {
             }
         },
 
-        async doGetComments() {
+        async doGetComments(loadMore = false) {
             try {
-                const { rows } = await this.getComments(this.$route.params.id);
+                const { rows, count } = await this.getComments({
+                    suggestionId: this.$route.params.id,
+                    page: this.page,
+                    perPage: this.perPage
+                });
 
-                this.comments = rows;
+                if (loadMore) {
+                    this.comments = [...this.comments, ...rows];
+                } else {
+                    this.comments = rows;
+                }
+
+                this.commentsTotal = count;
             } catch (error) {
                 console.error(error);
             }
@@ -367,6 +388,12 @@ export default {
 
         changeConfirmDeleteDialogStatus(flag) {
             this.isConfirmDeleteDialogOpened = flag;
+        },
+
+        async doLoadMore() {
+            this.page++;
+
+            await this.doGetComments(true);
         }
     }
 };
