@@ -84,6 +84,16 @@
         </v-col>
     </v-row>
 
+    <v-row>
+        <v-col>
+            <comments-section
+                :comments="comments"
+                :load-more-enabled="isLoadMoreEnabled"
+                @load-more="doLoadMore"
+            />
+        </v-col>
+    </v-row>
+
     <confirmation-modal
         :is-opened="isConfirmDeleteDialogOpened"
         title="Do you really want to delete this suggestion?"
@@ -124,6 +134,9 @@ export default {
         ),
         ConfirmationModal: defineAsyncComponent(
             () => import('@/components/modals/ConfirmationModal')
+        ),
+        CommentsSection: defineAsyncComponent(
+            () => import('@/components/suggestions/comments/Section')
         )
     },
 
@@ -142,6 +155,10 @@ export default {
         return {
             defaultForm,
             formData: { ...defaultForm },
+            comments: [],
+            page: 1,
+            perPage: 10,
+            commentsTotal: 0,
             loading: false,
             editMode: false,
             readonlyMode: false,
@@ -189,12 +206,17 @@ export default {
                 this.loggedUser?.id === this.formData.userId ||
                 this.formData.status !== SuggestionStatuses.VOTING
             );
+        },
+
+        isLoadMoreEnabled() {
+            return this.page * this.perPage < this.commentsTotal;
         }
     },
 
     async created() {
         if (this.$route.params?.id) {
             await this.doGetItem();
+            await this.doGetComments();
         }
     },
 
@@ -204,7 +226,8 @@ export default {
             getItem: 'show',
             createItem: 'store',
             updateItem: 'update',
-            deleteItem: 'destroy'
+            deleteItem: 'destroy',
+            getComments: 'getComments'
         }),
 
         capitalize,
@@ -225,6 +248,26 @@ export default {
                 ) {
                     this.readonlyMode = true;
                 }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async doGetComments(loadMore = false) {
+            try {
+                const { rows, count } = await this.getComments({
+                    suggestionId: this.$route.params.id,
+                    page: this.page,
+                    perPage: this.perPage
+                });
+
+                if (loadMore) {
+                    this.comments = [...this.comments, ...rows];
+                } else {
+                    this.comments = rows;
+                }
+
+                this.commentsTotal = count;
             } catch (error) {
                 console.error(error);
             }
@@ -345,6 +388,12 @@ export default {
 
         changeConfirmDeleteDialogStatus(flag) {
             this.isConfirmDeleteDialogOpened = flag;
+        },
+
+        async doLoadMore() {
+            this.page++;
+
+            await this.doGetComments(true);
         }
     }
 };

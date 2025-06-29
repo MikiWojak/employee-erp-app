@@ -63,6 +63,11 @@ module.exports = {
         'repositories.suggestionVote2User': {
             class: 'repositories/SuggestionVote2User',
             arguments: ['@sequelize']
+        },
+
+        'repositories.suggestionComment': {
+            class: 'repositories/SuggestionComment',
+            arguments: ['@sequelize']
         }
     }
 };
