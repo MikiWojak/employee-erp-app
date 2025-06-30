@@ -77,11 +77,7 @@ export default {
     validations() {
         return {
             formData: {
-                suggestionId: {
-                    required: requiredIf(function () {
-                        return !!this.editedItem;
-                    })
-                },
+                suggestionId: {},
                 content: {
                     required,
                     minLengthValue: minLength(2),
