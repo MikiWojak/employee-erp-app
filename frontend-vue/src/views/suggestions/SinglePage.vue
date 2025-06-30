@@ -39,8 +39,21 @@
             </div>
         </v-col>
 
-        <v-col cols="12" md="3" class="d-flex flex-column align-center">
-            <div v-if="editMode" class="mb-4">
+        <v-col cols="12" md="3" class="d-flex flex-column align-center ga-4">
+            <div v-if="editMode" class="d-flex align-center ga-4">
+                <v-avatar size="36px">
+                    <v-img
+                        v-if="formData.user?.avatar"
+                        alt="Icon"
+                        :src="getFullImagePath(formData.user.avatar)"
+                    />
+                    <v-icon v-else icon="mdi-account-circle" size="36px" />
+                </v-avatar>
+
+                <b> {{ formData.user.fullName }} </b>
+            </div>
+
+            <div v-if="editMode">
                 <v-btn
                     :variant="getVoteButtonVariant(1)"
                     :text="formData.votesUp"
@@ -140,6 +153,7 @@ import { required, minLength, maxLength } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
 import { useSuggestionStore } from '@/stores/suggestion';
+import getFullImagePath from '@/helpers/getFullImagePath';
 import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
 import getStatusColor from '@/helpers/suggestions/getStatusColor';
 import isVoteSelected from '@/helpers/suggestions/isVoteSelected';
@@ -265,6 +279,7 @@ export default {
 
         capitalize,
         getStatusColor,
+        getFullImagePath,
 
         async doGetItem() {
             try {
