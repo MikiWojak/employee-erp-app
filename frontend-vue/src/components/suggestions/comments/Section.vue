@@ -6,6 +6,7 @@
             text="Add a comment"
             color="green"
             prepend-icon="mdi-plus-circle-outline"
+            :disabled="addEditDeleteDisabled"
             @click="$emit('add-edit')"
         />
     </div>
@@ -15,6 +16,7 @@
             v-for="comment in comments"
             :key="comment.id"
             :comment="comment"
+            :edit-delete-disabled="addEditDeleteDisabled"
             @edit="doAddEdit"
             @delete="doDelete"
         />
@@ -50,6 +52,12 @@ export default {
         },
 
         loadMoreEnabled: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+
+        addEditDeleteDisabled: {
             type: Boolean,
             required: false,
             default: false

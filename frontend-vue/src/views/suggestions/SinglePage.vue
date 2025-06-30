@@ -84,11 +84,12 @@
         </v-col>
     </v-row>
 
-    <v-row>
+    <v-row v-if="formData?.id">
         <v-col>
             <comments-section
                 :comments="comments"
                 :load-more-enabled="isLoadMoreEnabled"
+                :add-edit-delete-disabled="isCommentAddEditDeleteDisabled"
                 @load-more="doLoadMore"
                 @add-edit="onAddEditComment"
                 @delete="openDeleteCommentConfirmationDialog"
@@ -235,6 +236,10 @@ export default {
 
         isLoadMoreEnabled() {
             return this.page * this.perPage < this.commentsTotal;
+        },
+
+        isCommentAddEditDeleteDisabled() {
+            return this.formData.status === SuggestionStatuses.PENDING;
         }
     },
 

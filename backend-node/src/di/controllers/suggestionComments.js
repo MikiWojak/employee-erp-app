@@ -15,12 +15,18 @@ module.exports = {
 
         'controllers.suggestionComments.update': {
             class: 'controllers/SuggestionComments/UpdateController',
-            arguments: ['@repositories.suggestionComment']
+            arguments: [
+                '@repositories.suggestion',
+                '@repositories.suggestionComment'
+            ]
         },
 
         'controllers.suggestionComments.destroy': {
             class: 'controllers/SuggestionComments/DestroyController',
-            arguments: ['@repositories.suggestionComment']
+            arguments: [
+                '@repositories.suggestion',
+                '@repositories.suggestionComment'
+            ]
         }
     }
 };

@@ -13,13 +13,19 @@ class StoreController {
             params: { id: suggestionId }
         } = req;
 
-        // @TODO Block for suggestion with specific statuses
-
         const suggestion =
             await this.suggestionRepository.findById(suggestionId);
 
         if (!suggestion) {
             return res.sendStatus(HTTP.NOT_FOUND);
+        }
+
+        const { STATUS_PENDING } = this.suggestionRepository.model;
+
+        if (suggestion.status === STATUS_PENDING) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot comment pending suggestion.');
         }
 
         const data = {

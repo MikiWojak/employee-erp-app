@@ -33,14 +33,14 @@
 </template>
 
 <script>
-import { mapActions } from 'pinia';
-import { useVuelidate } from '@vuelidate/core';
 import {
+    required,
     maxLength,
     minLength,
-    required,
     requiredIf
 } from '@vuelidate/validators';
+import { mapActions } from 'pinia';
+import { useVuelidate } from '@vuelidate/core';
 
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
@@ -67,6 +67,7 @@ export default {
             suggestionId: this.suggestion.id,
             content: ''
         };
+
         return {
             defaultForm,
             formData: { ...defaultForm }
@@ -93,6 +94,22 @@ export default {
     computed: {
         formTitle() {
             return this.editedItem ? 'Edit comment' : 'New comment';
+        }
+    },
+
+    watch: {
+        suggestion: {
+            handler(val) {
+                this.defaultForm.suggestionId = val.id;
+                this.formData.suggestionId = val.id;
+            },
+            immediate: true
+        },
+        editedItem: {
+            handler(val) {
+                this.formData = val ? { ...val } : { ...this.defaultForm };
+            },
+            immediate: true
         }
     },
 

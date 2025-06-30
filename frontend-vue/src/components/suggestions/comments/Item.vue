@@ -1,6 +1,6 @@
 <template>
     <div class="my-2">
-        <div class="d-flex align-center ga-2">
+        <div class="d-flex align-center ga-4">
             <v-avatar size="36px">
                 <v-img
                     v-if="comment.user?.avatar"
@@ -19,11 +19,16 @@
                 </div>
             </div>
 
+            <div v-if="comment.edited">
+                <i> Edited </i>
+            </div>
+
             <div class="d-flex align-center">
                 <v-btn
                     v-if="isAuthor"
                     variant="plain"
                     icon="mdi-pencil"
+                    :disabled="editDeleteDisabled"
                     @click="$emit('edit', comment)"
                 />
 
@@ -32,6 +37,7 @@
                     variant="plain"
                     icon="mdi-delete"
                     color="red"
+                    :disabled="editDeleteDisabled"
                     @click="$emit('delete', comment.id)"
                 />
             </div>
@@ -55,6 +61,12 @@ export default {
         comment: {
             type: Object,
             required: true
+        },
+
+        editDeleteDisabled: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
 

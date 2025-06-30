@@ -1,7 +1,8 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class DestroyController {
-    constructor(suggestionCommentRepository) {
+    constructor(suggestionRepository, suggestionCommentRepository) {
+        this.suggestionRepository = suggestionRepository;
         this.suggestionCommentRepository = suggestionCommentRepository;
     }
 
@@ -12,7 +13,14 @@ class DestroyController {
         } = req;
 
         const suggestionComment =
-            await this.suggestionCommentRepository.findById(id);
+            await this.suggestionCommentRepository.findById(id, {
+                include: [
+                    {
+                        association: 'suggestion',
+                        required: true
+                    }
+                ]
+            });
 
         if (!suggestionComment) {
             return res.sendStatus(HTTP.NO_CONTENT);
@@ -22,7 +30,13 @@ class DestroyController {
             return res.sendStatus(HTTP.FORBIDDEN);
         }
 
-        // @TODO Block for suggestion with specific statuses
+        const { STATUS_PENDING } = this.suggestionRepository.model;
+
+        if (suggestionComment.suggestion.status === STATUS_PENDING) {
+            return res
+                .status(HTTP.UNPROCESSABLE_ENTITY)
+                .send('You cannot delete comment for pending suggestion.');
+        }
 
         await suggestionComment.destroy();
 
