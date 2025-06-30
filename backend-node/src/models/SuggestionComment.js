@@ -4,10 +4,15 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     class SuggestionComment extends Model {
-        static associate({ User }) {
+        static associate({ User, Suggestion }) {
             this.belongsTo(User, {
                 as: 'user',
                 foreignKey: 'userId'
+            });
+
+            this.belongsTo(Suggestion, {
+                as: 'suggestion',
+                foreignKey: 'suggestionId'
             });
         }
     }
@@ -39,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
             content: {
                 allowNull: false,
                 type: DataTypes.TEXT
+            },
+            edited: {
+                allowNull: false,
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
             }
         },
         {

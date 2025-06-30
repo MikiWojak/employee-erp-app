@@ -39,8 +39,21 @@
             </div>
         </v-col>
 
-        <v-col cols="12" md="3" class="d-flex flex-column align-center">
-            <div v-if="editMode" class="mb-4">
+        <v-col cols="12" md="3" class="d-flex flex-column align-center ga-4">
+            <div v-if="editMode" class="d-flex align-center ga-4">
+                <v-avatar size="36px">
+                    <v-img
+                        v-if="formData.user?.avatar"
+                        alt="Icon"
+                        :src="getFullImagePath(formData.user.avatar)"
+                    />
+                    <v-icon v-else icon="mdi-account-circle" size="36px" />
+                </v-avatar>
+
+                <b> {{ formData.user.fullName }} </b>
+            </div>
+
+            <div v-if="editMode">
                 <v-btn
                     :variant="getVoteButtonVariant(1)"
                     :text="formData.votesUp"
@@ -84,12 +97,15 @@
         </v-col>
     </v-row>
 
-    <v-row>
+    <v-row v-if="formData?.id">
         <v-col>
             <comments-section
                 :comments="comments"
                 :load-more-enabled="isLoadMoreEnabled"
+                :add-edit-delete-disabled="isCommentAddEditDeleteDisabled"
                 @load-more="doLoadMore"
+                @add-edit="onAddEditComment"
+                @delete="openDeleteCommentConfirmationDialog"
             />
         </v-col>
     </v-row>
@@ -108,6 +124,22 @@
         @success="doGetItem"
         @close="toggleStatusDialog(false)"
     />
+
+    <add-edit-dialog
+        :is-opened="isAddEditDialogOpened"
+        :suggestion="formData"
+        :edited-item="editedItem"
+        @success="reloadComments"
+        @close="closeAddEditDialog"
+    />
+
+    <confirmation-modal
+        :is-opened="!!commentToDeleteId"
+        title="Do you really want to delete this comment?"
+        :loading="confirmationModalLoading"
+        @confirm="doDeleteComment"
+        @discard="closeDeleteCommentDialog"
+    />
 </template>
 
 <script>
@@ -121,9 +153,11 @@ import { required, minLength, maxLength } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
 import { useSuggestionStore } from '@/stores/suggestion';
+import getFullImagePath from '@/helpers/getFullImagePath';
 import { SuggestionStatuses } from '@/enums/SuggestionStatuses';
 import getStatusColor from '@/helpers/suggestions/getStatusColor';
 import isVoteSelected from '@/helpers/suggestions/isVoteSelected';
+import { useSuggestionCommentStore } from '@/stores/suggestionComment';
 
 export default {
     name: 'SinglePage',
@@ -137,6 +171,9 @@ export default {
         ),
         CommentsSection: defineAsyncComponent(
             () => import('@/components/suggestions/comments/Section')
+        ),
+        AddEditDialog: defineAsyncComponent(
+            () => import('@/components/suggestions/comments/AddEditDialog')
         )
     },
 
@@ -164,7 +201,10 @@ export default {
             readonlyMode: false,
             isStatusDialogOpened: false,
             isConfirmDeleteDialogOpened: false,
-            confirmationModalLoading: false
+            confirmationModalLoading: false,
+            editedItem: null,
+            isAddEditDialogOpened: false,
+            commentToDeleteId: null
         };
     },
 
@@ -210,6 +250,10 @@ export default {
 
         isLoadMoreEnabled() {
             return this.page * this.perPage < this.commentsTotal;
+        },
+
+        isCommentAddEditDeleteDisabled() {
+            return this.formData.status === SuggestionStatuses.PENDING;
         }
     },
 
@@ -229,9 +273,13 @@ export default {
             deleteItem: 'destroy',
             getComments: 'getComments'
         }),
+        ...mapActions(useSuggestionCommentStore, {
+            deleteComment: 'destroy'
+        }),
 
         capitalize,
         getStatusColor,
+        getFullImagePath,
 
         async doGetItem() {
             try {
@@ -394,6 +442,57 @@ export default {
             this.page++;
 
             await this.doGetComments(true);
+        },
+
+        onAddEditComment(editedItem = null) {
+            this.isAddEditDialogOpened = true;
+            this.editedItem = editedItem ? { ...editedItem } : null;
+        },
+
+        closeAddEditDialog() {
+            this.isAddEditDialogOpened = false;
+        },
+
+        async reloadComments() {
+            this.page = 1;
+
+            await this.doGetComments();
+        },
+
+        async doDeleteComment() {
+            try {
+                this.confirmationModalLoading = true;
+
+                await this.deleteComment(this.commentToDeleteId);
+
+                this.$toast.success('Comment has been deleted');
+
+                this.changeConfirmDeleteDialogStatus(false);
+
+                this.closeDeleteCommentDialog();
+
+                await this.reloadComments();
+            } catch (error) {
+                if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
+                    this.$toast.error(error.response.data);
+
+                    return;
+                }
+
+                console.error(error);
+
+                this.$toast.error('Error while deleting the comment!');
+            } finally {
+                this.confirmationModalLoading = false;
+            }
+        },
+
+        openDeleteCommentConfirmationDialog(id) {
+            this.commentToDeleteId = id;
+        },
+
+        closeDeleteCommentDialog() {
+            this.commentToDeleteId = null;
         }
     }
 };

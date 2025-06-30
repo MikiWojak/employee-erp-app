@@ -38,7 +38,12 @@ class ShowController {
             include: [
                 {
                     association: 'user',
-                    required: true
+                    required: true,
+                    include: [
+                        {
+                            association: 'avatar'
+                        }
+                    ]
                 },
                 {
                     association: 'usersVoted',
