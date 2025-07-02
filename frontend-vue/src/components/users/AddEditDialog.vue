@@ -82,7 +82,13 @@ import dayjs from 'dayjs';
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { email, required, requiredIf } from '@vuelidate/validators';
+import {
+    email,
+    maxLength,
+    minLength,
+    required,
+    requiredIf
+} from '@vuelidate/validators';
 
 import { Roles } from '@/enums/Roles';
 import { useAuthStore } from '@/stores/auth';
@@ -132,10 +138,14 @@ export default {
         return {
             formData: {
                 firstName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 lastName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 role: {
                     required: requiredIf(function () {
