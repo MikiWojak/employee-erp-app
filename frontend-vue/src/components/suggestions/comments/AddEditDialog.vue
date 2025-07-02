@@ -33,14 +33,9 @@
 </template>
 
 <script>
-import {
-    required,
-    maxLength,
-    minLength,
-    requiredIf
-} from '@vuelidate/validators';
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
+import { required, maxLength, minLength } from '@vuelidate/validators';
 
 import { useSuggestionStore } from '@/stores/suggestion';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
