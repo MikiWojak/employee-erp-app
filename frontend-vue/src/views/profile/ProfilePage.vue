@@ -100,7 +100,13 @@ import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { required, email, helpers } from '@vuelidate/validators';
+import {
+    required,
+    email,
+    helpers,
+    minLength,
+    maxLength
+} from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
@@ -143,10 +149,14 @@ export default {
         return {
             formData: {
                 firstName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 lastName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 dateOfBirth: {
                     required
