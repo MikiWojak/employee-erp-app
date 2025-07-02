@@ -101,9 +101,9 @@ import { mapActions, mapState } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
 import {
-    required,
     email,
     helpers,
+    required,
     minLength,
     maxLength
 } from '@vuelidate/validators';

@@ -84,9 +84,9 @@ import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import {
     email,
+    required,
     maxLength,
     minLength,
-    required,
     requiredIf
 } from '@vuelidate/validators';
 
