@@ -33,13 +33,16 @@ export default {
             return [
                 {
                     name: 'role',
-                    value: this.getRoleName
+                    value: this.getRoleName,
+                    attributes: () => ({})
                 },
                 {
                     component: 'v-chip',
                     name: 'vacationLeft',
                     value: this.getVacationLeft,
-                    color: this.getVacationLeftColor
+                    attributes: item => ({
+                        color: this.getVacationLeftColor(item)
+                    })
                 }
             ];
         },

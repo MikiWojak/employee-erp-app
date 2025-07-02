@@ -38,7 +38,7 @@
                         :text="tableOptions.addButtonText"
                         color="green"
                         prepend-icon="mdi-plus-circle-outline"
-                        @click="onAddButtonClick(null)"
+                        @click="onAddEditButtonClick(null)"
                     />
                 </div>
             </div>
@@ -72,7 +72,7 @@
         >
             <component
                 :is="field.component || 'span'"
-                v-bind="getColumnAttributes(field, item)"
+                v-bind="field.attributes(item)"
             >
                 {{ field.value(item) }}
             </component>
@@ -90,7 +90,7 @@
                 v-if="areEditDeleteButtonsVisible(item)"
                 variant="plain"
                 icon="mdi-pencil"
-                @click="onAddButtonClick(item)"
+                @click="onAddEditButtonClick(item)"
             />
 
             <v-btn
@@ -242,18 +242,6 @@ export default {
             return true;
         },
 
-        getColumnAttributes(field, item) {
-            const { attributes = {} } = field;
-
-            const preparedAttributes = { ...attributes };
-
-            if (typeof field.color === 'function') {
-                preparedAttributes.color = field.color(item);
-            }
-
-            return preparedAttributes;
-        },
-
         async getItems() {
             return Promise.resolve({ rows: [], count: 0 });
         },
@@ -313,8 +301,6 @@ export default {
 
                 this.$toast.success('Item has been deleted');
 
-                this.confirmationModalLoading = false;
-
                 this.closeDeleteDialog();
             } catch (error) {
                 if (error?.response?.status === HTTP.UNPROCESSABLE_ENTITY) {
@@ -331,7 +317,7 @@ export default {
             }
         },
 
-        onAddButtonClick(editedItem = null) {
+        onAddEditButtonClick(editedItem = null) {
             this.isAddEditDialogOpened = true;
             this.editedItem = editedItem ? { ...editedItem } : null;
         },

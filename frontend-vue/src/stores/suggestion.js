@@ -12,6 +12,12 @@ export const useSuggestionStore = defineStore('suggestion', {
             return data;
         },
 
+        async show(id) {
+            const { data } = await axios.get(`/suggestions/${id}`);
+
+            return data;
+        },
+
         async store(body) {
             const { data } = await axios.post('/suggestions', body);
 
@@ -34,6 +40,24 @@ export const useSuggestionStore = defineStore('suggestion', {
 
         async status({ id, status }) {
             await axios.post(`/suggestions/${id}/status`, { status });
+        },
+
+        async getComments({ suggestionId, page = 1, perPage = 10 } = {}) {
+            const { data } = await axios.get(
+                `/suggestions/${suggestionId}/comments`,
+                { params: { page, perPage } }
+            );
+
+            return data;
+        },
+
+        async storeComment({ suggestionId, content } = {}) {
+            const { data } = await axios.post(
+                `/suggestions/${suggestionId}/comments`,
+                { content }
+            );
+
+            return data;
         }
     }
 });

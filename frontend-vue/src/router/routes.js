@@ -65,9 +65,25 @@ export default [
     },
     {
         path: '/suggestions',
-        name: 'suggestions',
-        component: () => import('@/views/suggestions/TablePage'),
-        meta: { auth: true }
+        meta: { auth: true },
+        children: [
+            {
+                path: '',
+                name: 'suggestions',
+                component: () => import('@/views/suggestions/TablePage')
+            },
+            {
+                path: ':id',
+                name: 'suggestion-show',
+                component: () => import('@/views/suggestions/SinglePage')
+            },
+            {
+                path: 'add',
+                name: 'suggestion-add',
+                component: () => import('@/views/suggestions/SinglePage'),
+                meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
+            }
+        ]
     },
     {
         path: '/login',

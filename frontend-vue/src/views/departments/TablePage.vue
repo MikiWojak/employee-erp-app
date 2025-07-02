@@ -29,7 +29,8 @@ export default {
             return [
                 {
                     name: 'allWorkersCount',
-                    value: this.getAllWorkersCount
+                    value: this.getAllWorkersCount,
+                    attributes: () => ({})
                 }
             ];
         },
