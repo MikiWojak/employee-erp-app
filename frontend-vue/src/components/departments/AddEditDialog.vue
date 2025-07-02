@@ -34,7 +34,7 @@
 <script>
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { maxLength, minLength, required } from '@vuelidate/validators';
 
 import { useDepartmentStore } from '@/stores/department';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
@@ -63,7 +63,9 @@ export default {
         return {
             formData: {
                 name: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 }
             }
         };
