@@ -75,7 +75,7 @@
 import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, integer } from '@vuelidate/validators';
+import { required, integer, minLength, maxLength } from '@vuelidate/validators';
 
 import { useContractStore } from '@/stores/contract';
 import BaseAddEditDialog from '@/components/common/BaseAddEditDialog';
@@ -127,7 +127,9 @@ export default {
                     required
                 },
                 position: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 startDate: {
                     required
