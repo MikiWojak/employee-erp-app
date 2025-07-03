@@ -96,10 +96,6 @@
 
 <script>
 import dayjs from 'dayjs';
-import { defineAsyncComponent } from 'vue';
-import { mapActions, mapState } from 'pinia';
-import { useVuelidate } from '@vuelidate/core';
-import { StatusCodes as HTTP } from 'http-status-codes';
 import {
     email,
     helpers,
@@ -107,6 +103,10 @@ import {
     minLength,
     maxLength
 } from '@vuelidate/validators';
+import { defineAsyncComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
+import { useVuelidate } from '@vuelidate/core';
+import { StatusCodes as HTTP } from 'http-status-codes';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';

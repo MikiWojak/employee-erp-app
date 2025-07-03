@@ -79,9 +79,6 @@
 
 <script>
 import dayjs from 'dayjs';
-import { defineAsyncComponent } from 'vue';
-import { mapState, mapActions } from 'pinia';
-import { useVuelidate } from '@vuelidate/core';
 import {
     email,
     required,
@@ -89,6 +86,9 @@ import {
     minLength,
     requiredIf
 } from '@vuelidate/validators';
+import { defineAsyncComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
+import { useVuelidate } from '@vuelidate/core';
 
 import { Roles } from '@/enums/Roles';
 import { useAuthStore } from '@/stores/auth';
