@@ -14,16 +14,16 @@ const UserFactory = require('../../factories/User');
 const login = require('../../helpers/login');
 const truncateDatabase = require('../../helpers/truncateDatabase');
 
-let admin;
+let employee;
 
 describe('Auth', () => {
     beforeAll(async () => {
         await truncateDatabase();
 
-        await roleRepository.create({ name: Role.ADMIN });
+        await roleRepository.create({ name: Role.EMPLOYEE });
 
-        admin = UserFactory.generate();
-        await UserFactory.createAdmin(admin);
+        employee = UserFactory.generate();
+        await UserFactory.createEmployee(employee);
     });
 
     afterAll(async () => {
@@ -41,7 +41,7 @@ describe('Auth', () => {
 
     describe('POST /auth/logout', () => {
         it('returns NO_CONTENT sending request as ADMIN', async () => {
-            const { email, password } = admin;
+            const { email, password } = employee;
             await login(request, email, password);
 
             const { status } = await request.post('/api/auth/logout');

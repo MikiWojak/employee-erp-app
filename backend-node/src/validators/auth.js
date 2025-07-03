@@ -22,7 +22,7 @@ const password = [
         .withMessage('This field is required.')
         .bail()
         .isLength({ min: 8, max: 64 })
-        .withMessage('This field must have between 2 and 255 characters.')
+        .withMessage('This field must have between 8 and 64 characters.')
 ];
 
 const login = [...sendResetPasswordLink, ...password];
