@@ -53,7 +53,7 @@
 import { mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { required, email, minLength } from '@vuelidate/validators';
+import { required, email, minLength, maxLength } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
@@ -87,7 +87,8 @@ export default {
                 },
                 password: {
                     required,
-                    minLength: minLength(8)
+                    minLengthValue: minLength(8),
+                    maxLengthValue: maxLength(64)
                 }
             }
         };
