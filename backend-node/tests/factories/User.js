@@ -8,7 +8,7 @@ const userRepository = di.get('repositories.user');
 const roleRepository = di.get('repositories.role');
 
 class UserFactory {
-    static generate(props) {
+    static generate(props = {}) {
         const dateOfBirth = dayjs(
             faker.date.between(
                 dayjs().subtract(65, 'year').format('YYYY-MM-DD'),

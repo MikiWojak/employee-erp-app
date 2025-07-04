@@ -33,29 +33,19 @@ describe('Users', () => {
         ]);
 
         admin = UserFactory.generate();
-        managerOne = UserFactory.generate();
-        managerTwo = UserFactory.generate();
-        employee = UserFactory.generate();
-        employeeOther = UserFactory.generate();
+        managerOne = UserFactory.generate({ departmentId: departmentOne.id });
+        managerTwo = UserFactory.generate({ departmentId: departmentOne.id });
+        employee = UserFactory.generate({ departmentId: departmentOne.id });
+        employeeOther = UserFactory.generate({
+            departmentId: departmentTwo.id
+        });
 
         await Promise.all([
             UserFactory.createAdmin(admin),
-            UserFactory.createManager({
-                ...managerOne,
-                departmentId: departmentOne.id
-            }),
-            UserFactory.createManager({
-                ...managerTwo,
-                departmentId: departmentOne.id
-            }),
-            UserFactory.createEmployee({
-                ...employee,
-                departmentId: departmentOne.id
-            }),
-            UserFactory.createEmployee({
-                ...employeeOther,
-                departmentId: departmentTwo.id
-            })
+            UserFactory.createManager(managerOne),
+            UserFactory.createManager(managerTwo),
+            UserFactory.createEmployee(employee),
+            UserFactory.createEmployee(employeeOther)
         ]);
     });
 

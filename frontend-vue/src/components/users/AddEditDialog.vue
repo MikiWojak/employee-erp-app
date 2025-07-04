@@ -153,9 +153,9 @@ export default {
                     })
                 },
                 departmentId: {
-                    required: requiredIf(function () {
-                        return this.isAdmin && this.isRoleForDepartmentSelected;
-                    })
+                    // required: requiredIf(function () {
+                    //     return this.isAdmin && this.isRoleForDepartmentSelected;
+                    // })
                 },
                 dateOfBirth: {
                     required
