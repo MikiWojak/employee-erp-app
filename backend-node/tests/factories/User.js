@@ -28,8 +28,8 @@ class UserFactory {
         return { ...defaultProps, ...props };
     }
 
-    static async createAdmin(props = {}) {
-        const role = await roleRepository.findByName(Role.ADMIN);
+    static async #createBase(props = {}, roleName) {
+        const role = await roleRepository.findByName(roleName);
 
         return userRepository.create(
             this.generate({
@@ -37,19 +37,18 @@ class UserFactory {
                 roleId: role.id
             })
         );
+    }
 
-        return user;
+    static async createAdmin(props = {}) {
+        return this.#createBase(props, Role.ADMIN);
+    }
+
+    static async createManager(props = {}) {
+        return this.#createBase(props, Role.MANAGER);
     }
 
     static async createEmployee(props = {}) {
-        const role = await roleRepository.findByName(Role.EMPLOYEE);
-
-        return userRepository.create(
-            this.generate({
-                ...props,
-                roleId: role.id
-            })
-        );
+        return this.#createBase(props, Role.EMPLOYEE);
     }
 }
 
