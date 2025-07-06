@@ -35,6 +35,7 @@ const update = [
         .not()
         .isEmpty()
         .withMessage('This field is required.')
+        .bail()
         .isIn([ADMIN, MANAGER, EMPLOYEE])
         .withMessage('This role does not exist.'),
 

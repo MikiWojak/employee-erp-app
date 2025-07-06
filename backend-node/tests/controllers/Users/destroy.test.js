@@ -119,6 +119,15 @@ describe('Users', () => {
             expect(status).toBe(HTTP.NO_CONTENT);
         });
 
+        it('returns FORBIDDEN sending valid ID as EMPLOYEE', async () => {
+            const { email, password } = employee;
+            await login(request, email, password);
+
+            const { status } = await destroy(deletedUser.id);
+
+            expect(status).toBe(HTTP.FORBIDDEN);
+        });
+
         it('returns UNPROCESSABLE_ENTITY sending valid ID from different department as MANAGER', async () => {
             const deletedUserOther = await UserFactory.createEmployee({
                 departmentId: departmentTwo.id
@@ -157,15 +166,6 @@ describe('Users', () => {
 
             expect(status).toBe(HTTP.UNPROCESSABLE_ENTITY);
             expect(error.text).toEqual('You cannot delete your own account.');
-        });
-
-        it('returns FORBIDDEN sending valid ID as EMPLOYEE', async () => {
-            const { email, password } = employee;
-            await login(request, email, password);
-
-            const { status } = await destroy(deletedUser.id);
-
-            expect(status).toBe(HTTP.FORBIDDEN);
         });
 
         it('returns UNAUTHORIZED sending valid ID as NOT LOGGED IN', async () => {

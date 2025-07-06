@@ -199,11 +199,12 @@ describe('Users', () => {
             const { email, password } = admin;
             await login(request, email, password);
 
-            dataToSend.firstName = 'a'.repeat(256);
-            dataToSend.lastName = 'a'.repeat(256);
-            dataToSend.email = employee.email;
-
-            const { status, error } = await store(dataToSend);
+            const { status, error } = await store({
+                ...dataToSend,
+                firstName: 'a'.repeat(256),
+                lastName: 'a'.repeat(256),
+                email: employee.email
+            });
 
             const { errors } = JSON.parse(error.text);
 
@@ -236,9 +237,10 @@ describe('Users', () => {
             const { email, password } = admin;
             await login(request, email, password);
 
-            dataToSend.departmentId = 'a';
-
-            const { status, error } = await store(dataToSend);
+            const { status, error } = await store({
+                ...dataToSend,
+                departmentId: 'a'
+            });
 
             const { errors } = JSON.parse(error.text);
 
@@ -257,9 +259,10 @@ describe('Users', () => {
             const { email, password } = admin;
             await login(request, email, password);
 
-            dataToSend.departmentId = faker.datatype.uuid();
-
-            const { status, error } = await store(dataToSend);
+            const { status, error } = await store({
+                ...dataToSend,
+                departmentId: faker.datatype.uuid()
+            });
 
             const { errors } = JSON.parse(error.text);
 

@@ -24,6 +24,8 @@ class UpdateController {
 
         const user = await this.userRepository.getById(id);
 
+        // console.dir({ user }, { depth: null });
+
         if (!user) {
             return res.sendStatus(HTTP.NOT_FOUND);
         }
