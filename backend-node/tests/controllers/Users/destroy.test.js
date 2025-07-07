@@ -80,6 +80,10 @@ describe('Users', () => {
         return request.delete(`/api/users/${id}`);
     };
 
+    const indexCheck = () => {
+        return request.get('/api/users').query({ page: 1, perPage: 100 });
+    };
+
     describe('DELETE /users/:id', () => {
         it('returns NO_CONTENT sending valid ID as ADMIN', async () => {
             const { email, password } = admin;
@@ -88,6 +92,18 @@ describe('Users', () => {
             const { status } = await destroy(deletedUser.id);
 
             expect(status).toBe(HTTP.NO_CONTENT);
+
+            const { status: statusCheck, body } = await indexCheck();
+
+            expect(statusCheck).toBe(HTTP.OK);
+            expect(body.rows).toEqual(
+                expect.arrayContaining([
+                    expect.not.objectContaining({
+                        id: deletedUser.id,
+                        email: deletedUser.email
+                    })
+                ])
+            );
         });
 
         it('returns NO_CONTENT sending not existing ID as ADMIN', async () => {
@@ -117,6 +133,18 @@ describe('Users', () => {
             const { status } = await destroy(deletedUser.id);
 
             expect(status).toBe(HTTP.NO_CONTENT);
+
+            const { status: statusCheck, body } = await indexCheck();
+
+            expect(statusCheck).toBe(HTTP.OK);
+            expect(body.rows).toEqual(
+                expect.arrayContaining([
+                    expect.not.objectContaining({
+                        id: deletedUser.id,
+                        email: deletedUser.email
+                    })
+                ])
+            );
         });
 
         it('returns FORBIDDEN sending valid ID as EMPLOYEE', async () => {
@@ -172,6 +200,36 @@ describe('Users', () => {
             const { status } = await destroy(deletedUser.id);
 
             expect(status).toBe(HTTP.UNAUTHORIZED);
+        });
+
+        it('returns INTERNAL_SERVER_ERROR when TRANSACTION FAILS as MANAGER', async () => {
+            const userRepositoryMock = di.get('repositories.user');
+            jest.spyOn(
+                userRepositoryMock.model.prototype,
+                'destroy'
+            ).mockImplementationOnce(() => {
+                throw new Error('Test error');
+            });
+
+            const { email, password } = manager;
+            await login(request, email, password);
+
+            const { status, error } = await destroy(deletedUser.id);
+
+            expect(status).toBe(HTTP.INTERNAL_SERVER_ERROR);
+            expect(error.text).toEqual('We messed something up. Sorry!');
+
+            const { status: statusCheck, body } = await indexCheck();
+
+            expect(statusCheck).toBe(HTTP.OK);
+            expect(body.rows).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        id: deletedUser.id,
+                        email: deletedUser.email
+                    })
+                ])
+            );
         });
     });
 });
