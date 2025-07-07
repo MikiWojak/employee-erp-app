@@ -47,12 +47,6 @@ describe('Users', () => {
             UserFactory.createEmployee(employee)
         ]);
         managerData = await UserFactory.createManager(manager);
-
-        admin = UserFactory.generate();
-        await UserFactory.createAdmin(admin);
-
-        employee = UserFactory.generate();
-        await UserFactory.createEmployee(employee);
     });
 
     beforeEach(async () => {
