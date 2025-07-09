@@ -248,7 +248,7 @@ describe('Users', () => {
             );
         });
 
-        it('returns BAD_REQUEST sending invalid firstName, lastName, empty departmentId and taken email as ADMIN', async () => {
+        it('returns BAD_REQUEST sending invalid firstName, lastName, no department and taken email as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 
@@ -288,7 +288,7 @@ describe('Users', () => {
             );
         });
 
-        it('returns BAD_REQUEST sending invalid departmentId as ADMIN', async () => {
+        it('returns BAD_REQUEST sending invalid department as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 
@@ -310,7 +310,7 @@ describe('Users', () => {
             );
         });
 
-        it('returns BAD_REQUEST sending not existing departmentId as ADMIN', async () => {
+        it('returns BAD_REQUEST sending not existing department as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 
@@ -378,7 +378,7 @@ describe('Users', () => {
             expect(status).toBe(HTTP.FORBIDDEN);
         });
 
-        it('returns NOT_FOUND sending valid data but not existing id as ADMIN', async () => {
+        it('returns NOT_FOUND sending valid data but not existing ID as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 
@@ -389,7 +389,7 @@ describe('Users', () => {
             expect(status).toBe(HTTP.NOT_FOUND);
         });
 
-        it('returns NOT_FOUND sending valid data but invalid id as ADMIN', async () => {
+        it('returns NOT_FOUND sending valid data but invalid ID as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 

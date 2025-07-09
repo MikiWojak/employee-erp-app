@@ -195,7 +195,7 @@ describe('Users', () => {
             );
         });
 
-        it('returns BAD_REQUEST sending invalid firstName, lastName, empty departmentId and taken email as ADMIN', async () => {
+        it('returns BAD_REQUEST sending invalid firstName, lastName, empty department and taken email as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 
@@ -233,7 +233,7 @@ describe('Users', () => {
             );
         });
 
-        it('returns BAD_REQUEST sending invalid departmentId as ADMIN', async () => {
+        it('returns BAD_REQUEST sending invalid department as ADMIN', async () => {
             const { email, password } = admin;
             await login(request, email, password);
 
