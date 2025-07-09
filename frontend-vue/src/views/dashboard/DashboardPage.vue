@@ -1,36 +1,26 @@
 <template>
-    <h2>
-        Days off left:
-        <v-chip x-large :color="getColor(vacationDaysLeft)" dark>
-            {{ vacationDaysLeft }}
-        </v-chip>
-    </h2>
+    <h1>Hello {{ loggedUser?.firstName }}!</h1>
+
+    <days-off-summary v-if="!isAdmin" />
 </template>
 
 <script>
 import { mapState } from 'pinia';
+import { defineAsyncComponent } from 'vue';
 
 import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'DashboardPage',
 
-    computed: {
-        ...mapState(useAuthStore, ['vacationDaysLeft'])
+    components: {
+        DaysOffSummary: defineAsyncComponent(
+            () => import('@/components/dashboard/DaysOffSummary')
+        )
     },
 
-    methods: {
-        getColor(value) {
-            if (value > 0) {
-                return 'green';
-            }
-
-            if (value === 0) {
-                return 'orange';
-            }
-
-            return 'red';
-        }
+    computed: {
+        ...mapState(useAuthStore, ['isAdmin', 'loggedUser'])
     }
 };
 </script>
