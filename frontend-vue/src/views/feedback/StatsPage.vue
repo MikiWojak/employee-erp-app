@@ -6,17 +6,22 @@
             <tokens-collection-select
                 v-model="selectedTokensCollection"
                 clearable
+                hide-details
             />
         </v-col>
     </v-row>
 
     <v-row v-if="isAdmin">
         <v-col cols="12" md="6">
-            <role-select v-model="role" clearable />
+            <role-select v-model="role" clearable hide-details />
         </v-col>
 
         <v-col cols="12" md="6">
-            <department-select v-model="selectedDepartment" clearable />
+            <department-select
+                v-model="selectedDepartment"
+                clearable
+                hide-details
+            />
         </v-col>
     </v-row>
 

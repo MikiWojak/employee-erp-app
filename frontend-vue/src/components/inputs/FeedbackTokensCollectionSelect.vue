@@ -12,6 +12,7 @@
         :error-messages="errorMessages"
         return-object
         :clearable="clearable"
+        :hide-details="hideDetails"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
         @update:search="doSearch"
@@ -40,6 +41,11 @@ export default {
         errorMessages: {
             type: String,
             default: ''
+        },
+
+        hideDetails: {
+            type: Boolean,
+            default: false
         }
     },
 

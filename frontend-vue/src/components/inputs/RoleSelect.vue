@@ -7,6 +7,7 @@
         prepend-icon="mdi-folder-lock"
         :error-messages="errorMessages"
         :clearable="clearable"
+        :hide-details="hideDetails"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
     />
@@ -37,6 +38,11 @@ export default {
         errorMessages: {
             type: String,
             default: ''
+        },
+
+        hideDetails: {
+            type: Boolean,
+            default: false
         }
     },
 
