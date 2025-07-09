@@ -35,13 +35,12 @@ const update = [
         .not()
         .isEmpty()
         .withMessage('This field is required.')
+        .bail()
         .isIn([ADMIN, MANAGER, EMPLOYEE])
         .withMessage('This role does not exist.'),
 
     body('departmentId')
-        .if(async (value, { req: { body } }) => {
-            const { rolesInfo } = req;
-
+        .if(async (value, { req: { body, rolesInfo } }) => {
             if (!rolesInfo.isAdmin) {
                 return Promise.reject();
             }
