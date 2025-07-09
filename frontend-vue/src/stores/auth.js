@@ -5,7 +5,9 @@ import { Roles } from '@/enums/Roles';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null
+        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null,
+        vacationSummary:
+            JSON.parse(localStorage.getItem('vacationSummary')) || null
     }),
 
     getters: {
@@ -77,12 +79,20 @@ export const useAuthStore = defineStore('auth', {
             this.setLoggedUser(data);
         },
 
-        setLoggedUser(loggedUser) {
-            this.loggedUser = loggedUser;
+        setLoggedUser(data) {
+            this.loggedUser = data?.user || null;
+            this.vacationSummary = data?.vacationSummary || null;
 
-            loggedUser
-                ? localStorage.setItem('loggedUser', JSON.stringify(loggedUser))
-                : localStorage.removeItem('loggedUser');
+            if (data) {
+                localStorage.setItem('loggedUser', JSON.stringify(data.user));
+                localStorage.setItem(
+                    'vacationSummary',
+                    JSON.stringify(data.vacationSummary)
+                );
+            } else {
+                localStorage.removeItem('loggedUser');
+                localStorage.removeItem('vacationSummary');
+            }
         }
     }
 });

@@ -47,8 +47,8 @@ describe('Auth', () => {
             const { status, body } = await request.get('/api/auth/me');
 
             expect(status).toBe(HTTP.OK);
-            expect(body).toHaveProperty('email', email);
-            expect(body).not.toHaveProperty('password');
+            expect(body).toHaveProperty('user.email', email);
+            expect(body).not.toHaveProperty('user.password');
         });
 
         it('returns UNAUTHORIZED sending request as NOT LOGGED IN', async () => {

@@ -2,14 +2,17 @@
     <h2>Days off summary</h2>
 
     <v-row>
-        <v-col
-            v-for="(card, index) in cards"
-            :key="index"
-            cols="6"
-            sm="4"
-            md="3"
-            lg="2"
-        >
+        <v-col cols="12" md="6">
+            <v-card
+                :title="loggedUser?.vacationDaysSum"
+                subtitle="Days off sum"
+                variant="elevated"
+            />
+        </v-col>
+    </v-row>
+
+    <v-row>
+        <v-col v-for="(card, index) in cards" :key="index" cols="12" md="6">
             <v-card v-bind="card" />
         </v-col>
     </v-row>
@@ -24,42 +27,53 @@ export default {
     name: 'DaysOffSummary',
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'vacationDaysLeft']),
+        ...mapState(useAuthStore, [
+            'loggedUser',
+            'vacationSummary',
+            'vacationDaysLeft'
+        ]),
 
         cards() {
             const commonProps = { variant: 'elevated' };
+            const { vacationDaysPending = 0 } = this.vacationSummary || {};
+            const { vacationDaysUsed = 0 } = this.loggedUser || {};
+            const vacationsDaysLeftExt =
+                this.vacationDaysLeft - vacationDaysPending;
 
             return [
                 {
-                    title: this.loggedUser?.vacationDaysSum,
-                    subtitle: 'Days off sum',
-                    ...commonProps
-                },
-                {
-                    title: 0, // @TODO
+                    title: vacationDaysPending,
                     subtitle: 'Days off pending',
                     ...commonProps
                 },
                 {
-                    title: this.loggedUser?.vacationDaysUsed,
+                    title: vacationDaysUsed,
                     subtitle: 'Days off used',
                     ...commonProps
+                },
+                {
+                    title: vacationsDaysLeftExt,
+                    subtitle: 'Days off left (including pending)',
+                    ...commonProps,
+                    color: this.getColor(vacationsDaysLeftExt)
                 },
                 {
                     title: this.vacationDaysLeft,
                     subtitle: 'Days off left',
                     ...commonProps,
-                    color: this.daysOffLeftColor
+                    color: this.getColor(this.vacationDaysLeft)
                 }
             ];
-        },
+        }
+    },
 
-        daysOffLeftColor() {
-            if (this.vacationDaysLeft > 0) {
+    methods: {
+        getColor(value) {
+            if (value > 0) {
                 return 'green';
             }
 
-            if (this.vacationDaysLeft === 0) {
+            if (value === 0) {
                 return 'orange';
             }
 
