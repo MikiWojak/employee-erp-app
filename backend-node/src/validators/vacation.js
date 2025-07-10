@@ -28,6 +28,25 @@ const checkIfVacationsOverlap = async (
     return !!vacation;
 };
 
+const checkIfVacationInsideContract = async (
+    startDate,
+    endDate,
+    userId,
+    contractRepository
+) => {
+    const where = {
+        userId,
+        startDate: { [Op.lte]: endDate },
+        endDate: { [Op.gte]: startDate }
+    };
+
+    const contract = await contractRepository.findOne({
+        where
+    });
+
+    return !!contract;
+};
+
 const isWeekend = value => {
     const date = new Date(value);
 
@@ -114,6 +133,7 @@ const update = [
             ) => {
                 const di = app.get('di');
                 const userRepository = di.get('repositories.user');
+                const contractRepository = di.get('repositories.contract');
                 const vacationRepository = di.get('repositories.vacation');
 
                 if (isManager && userId !== loggedUser.id) {
@@ -141,6 +161,20 @@ const update = [
 
                 if (doVacationsOverlap) {
                     return Promise.reject('Vacation overlaps other one.');
+                }
+
+                const isVacationInsideContract =
+                    await checkIfVacationInsideContract(
+                        startDate,
+                        endDate,
+                        uid,
+                        contractRepository
+                    );
+
+                if (!isVacationInsideContract) {
+                    return Promise.reject(
+                        'Vacation must be during one of contracts.'
+                    );
                 }
             }
         ),
