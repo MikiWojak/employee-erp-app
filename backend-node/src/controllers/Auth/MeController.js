@@ -1,5 +1,5 @@
-const { StatusCodes: HTTP } = require('http-status-codes');
 const { fn, col } = require('sequelize');
+const { StatusCodes: HTTP } = require('http-status-codes');
 
 class MeController {
     constructor(userRepository, vacationRepository) {
