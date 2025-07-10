@@ -2,7 +2,7 @@
     <h2>Days off summary</h2>
 
     <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" sm="6" xl="3">
             <v-card
                 :title="loggedUser?.vacationDaysSum"
                 subtitle="Days off sum"
@@ -12,7 +12,13 @@
     </v-row>
 
     <v-row>
-        <v-col v-for="(card, index) in cards" :key="index" cols="12" md="6">
+        <v-col
+            v-for="(card, index) in cards"
+            :key="index"
+            cols="12"
+            sm="6"
+            xl="3"
+        >
             <v-card v-bind="card" />
         </v-col>
     </v-row>
