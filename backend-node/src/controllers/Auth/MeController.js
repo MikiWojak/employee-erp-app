@@ -1,8 +1,10 @@
+const { fn, col } = require('sequelize');
 const { StatusCodes: HTTP } = require('http-status-codes');
 
 class MeController {
-    constructor(userRepository) {
+    constructor(userRepository, vacationRepository) {
         this.userRepository = userRepository;
+        this.vacationRepository = vacationRepository;
     }
 
     async invoke(req, res) {
@@ -16,7 +18,27 @@ class MeController {
             return res.sendStatus(HTTP.UNAUTHORIZED);
         }
 
-        return res.send(user);
+        const [vacationSummaryRaw] = await this.vacationRepository.findAll({
+            where: {
+                userId: id,
+                approved: false
+            },
+            attributes: [
+                [
+                    fn('COALESCE', fn('SUM', col('duration')), 0),
+                    'vacationDaysPending'
+                ]
+            ],
+            raw: true
+        });
+
+        const vacationSummary = {};
+
+        for (const key in vacationSummaryRaw) {
+            vacationSummary[key] = parseInt(vacationSummaryRaw[key]);
+        }
+
+        return res.send({ user, vacationSummary });
     }
 }
 

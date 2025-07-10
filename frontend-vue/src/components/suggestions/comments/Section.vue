@@ -1,5 +1,7 @@
 <template>
-    <div class="d-flex justify-space-between align-center">
+    <div
+        class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start"
+    >
         <h2> Comments </h2>
 
         <v-btn

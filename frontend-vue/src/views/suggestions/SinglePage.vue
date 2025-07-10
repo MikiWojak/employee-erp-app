@@ -75,9 +75,8 @@
                 />
             </div>
 
-            <div class="d-flex ga-2">
+            <div v-if="!readonlyMode" class="d-flex ga-2">
                 <v-btn
-                    v-if="!readonlyMode"
                     text="Save"
                     prepend-icon="mdi-floppy"
                     color="green"
@@ -86,7 +85,7 @@
                 />
 
                 <v-btn
-                    v-if="editMode && !readonlyMode"
+                    v-if="editMode"
                     text="Delete"
                     prepend-icon="mdi-delete"
                     color="red"

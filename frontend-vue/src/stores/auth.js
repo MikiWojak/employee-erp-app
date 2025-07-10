@@ -5,7 +5,8 @@ import { Roles } from '@/enums/Roles';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null
+        loggedUser: null,
+        vacationSummary: null
     }),
 
     getters: {
@@ -21,12 +22,10 @@ export const useAuthStore = defineStore('auth', {
 
     actions: {
         async login({ email, password }) {
-            const { data } = await axios.post('/auth/login', {
+            await axios.post('/auth/login', {
                 email,
                 password
             });
-
-            this.setLoggedUser(data);
         },
 
         async logout() {
@@ -64,25 +63,18 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async updateProfile(multipartFormData) {
-            const { data } = await axios.put(
-                '/auth/profile',
-                multipartFormData,
-                {
-                    headers: {
-                        contentType: 'multipart/form-data'
-                    }
+            await axios.put('/auth/profile', multipartFormData, {
+                headers: {
+                    contentType: 'multipart/form-data'
                 }
-            );
+            });
 
-            this.setLoggedUser(data);
+            await this.me();
         },
 
-        setLoggedUser(loggedUser) {
-            this.loggedUser = loggedUser;
-
-            loggedUser
-                ? localStorage.setItem('loggedUser', JSON.stringify(loggedUser))
-                : localStorage.removeItem('loggedUser');
+        setLoggedUser(data) {
+            this.loggedUser = data?.user || null;
+            this.vacationSummary = data?.vacationSummary || null;
         }
     }
 });

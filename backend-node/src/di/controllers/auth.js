@@ -7,7 +7,7 @@ module.exports = {
 
         'controllers.auth.me': {
             class: 'controllers/Auth/MeController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@repositories.vacation']
         },
 
         'controllers.auth.logout': {
