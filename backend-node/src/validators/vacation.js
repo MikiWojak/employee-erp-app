@@ -36,8 +36,8 @@ const checkIfVacationInsideContract = async (
 ) => {
     const where = {
         userId,
-        startDate: { [Op.lte]: endDate },
-        endDate: { [Op.gte]: startDate }
+        startDate: { [Op.lte]: startDate },
+        endDate: { [Op.gte]: endDate }
     };
 
     const contract = await contractRepository.findOne({
