@@ -27,7 +27,7 @@ module.exports = {
         });
 
         for (const user of users) {
-            const { id: userId, contracts, vacationDaysSum } = user;
+            const { id: userId, contracts } = user;
 
             if (!contracts.length) {
                 continue;
@@ -49,7 +49,7 @@ module.exports = {
                 );
             }
 
-            const startDate = dayjs(startDateDayjs).format('YYYY-MM-DD');
+            const startDate = startDateDayjs.format('YYYY-MM-DD');
 
             const endDateRaw = faker.date.between(
                 startDate,
@@ -65,7 +65,7 @@ module.exports = {
                 );
             }
 
-            const endDate = dayjs(endDateDayjs).format('YYYY-MM-DD');
+            const endDate = endDateDayjs.format('YYYY-MM-DD');
 
             const transaction = await vacationRepository.getDbTransaction();
 
