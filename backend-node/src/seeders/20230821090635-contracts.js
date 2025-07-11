@@ -36,7 +36,7 @@ module.exports = {
 
             const endDate = dayjs(
                 faker.date.between(
-                    startDate,
+                    dayjs(startDate).add(1, 'year').format('YYYY-MM-DD'),
                     dayjs(startDate).add(5, 'year').format('YYYY-MM-DD')
                 )
             ).format('YYYY-MM-DD');
