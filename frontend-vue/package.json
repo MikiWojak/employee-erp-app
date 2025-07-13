@@ -37,6 +37,6 @@
         "globals": "16.0.0",
         "prettier": "3.5.3",
         "vite": "6.3.5",
-        "vuetify": "3.7.18"
+        "vuetify": "3.9.0"
     }
 }
