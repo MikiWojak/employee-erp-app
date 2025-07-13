@@ -6,6 +6,7 @@
         :error-messages="errorMessages"
         :min="min"
         :max="max"
+        :display-format="formatDate"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
     />
@@ -72,6 +73,10 @@ export default {
                 'update:model-value',
                 dayjs(this.date).format('YYYY-MM-DD')
             );
+        },
+
+        formatDate(date) {
+            return dayjs(date).format('YYYY-MM-DD');
         }
     }
 };

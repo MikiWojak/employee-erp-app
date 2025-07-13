@@ -1,3 +1,5 @@
+const dayjs = require('dayjs');
+const { Op } = require('sequelize');
 const deepmerge = require('deepmerge');
 
 const { Role } = require('../../models');
@@ -35,6 +37,8 @@ class IndexController {
             roleNames.push(allRolesFlag ? Role.ADMIN : Role.MANAGER);
         }
 
+        const today = dayjs().format('YYYY-MM-DD');
+
         const options = {
             where,
             ...sorting,
@@ -58,6 +62,33 @@ class IndexController {
                 {
                     association: 'updatedBy',
                     attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    association: 'contracts',
+                    attributes: ['id'],
+                    required: false,
+                    where: {
+                        startDate: {
+                            [Op.lte]: today
+                        },
+                        endDate: {
+                            [Op.gte]: today
+                        }
+                    }
+                },
+                {
+                    association: 'vacations',
+                    attributes: ['id'],
+                    required: false,
+                    where: {
+                        startDate: {
+                            [Op.lte]: today
+                        },
+                        endDate: {
+                            [Op.gte]: today
+                        },
+                        approved: true
+                    }
                 }
             ],
             subQuery: false
