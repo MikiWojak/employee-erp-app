@@ -1,6 +1,7 @@
 <template>
     <v-autocomplete
         v-model="tokensCollection"
+        :search="search"
         :items="tokensCollections"
         :loading="loading"
         hide-no-data
@@ -53,10 +54,12 @@ export default {
 
     data() {
         return {
+            search: '',
             tokensCollections: [],
             tokensCollection: null,
             timer: null,
-            loading: false
+            loading: false,
+            ignoreNextSearchFlag: false
         };
     },
 
@@ -64,6 +67,8 @@ export default {
         modelValue: {
             handler(newVal) {
                 this.tokensCollection = newVal;
+                this.search = newVal?.number || '';
+                this.ignoreNextSearchFlag = !!newVal;
             },
             immediate: true
         }
@@ -75,6 +80,10 @@ export default {
         }),
 
         handleInput(value) {
+            this.tokensCollection = value;
+            this.search = value?.number || '';
+            this.ignoreNextSearchFlag = true;
+
             this.$emit('update:model-value', value);
         },
 
@@ -94,9 +103,17 @@ export default {
         },
 
         async doSearch(search) {
+            if (this.ignoreNextSearchFlag) {
+                this.ignoreNextSearchFlag = false;
+
+                return;
+            }
+
             if (!search) {
                 return;
             }
+
+            this.search = search;
 
             if (this.timer) {
                 clearTimeout(this.timer);
