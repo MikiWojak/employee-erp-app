@@ -14,7 +14,8 @@ class EmailConsumer extends AbstractConsumer {
         const hbsOptions = {
             viewEngine: {
                 layoutsDir: path.join(__dirname, '../../../templates'),
-                defaultLayout: 'base'
+                defaultLayout: 'base',
+                helpers: require('../../../helpers/handlebars')
             },
             viewPath: path.join(__dirname, '../../../templates')
         };
