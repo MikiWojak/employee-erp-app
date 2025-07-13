@@ -182,7 +182,7 @@ export default {
                 return 'On contract';
             }
 
-            return 'No current contract';
+            return 'No ongoing contract';
         },
 
         getContractStatusColor(item) {
