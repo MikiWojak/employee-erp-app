@@ -43,6 +43,22 @@ export default {
                     attributes: item => ({
                         color: this.getVacationLeftColor(item)
                     })
+                },
+                {
+                    component: 'v-chip',
+                    name: 'contractStatus',
+                    value: this.getContractStatus,
+                    attributes: item => ({
+                        color: this.getContractStatusColor(item)
+                    })
+                },
+                {
+                    component: 'v-chip',
+                    name: 'vacationStatus',
+                    value: this.getVacationStatus,
+                    attributes: item => ({
+                        color: this.getVacationStatusColor(item)
+                    })
                 }
             ];
         },
@@ -71,6 +87,16 @@ export default {
                 {
                     title: 'Days off left',
                     value: 'vacationLeft',
+                    minWidth: '125px'
+                },
+                {
+                    title: 'Contract Status',
+                    value: 'contractStatus',
+                    minWidth: '125px'
+                },
+                {
+                    title: 'Vacation Status',
+                    value: 'vacationStatus',
                     minWidth: '125px'
                 },
                 {
@@ -145,6 +171,62 @@ export default {
             }
 
             return true;
+        },
+
+        getContractStatus(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'Admin';
+            }
+
+            if (item.contracts.length) {
+                return 'On contract';
+            }
+
+            return 'No current contract';
+        },
+
+        getContractStatusColor(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'purple';
+            }
+
+            if (item.contracts.length) {
+                return 'green';
+            }
+
+            return 'orange';
+        },
+
+        getVacationStatus(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'Admin';
+            }
+
+            if (item.vacations.length) {
+                return 'On vacation';
+            }
+
+            if (item.contracts.length) {
+                return 'Working';
+            }
+
+            return '-';
+        },
+
+        getVacationStatusColor(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'purple';
+            }
+
+            if (item.vacations.length) {
+                return 'orange';
+            }
+
+            if (item.contracts.length) {
+                return 'green';
+            }
+
+            return '';
         }
     }
 };
