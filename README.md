@@ -10,6 +10,7 @@
     - [Backend (dev)](#usage-backend-dev)
     - [Backend (test)](#usage-backend-test)
     - [Frontend (dev)](#usage-frontend-dev)
+    - [Default credentials](#default-credentials)
 
 ## App description
 
@@ -89,7 +90,13 @@ Go to backend directory.
 cd backend-node
 ```
 
-Run Docker containers in the background if not launched yet.
+Set proper Node.js version in every terminal for backend.
+
+```
+nvm use
+```
+
+Run Docker containers in the background if not running yet.
 
 ```
 docker compose up -d
@@ -118,6 +125,12 @@ Go to backend directory.
 
 ```
 cd backend-node
+```
+
+Set proper Node.js version.
+
+```
+nvm use
 ```
 
 Copy env file and set proper data. You can also leave it default in local test environment.
@@ -157,8 +170,58 @@ Go to frontend directory.
 cd frontend-vue
 ```
 
+Set proper Node.js version.
+
+```
+nvm use
+```
+
 Run frontend in dev mode.
 
 ```
 npm run dev
+```
+
+### Default credentials
+
+#### Admin
+
+Email
+
+```
+admin@erp.test
+```
+
+Password
+
+```
+Qwerty123!
+```
+
+#### Manager
+
+Email
+
+```
+manager@erp.test
+```
+
+Password
+
+```
+Qwerty123!
+```
+
+#### Employee
+
+Email
+
+```
+employee@erp.test
+```
+
+Password
+
+```
+Qwerty123!
 ```
