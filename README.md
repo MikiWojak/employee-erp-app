@@ -4,6 +4,7 @@
 
 - [App description](#app-description)
 - [Installation](#installation)
+    - [Main folder](#installation-main-folder)
     - [Backend](#installation-backend)
     - [Frontend](#installation-frontend)
 - [Usage](#usage)
@@ -17,6 +18,20 @@
 Web application to manage: workers, contracts, vacations, suggestions and feedback. Allows to operate as: admin, manager and employee.
 
 ## Installation
+
+<h3 id="installation-main-folder">Main folder</h3>
+
+Set proper Node.js version. Install if necessary.
+
+```
+nvm use
+```
+
+Install dependencies.
+
+```
+npm install
+```
 
 <h3 id="installation-backend">Backend</h3>
 
@@ -57,6 +72,7 @@ npm run db-setup-fresh
 ```
 
 <h3 id="installation-frontend">Frontend</h3>
+
 Go to frontend directory.
 
 ```
@@ -84,6 +100,7 @@ cp .env.example .env
 ## Usage
 
 <h3 id="usage-backend-dev">Backend (dev)</h3>
+
 Go to backend directory.
 
 ```
@@ -121,6 +138,7 @@ docker compose down
 ```
 
 <h3 id="usage-backend-test">Backend (test)</h3>
+
 Go to backend directory.
 
 ```
@@ -164,6 +182,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.test down
 ```
 
 <h3 id="usage-frontend-dev">Frontend (dev)</h3>
+
 Go to frontend directory.
 
 ```
