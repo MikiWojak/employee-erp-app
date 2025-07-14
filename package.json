@@ -1,0 +1,13 @@
+{
+  "name": "employee-erp-app",
+  "version": "1.0.0",
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "npm": "^10.0.0",
+    "node": "^22.0.0"
+  },
+  "dependencies": {
+    "prettier": "3.5.3"
+  }
+}
