@@ -15,14 +15,13 @@ npm install
 cp .env.example .env
 
 # Docker setup
-docker network create global
-docker-compose up -d
+docker compose up -d
 
 # Database setup
 npm run db-setup-fresh
 
 # Close docker containers
-docker-compose down
+docker compose down
 ```
 
 ## Run for development - compiles and hot reloads
