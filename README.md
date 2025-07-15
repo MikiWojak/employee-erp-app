@@ -137,7 +137,7 @@ Clear Redis session cache if necessary.
 npm run redis-session-flush
 ```
 
-Close docker containers (only after backend and queues closed).
+Close Docker containers (only after backend and queues closed).
 
 ```
 docker compose down
