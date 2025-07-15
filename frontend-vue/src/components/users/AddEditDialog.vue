@@ -32,6 +32,7 @@
                 <role-select
                     v-if="isAdmin"
                     v-model="formData.role"
+                    all-roles
                     :error-messages="handleError('role')"
                     @blur="onBlur('role')"
                     @update:model-value="clearServerError('role')"
@@ -78,10 +79,16 @@
 
 <script>
 import dayjs from 'dayjs';
+import {
+    email,
+    required,
+    maxLength,
+    minLength,
+    requiredIf
+} from '@vuelidate/validators';
 import { defineAsyncComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { email, required, requiredIf } from '@vuelidate/validators';
 
 import { Roles } from '@/enums/Roles';
 import { useAuthStore } from '@/stores/auth';
@@ -131,10 +138,14 @@ export default {
         return {
             formData: {
                 firstName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 lastName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 role: {
                     required: requiredIf(function () {

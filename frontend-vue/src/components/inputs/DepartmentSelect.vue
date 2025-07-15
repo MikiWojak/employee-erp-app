@@ -1,6 +1,7 @@
 <template>
     <v-autocomplete
         v-model="department"
+        :search="search"
         :items="departments"
         :loading="loading"
         hide-no-data
@@ -11,6 +12,8 @@
         placeholder="Start typing to Search"
         :error-messages="errorMessages"
         return-object
+        :clearable="clearable"
+        :hide-details="hideDetails"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
         @update:search="doSearch"
@@ -31,9 +34,19 @@ export default {
             default: null
         },
 
+        clearable: {
+            type: Boolean,
+            default: false
+        },
+
         errorMessages: {
             type: String,
             default: ''
+        },
+
+        hideDetails: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -41,10 +54,12 @@ export default {
 
     data() {
         return {
+            search: '',
             departments: [],
             department: null,
             timer: null,
-            loading: false
+            loading: false,
+            ignoreNextSearchFlag: false
         };
     },
 
@@ -52,6 +67,8 @@ export default {
         modelValue: {
             handler(newVal) {
                 this.department = newVal;
+                this.search = newVal?.name || '';
+                this.ignoreNextSearchFlag = !!newVal;
             },
             immediate: true
         }
@@ -61,6 +78,10 @@ export default {
         ...mapActions(useDepartmentStore, { getDepartments: 'index' }),
 
         handleInput(value) {
+            this.department = value;
+            this.search = value?.name || '';
+            this.ignoreNextSearchFlag = true;
+
             this.$emit('update:model-value', value);
         },
 
@@ -80,9 +101,17 @@ export default {
         },
 
         async doSearch(search) {
+            if (this.ignoreNextSearchFlag) {
+                this.ignoreNextSearchFlag = false;
+
+                return;
+            }
+
             if (!search) {
                 return;
             }
+
+            this.search = search;
 
             if (this.timer) {
                 clearTimeout(this.timer);

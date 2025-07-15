@@ -18,30 +18,47 @@ export default {
 
     extends: BaseTablePage,
 
-    data() {
-        return {
-            tableOptions: {
+    computed: {
+        ...mapState(useAuthStore, ['isAdmin', 'isManager', 'loggedUser']),
+
+        customTableOptions() {
+            return {
                 title: 'Users',
                 deleteConfirmationModalTitle:
                     'Do you really want to delete this user?'
-            }
-        };
-    },
-
-    computed: {
-        ...mapState(useAuthStore, ['isAdmin', 'isManager', 'loggedUser']),
+            };
+        },
 
         customFields() {
             return [
                 {
                     name: 'role',
-                    value: this.getRoleName
+                    value: this.getRoleName,
+                    attributes: () => ({})
                 },
                 {
                     component: 'v-chip',
                     name: 'vacationLeft',
                     value: this.getVacationLeft,
-                    color: this.getVacationLeftColor
+                    attributes: item => ({
+                        color: this.getVacationLeftColor(item)
+                    })
+                },
+                {
+                    component: 'v-chip',
+                    name: 'contractStatus',
+                    value: this.getContractStatus,
+                    attributes: item => ({
+                        color: this.getContractStatusColor(item)
+                    })
+                },
+                {
+                    component: 'v-chip',
+                    name: 'vacationStatus',
+                    value: this.getVacationStatus,
+                    attributes: item => ({
+                        color: this.getVacationStatusColor(item)
+                    })
                 }
             ];
         },
@@ -70,6 +87,16 @@ export default {
                 {
                     title: 'Days off left',
                     value: 'vacationLeft',
+                    minWidth: '125px'
+                },
+                {
+                    title: 'Contract Status',
+                    value: 'contractStatus',
+                    minWidth: '125px'
+                },
+                {
+                    title: 'Vacation Status',
+                    value: 'vacationStatus',
                     minWidth: '125px'
                 },
                 {
@@ -132,18 +159,74 @@ export default {
             return item?.role?.name || '';
         },
 
-        areActionButtonsDisabled(item) {
+        areEditDeleteButtonsVisible(item) {
             if (this.loggedUser?.id === item.id) {
-                return true;
+                return false;
             }
 
             const isUserManager = item.role.name === Roles.MANAGER;
 
             if (this.isManager && isUserManager) {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
+        },
+
+        getContractStatus(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'Admin';
+            }
+
+            if (item.contracts.length) {
+                return 'On contract';
+            }
+
+            return 'No ongoing contract';
+        },
+
+        getContractStatusColor(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'purple';
+            }
+
+            if (item.contracts.length) {
+                return 'green';
+            }
+
+            return 'orange';
+        },
+
+        getVacationStatus(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'Admin';
+            }
+
+            if (item.vacations.length) {
+                return 'On vacation';
+            }
+
+            if (item.contracts.length) {
+                return 'Working';
+            }
+
+            return '-';
+        },
+
+        getVacationStatusColor(item) {
+            if (item.role.name === Roles.ADMIN) {
+                return 'purple';
+            }
+
+            if (item.vacations.length) {
+                return 'orange';
+            }
+
+            if (item.contracts.length) {
+                return 'green';
+            }
+
+            return '';
         }
     }
 };

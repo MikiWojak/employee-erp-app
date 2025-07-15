@@ -21,6 +21,10 @@ export default {
         editedItem: {
             type: Object,
             default: null
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         }
     },
 

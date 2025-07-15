@@ -9,14 +9,14 @@
                     v-model="departmentName"
                     label="Department"
                     prepend-icon="mdi-office-building"
-                    disabled
+                    readonly
                 />
 
                 <v-text-field
                     v-model="roleName"
                     label="Role"
                     prepend-icon="mdi-folder-lock"
-                    disabled
+                    readonly
                 />
 
                 <v-text-field
@@ -96,11 +96,17 @@
 
 <script>
 import dayjs from 'dayjs';
+import {
+    email,
+    helpers,
+    required,
+    minLength,
+    maxLength
+} from '@vuelidate/validators';
 import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { required, email, helpers } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
@@ -143,10 +149,14 @@ export default {
         return {
             formData: {
                 firstName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 lastName: {
-                    required
+                    required,
+                    minLengthValue: minLength(2),
+                    maxLengthValue: maxLength(255)
                 },
                 dateOfBirth: {
                     required

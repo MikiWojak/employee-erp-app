@@ -7,6 +7,9 @@ const update = [
         .isEmpty()
         .withMessage('This field is required.')
         .bail()
+        .isLength({ min: 2, max: 255 })
+        .withMessage('This field must have between 2 and 255 characters.')
+        .bail()
         .custom(
             async (
                 name,

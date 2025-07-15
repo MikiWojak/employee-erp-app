@@ -20,11 +20,6 @@ export default {
 
     data() {
         return {
-            tableOptions: {
-                title: 'Vacations',
-                deleteConfirmationModalTitle:
-                    'Do you really want to delete this vacation?'
-            },
             selectedTab: BelongingTabs.EMPLOYEES
         };
     },
@@ -32,13 +27,23 @@ export default {
     computed: {
         ...mapState(useAuthStore, ['isAdmin', 'isManager']),
 
+        customTableOptions() {
+            return {
+                title: 'Vacations',
+                deleteConfirmationModalTitle:
+                    'Do you really want to delete this vacation?'
+            };
+        },
+
         customFields() {
             return [
                 {
                     component: 'v-chip',
                     name: 'approved',
                     value: this.getStatus,
-                    color: this.getColor
+                    attributes: item => ({
+                        color: this.getColor(item)
+                    })
                 }
             ];
         },
@@ -130,15 +135,15 @@ export default {
             deleteItem: 'destroy'
         }),
 
-        areActionButtonsDisabled(item) {
+        areEditDeleteButtonsVisible(item) {
             if (
                 this.isAdmin ||
                 (this.isManager && this.selectedTab === BelongingTabs.EMPLOYEES)
             ) {
-                return false;
+                return true;
             }
 
-            return item.approved;
+            return !item.approved;
         },
 
         getStatus(item) {

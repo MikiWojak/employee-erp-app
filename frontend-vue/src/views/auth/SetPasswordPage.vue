@@ -59,7 +59,7 @@ import { mapActions } from 'pinia';
 import { defineAsyncComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { StatusCodes as HTTP } from 'http-status-codes';
-import { required, minLength, sameAs } from '@vuelidate/validators';
+import { required, minLength, sameAs, maxLength } from '@vuelidate/validators';
 
 import { useAuthStore } from '@/stores/auth';
 import BaseForm from '@/components/common/BaseForm';
@@ -96,7 +96,8 @@ export default {
             formData: {
                 password: {
                     required,
-                    minLength: minLength(8)
+                    minLengthValue: minLength(8),
+                    maxLengthValue: maxLength(64)
                 },
                 passwordConfirmation: {
                     required,

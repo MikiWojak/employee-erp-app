@@ -45,6 +45,23 @@ module.exports = {
         'services.media.delete': {
             class: 'services/media/DeleteHandler',
             arguments: ['@repositories.media']
+        },
+
+        'services.feedback.generateTokenCollection': {
+            class: 'services/feedback/GenerateTokenCollectionHandler',
+            arguments: [
+                '@repositories.feedbackTokensCollection',
+                '@repositories.feedbackToken',
+                '@repositories.user'
+            ]
+        },
+
+        'services.feedback.answer': {
+            class: 'services/feedback/AnswerHandler',
+            arguments: [
+                '@repositories.feedbackAnswer',
+                '@repositories.feedbackTokensCollection'
+            ]
         }
     }
 };

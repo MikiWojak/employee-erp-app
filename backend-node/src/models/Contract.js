@@ -94,14 +94,14 @@ module.exports = (sequelize, DataTypes) => {
             paranoid: true,
 
             hooks: {
-                async beforeSave(contract, options) {
+                async beforeSave(contract) {
                     const startDate = dayjs(contract.startDate);
                     const endDate = dayjs(contract.endDate);
 
                     const duration = endDate.diff(startDate, 'day') + 1;
-                    const multiplier = duration / 365;
+                    const multiplier = duration / 366;
 
-                    const vacationDays = Math.round(
+                    const vacationDays = Math.ceil(
                         contract.vacationDaysPerYear * multiplier
                     );
 

@@ -21,8 +21,8 @@ const password = [
         .isEmpty()
         .withMessage('This field is required.')
         .bail()
-        .isLength(8)
-        .withMessage(`This field must have at least 8 letters.`)
+        .isLength({ min: 8, max: 64 })
+        .withMessage('This field must have between 8 and 64 characters.')
 ];
 
 const login = [...sendResetPasswordLink, ...password];
@@ -47,13 +47,19 @@ const updateProfile = [
         .trim()
         .not()
         .isEmpty()
-        .withMessage('This field is required.'),
+        .withMessage('This field is required.')
+        .bail()
+        .isLength({ min: 2, max: 255 })
+        .withMessage('This field must have between 2 and 255 characters.'),
 
     body('lastName')
         .trim()
         .not()
         .isEmpty()
-        .withMessage('This field is required.'),
+        .withMessage('This field is required.')
+        .bail()
+        .isLength({ min: 2, max: 255 })
+        .withMessage('This field must have between 2 and 255 characters.'),
 
     body('dateOfBirth')
         .trim()

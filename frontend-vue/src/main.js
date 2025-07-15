@@ -14,6 +14,16 @@ import 'vue-toast-notification/dist/theme-bootstrap.css';
 import App from '@/App';
 import router from '@/router';
 
+import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+} from 'chart.js';
+
 const pinia = createPinia();
 const vuetify = createVuetify({
     components: {
@@ -22,6 +32,15 @@ const vuetify = createVuetify({
     },
     directives
 });
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 const app = createApp(App);
 

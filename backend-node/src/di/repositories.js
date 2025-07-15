@@ -33,6 +33,41 @@ module.exports = {
         'repositories.media': {
             class: 'repositories/Media',
             arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackAnswer': {
+            class: 'repositories/FeedbackAnswer',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackQuestion': {
+            class: 'repositories/FeedbackQuestion',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackTokensCollection': {
+            class: 'repositories/FeedbackTokensCollection',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.feedbackToken': {
+            class: 'repositories/FeedbackToken',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.suggestion': {
+            class: 'repositories/Suggestion',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.suggestionVote2User': {
+            class: 'repositories/SuggestionVote2User',
+            arguments: ['@sequelize']
+        },
+
+        'repositories.suggestionComment': {
+            class: 'repositories/SuggestionComment',
+            arguments: ['@sequelize']
         }
     }
 };

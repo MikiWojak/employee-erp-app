@@ -6,6 +6,8 @@
         label="Role"
         prepend-icon="mdi-folder-lock"
         :error-messages="errorMessages"
+        :clearable="clearable"
+        :hide-details="hideDetails"
         @blur="$emit('blur')"
         @update:model-value="handleInput"
     />
@@ -23,9 +25,24 @@ export default {
             default: null
         },
 
+        clearable: {
+            type: Boolean,
+            default: false
+        },
+
+        allRoles: {
+            type: Boolean,
+            default: false
+        },
+
         errorMessages: {
             type: String,
             default: ''
+        },
+
+        hideDetails: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -33,9 +50,18 @@ export default {
 
     data() {
         return {
-            roleOptions: Object.values(Roles),
             role: null
         };
+    },
+
+    computed: {
+        roleOptions() {
+            if (this.allRoles) {
+                return Object.values(Roles);
+            }
+
+            return [Roles.MANAGER, Roles.EMPLOYEE];
+        }
     },
 
     watch: {

@@ -42,6 +42,35 @@
             :to="{ name: 'vacations' }"
         />
 
+        <v-list-item
+            prepend-icon="mdi-lightbulb-on"
+            title="Suggestions"
+            :to="{ name: 'suggestions' }"
+        />
+
+        <v-list-subheader class="ml-4" inset> Feedback </v-list-subheader>
+
+        <v-list-item
+            v-if="isEmployee || isManager"
+            prepend-icon="mdi-comment"
+            title="Form"
+            :to="{ name: 'feedback' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin || isManager"
+            prepend-icon="mdi-ticket-account"
+            title="Tokens Collections"
+            :to="{ name: 'feedback-tokens-collections' }"
+        />
+
+        <v-list-item
+            v-if="isAdmin || isManager"
+            prepend-icon="mdi-comment-multiple"
+            title="Statistics"
+            :to="{ name: 'feedback-statistics' }"
+        />
+
         <v-divider />
 
         <v-list-item
@@ -75,7 +104,12 @@ export default {
     },
 
     computed: {
-        ...mapState(useAuthStore, ['loggedUser', 'isAdmin', 'isManager']),
+        ...mapState(useAuthStore, [
+            'isAdmin',
+            'isManager',
+            'isEmployee',
+            'loggedUser'
+        ]),
 
         fullName() {
             return this.loggedUser?.fullName || '';

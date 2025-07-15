@@ -46,6 +46,46 @@ export default [
         meta: { auth: true }
     },
     {
+        path: '/feedback',
+        name: 'feedback',
+        component: () => import('@/views/feedback/QuestionsPage'),
+        meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
+    },
+    {
+        path: '/feedback/statistics',
+        name: 'feedback-statistics',
+        component: () => import('@/views/feedback/StatsPage'),
+        meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
+    },
+    {
+        path: '/feedback/tokens-collections',
+        name: 'feedback-tokens-collections',
+        component: () => import('@/views/feedback-tokens/TokensPage'),
+        meta: { auth: [Roles.ADMIN, Roles.MANAGER] }
+    },
+    {
+        path: '/suggestions',
+        meta: { auth: true },
+        children: [
+            {
+                path: '',
+                name: 'suggestions',
+                component: () => import('@/views/suggestions/TablePage')
+            },
+            {
+                path: ':id',
+                name: 'suggestion-show',
+                component: () => import('@/views/suggestions/SinglePage')
+            },
+            {
+                path: 'add',
+                name: 'suggestion-add',
+                component: () => import('@/views/suggestions/SinglePage'),
+                meta: { auth: [Roles.EMPLOYEE, Roles.MANAGER] }
+            }
+        ]
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/auth/LoginPage'),

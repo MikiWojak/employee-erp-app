@@ -1,6 +1,7 @@
 <template>
     <v-autocomplete
         v-model="user"
+        :search="search"
         :items="users"
         :loading="loading"
         hide-no-data
@@ -41,10 +42,12 @@ export default {
 
     data() {
         return {
+            search: '',
             users: [],
             user: null,
             timer: null,
-            loading: false
+            loading: false,
+            ignoreNextSearchFlag: false
         };
     },
 
@@ -52,6 +55,8 @@ export default {
         modelValue: {
             handler(newVal) {
                 this.user = newVal;
+                this.search = newVal?.fullName || '';
+                this.ignoreNextSearchFlag = !!newVal;
             },
             immediate: true
         }
@@ -61,6 +66,10 @@ export default {
         ...mapActions(useUserStore, { getUsers: 'index' }),
 
         handleInput(value) {
+            this.user = value;
+            this.search = value?.fullName || '';
+            this.ignoreNextSearchFlag = true;
+
             this.$emit('update:model-value', value);
         },
 
@@ -77,9 +86,17 @@ export default {
         },
 
         async doSearch(search) {
+            if (this.ignoreNextSearchFlag) {
+                this.ignoreNextSearchFlag = false;
+
+                return;
+            }
+
             if (!search) {
                 return;
             }
+
+            this.search = search;
 
             if (this.timer) {
                 clearTimeout(this.timer);
