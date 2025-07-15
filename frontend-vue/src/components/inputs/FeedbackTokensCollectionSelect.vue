@@ -113,7 +113,7 @@ export default {
                 return;
             }
 
-            this.search = `${search}`;
+            this.search = search;
 
             if (this.timer) {
                 clearTimeout(this.timer);
