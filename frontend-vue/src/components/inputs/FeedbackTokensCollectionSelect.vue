@@ -67,7 +67,7 @@ export default {
         modelValue: {
             handler(newVal) {
                 this.tokensCollection = newVal;
-                this.search = newVal?.number || '';
+                this.search = newVal?.number ? `${newVal.number}` : '';
                 this.ignoreNextSearchFlag = !!newVal;
             },
             immediate: true
@@ -81,7 +81,7 @@ export default {
 
         handleInput(value) {
             this.tokensCollection = value;
-            this.search = value?.number || '';
+            this.search = value?.number ? `${value.number}` : '';
             this.ignoreNextSearchFlag = true;
 
             this.$emit('update:model-value', value);

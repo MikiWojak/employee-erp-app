@@ -131,7 +131,13 @@ Run queues in separate terminal.
 npm run queues
 ```
 
-Close docker containers (only after backend and queues closed).
+Clear Redis session cache if necessary.
+
+```
+npm run redis-session-flush
+```
+
+Close Docker containers (only after backend and queues closed).
 
 ```
 docker compose down
