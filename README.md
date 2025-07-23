@@ -4,6 +4,7 @@
 
 - [App description](#app-description)
 - [Installation](#installation)
+    - [Requirements](#requirements)
     - [Main folder](#installation-main-folder)
     - [Backend](#installation-backend)
     - [Frontend](#installation-frontend)
@@ -18,6 +19,13 @@
 Web application to manage: workers, contracts, vacations, suggestions and feedback. Allows to operate as: admin, manager and employee.
 
 ## Installation
+
+<h3 id="installation-main-folder">Requirements</h3>
+
+- Docker
+- Docker Compose
+- NVM
+- Node.js
 
 <h3 id="installation-main-folder">Main folder</h3>
 
