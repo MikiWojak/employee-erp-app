@@ -20,7 +20,7 @@ Web application to manage: workers, contracts, vacations, suggestions and feedba
 
 ## Installation
 
-<h3 id="installation-main-folder">Requirements</h3>
+<h3 id="requirements">Requirements</h3>
 
 - Docker
 - Docker Compose
