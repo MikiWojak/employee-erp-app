@@ -1,4 +1,4 @@
-class GetLoggedInUserHandler {
+class CheckIfUserLoggedInHandler {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
@@ -20,4 +20,4 @@ class GetLoggedInUserHandler {
     }
 }
 
-module.exports = GetLoggedInUserHandler;
+module.exports = CheckIfUserLoggedInHandler;

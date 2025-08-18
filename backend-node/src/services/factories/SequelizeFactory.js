@@ -2,60 +2,61 @@
 
 const fs = require('fs');
 const path = require('path');
+const dayjs = require('dayjs');
+const crypto = require('crypto');
 
 class SequelizeFactory {
     static create(Sequelize, config) {
-        let sequelize;
-
         const hooks = {
-            beforeUpdate(instance) {
-                if ('updatedAt' in instance) {
-                    instance.updatedAt = new Date();
+            beforeUpdate: item => {
+                if ('updatedAt' in item) {
+                    item.updatedAt = dayjs().format();
                 }
             }
         };
 
-        if (config.db.url) {
-            sequelize = new Sequelize(config.db.url, { ...config.db, hooks });
-        } else {
-            sequelize = new Sequelize(
-                config.db.name,
-                config.db.username,
-                config.db.password,
-                { ...config.db, hooks }
-            );
-        }
+        const {
+            db: databaseConfig,
+            db: { name, username, password }
+        } = config;
 
-        const id = Math.random().toString(36).substring(2);
-        console.info(`Sequelize created #ID ${id}`);
-
-        const db = {};
-        const modelsPath = path.join(__dirname, '../../models');
-        fs.readdirSync(modelsPath)
-            .filter(
-                file =>
-                    file.indexOf('.') !== 0 &&
-                    file !== 'index.js' &&
-                    file.slice(-3) === '.js'
-            )
-            .forEach(file => {
-                const model = require(path.join(modelsPath, file))(
-                    sequelize,
-                    Sequelize.DataTypes
-                );
-                db[model.name] = model;
-            });
-
-        Object.keys(db).forEach(modelName => {
-            if (db[modelName].associate) {
-                db[modelName].associate(db);
-            }
+        const sequelize = new Sequelize(name, username, password, {
+            ...databaseConfig,
+            hooks
         });
 
-        db.sequelize = sequelize;
-        db.Sequelize = Sequelize;
+        const id = crypto.randomBytes(8).toString('hex');
+        console.info(`Sequelize instance #${id}`);
 
-        return db;
+        const databaseComponents = {};
+        const modelsLocation = path.join(__dirname, '../../models');
+
+        const modelFileNamesRaw = fs.readdirSync(modelsLocation);
+        const modelFileNames = modelFileNamesRaw.filter(
+            fileName =>
+                fileName.indexOf('.') !== 0 &&
+                fileName !== 'index.js' &&
+                fileName.slice(-3) === '.js'
+        );
+
+        for (const fileName of modelFileNames) {
+            const model = require(path.join(modelsLocation, fileName))(
+                sequelize,
+                Sequelize.DataTypes
+            );
+            databaseComponents[model.name] = model;
+        }
+
+        for (const modelName of Object.keys(databaseComponents)) {
+            if (databaseComponents[modelName].associate) {
+                databaseComponents[modelName].associate(databaseComponents);
+            }
+        }
+
+        databaseComponents.sequelize = sequelize;
+        databaseComponents.Sequelize = Sequelize;
+
+        return databaseComponents;
     }
 }
 
