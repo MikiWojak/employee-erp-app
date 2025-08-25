@@ -1,0 +1,21 @@
+{
+    "apps": [
+        {
+            "name": "EmployeeErpAPI",
+            "namespace": "EmployeeErp",
+            "script": "./src/index.js",
+            "watch": false,
+            "exec_mode": "cluster",
+            "max_memory_restart": "500M",
+            "log_date_format": "YYYY-MM-DD HH:mm Z"
+        },
+        {
+            "name": "EmployeeErpQUEUES",
+            "namespace": "EmployeeErp",
+            "script": "./src/queues.js",
+            "watch": false,
+            "max_memory_restart": "250M",
+            "log_date_format": "YYYY-MM-DD HH:mm Z"
+        }
+    ]
+}
