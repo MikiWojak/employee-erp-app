@@ -99,9 +99,9 @@ module.exports = (sequelize, DataTypes) => {
                     const endDate = dayjs(contract.endDate);
 
                     const duration = endDate.diff(startDate, 'day') + 1;
-                    const multiplier = duration / 366;
+                    const multiplier = duration / 365;
 
-                    const vacationDays = Math.ceil(
+                    const vacationDays = Math.round(
                         contract.vacationDaysPerYear * multiplier
                     );
 

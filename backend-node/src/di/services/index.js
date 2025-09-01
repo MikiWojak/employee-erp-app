@@ -22,8 +22,8 @@ module.exports = {
             }
         },
 
-        'services.getLoggedInUser': {
-            class: 'services/GetLoggedInUserHandler',
+        'services.checkIfUserLoggedIn': {
+            class: 'services/CheckIfUserLoggedInHandler',
             arguments: ['@repositories.user']
         },
 

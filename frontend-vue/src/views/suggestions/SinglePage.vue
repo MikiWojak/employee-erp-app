@@ -232,7 +232,7 @@ export default {
                 return 'Suggestion details';
             }
 
-            return this.editMode ? 'Edit suggestion' : 'Add suggestions';
+            return this.editMode ? 'Edit suggestion' : 'Add suggestion';
         },
 
         statusOptions() {

@@ -1,10 +1,12 @@
 const { StatusCodes: HTTP } = require('http-status-codes');
 
-function loggedOnly(...permittedRoles) {
+function loggedOnly(...permittedRolesRaw) {
     return async (req, res, next) => {
         const di = req.app.get('di');
-        const getLoggedInUserHandler = di.get('services.getLoggedInUser');
-        const loggedUser = await getLoggedInUserHandler.handle(req);
+        const checkIfUserLoggedInHandler = di.get(
+            'services.checkIfUserLoggedIn'
+        );
+        const loggedUser = await checkIfUserLoggedInHandler.handle(req);
 
         if (!loggedUser) {
             return res.sendStatus(HTTP.UNAUTHORIZED);
@@ -15,9 +17,9 @@ function loggedOnly(...permittedRoles) {
         req.loggedUser = loggedUser;
         req.rolesInfo = rolesInfo;
 
-        if (!Array.isArray(permittedRoles)) {
-            permittedRoles = [permittedRoles];
-        }
+        const permittedRoles = Array.isArray(permittedRolesRaw)
+            ? permittedRolesRaw
+            : [permittedRolesRaw];
 
         if (
             permittedRoles.length &&
