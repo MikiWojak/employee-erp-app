@@ -1,6 +1,6 @@
 # Mikołaj Żarnowski - Aplikacja internetowa "Employee ERP App" - Praca inżynierska
 
-Content in English.
+Content of README in English.
 
 ## Table of content
 
