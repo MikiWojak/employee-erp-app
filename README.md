@@ -1,4 +1,6 @@
-# employee-erp-app
+# Mikołaj Żarnowski - Aplikacja internetowa "Employee ERP App" - Praca inżynierska
+
+Content in English.
 
 ## Table of content
 
